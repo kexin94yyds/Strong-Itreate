@@ -1,0 +1,149 @@
+
+> metamorphosis-app@0.0.1 dev
+> vite --host
+
+Port 5173 is in use, trying another one...
+
+  VITE v5.4.19  ready in 459 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://10.101.62.168:5174/
+  ➜  press h + enter to show help
+12:16:52 [vite] page reload index.html
+12:16:52 [vite] vite.config.ts changed, restarting server...
+12:16:52 [vite] changed tsconfig file detected: /Users/apple/DDK/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+12:16:52 [vite] page reload index.html
+12:16:52 [vite] server restarted.
+12:18:35 [vite] vite.config.ts changed, restarting server...
+12:18:36 [vite] server restarted.
+12:18:36 [vite] page reload index.html
+12:24:32 [vite] page reload index.html
+12:25:11 [vite] page reload index.html
+12:25:22 [vite] page reload index.html
+12:25:22 [vite] page reload index.html
+12:26:07 [vite] page reload index.html
+12:34:20 [vite] page reload index.html
+12:40:26 [vite] page reload index.html
+12:40:34 [vite] page reload index.html
+12:40:34 [vite] page reload index.html
+12:41:19 [vite] page reload index.html
+12:46:27 [vite] page reload index.html
+12:46:36 [vite] page reload index.html
+12:51:34 [vite] page reload index.html
+12:51:43 [vite] page reload index.html
+13:07:23 [vite] page reload index.html
+13:07:23 [vite] Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+13:07:23 [vite] Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+13:07:23 [vite] Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+13:08:48 [vite] page reload index.html
+13:20:58 [vite] page reload index.html
+13:21:34 [vite] page reload index.html
+13:22:02 [vite] page reload index.html
+13:23:59 [vite] page reload script.js
+13:25:16 [vite] page reload script.js
+13:25:17 [vite] page reload script.js
+13:28:21 [vite] page reload script.js
+13:28:23 [vite] page reload script.js
+13:28:23 [vite] page reload script.js
+13:30:34 [vite] page reload script.js
+13:30:36 [vite] page reload script.js
+13:31:09 [vite] page reload index.html
+13:31:10 [vite] page reload index.html
+13:31:23 [vite] hmr update /styles.css?direct
+13:31:30 [vite] hmr update /styles.css?direct
+13:31:32 [vite] hmr update /styles.css?direct
+13:31:53 [vite] hmr update /styles.css?direct
+13:31:53 [vite] page reload script.js
+13:31:53 [vite] page reload index.html
+13:31:54 [vite] page reload index.html
+13:31:54 [vite] page reload script.js
+13:32:24 [vite] page reload index.html
+13:32:25 [vite] page reload index.html
+13:32:40 [vite] hmr update /styles.css?direct
+13:37:25 [vite] page reload script.js
+13:37:28 [vite] page reload script.js
+13:38:45 [vite] page reload script.js
+13:38:47 [vite] page reload script.js
+13:38:55 [vite] page reload index.html
+13:38:56 [vite] page reload index.html
+13:39:07 [vite] page reload script.js
+13:39:09 [vite] page reload script.js
+13:39:26 [vite] page reload index.html
+13:39:26 [vite] hmr update /styles.css?direct
+13:39:26 [vite] page reload script.js
+13:39:26 [vite] page reload index.html
+13:39:26 [vite] hmr update /styles.css?direct
+13:39:26 [vite] page reload script.js
+13:39:26 [vite] page reload index.html
+13:39:26 [vite] hmr update /styles.css?direct
+13:39:26 [vite] page reload script.js
+13:39:26 [vite] page reload index.html
+13:40:26 [vite] page reload index.html
+13:40:27 [vite] page reload index.html
+13:40:29 [vite] page reload index.html
+13:40:58 [vite] page reload index.html
+13:40:58 [vite] page reload index.html
+13:41:10 [vite] page reload index.html
+13:41:10 [vite] hmr update /styles.css?direct
+13:41:10 [vite] page reload index.html
+13:41:10 [vite] page reload script.js
+13:41:14 [vite] page reload index.html
+13:41:15 [vite] hmr update /styles.css?direct
+13:41:15 [vite] page reload index.html
+13:41:15 [vite] page reload script.js
+13:41:15 [vite] hmr update /styles.css?direct
+13:41:24 [vite] hmr update /styles.css?direct
+13:41:24 [vite] page reload index.html
+13:41:24 [vite] page reload script.js
+13:41:24 [vite] hmr update /styles.css?direct
+13:41:24 [vite] page reload script.js
+13:42:20 [vite] page reload index.html
+13:42:21 [vite] page reload index.html
+13:42:30 [vite] hmr update /styles.css?direct
+13:42:32 [vite] hmr update /styles.css?direct
+13:43:12 [vite] page reload index.html
+13:43:13 [vite] page reload index.html
+13:43:26 [vite] hmr update /styles.css?direct
+13:43:28 [vite] hmr update /styles.css?direct
+13:43:40 [vite] page reload script.js
+13:43:42 [vite] page reload script.js
+13:43:42 [vite] page reload script.js
+13:44:33 [vite] page reload script.js
+13:44:33 [vite] page reload index.html
+13:44:33 [vite] hmr update /styles.css?direct
+13:44:34 [vite] page reload script.js
+13:44:34 [vite] page reload index.html
+13:44:34 [vite] hmr update /styles.css?direct
+13:45:24 [vite] page reload index.html
+13:45:32 [vite] page reload script.js
+13:45:38 [vite] page reload index.html
+13:45:38 [vite] page reload script.js
+13:46:32 [vite] page reload index.html
+13:47:23 [vite] hmr update /styles.css?direct
+13:47:35 [vite] page reload index.html
+13:47:35 [vite] hmr update /styles.css?direct
+13:49:04 [vite] page reload index.html
+13:49:16 [vite] hmr update /styles.css?direct
+13:49:51 [vite] page reload index.html
+13:49:52 [vite] page reload index.html
+13:50:02 [vite] hmr update /styles.css?direct
+13:50:04 [vite] hmr update /styles.css?direct
+13:50:25 [vite] page reload script.js
+13:50:35 [vite] page reload index.html
+13:50:35 [vite] page reload script.js
+13:50:35 [vite] page reload index.html
+13:50:35 [vite] hmr update /styles.css?direct
+13:51:43 [vite] page reload script.js
+13:52:26 [vite] page reload script.js
+13:52:36 [vite] page reload script.js
+13:52:52 [vite] page reload script.js
+13:53:05 [vite] page reload script.js
+13:53:21 [vite] page reload script.js
+13:53:24 [vite] page reload script.js
+13:56:17 [vite] page reload script.js
+13:57:36 [vite] page reload script.js
+13:57:39 [vite] page reload script.js
+13:59:27 [vite] page reload script.js
+13:59:32 [vite] page reload script.js
+14:05:18 [vite] page reload script.js
+14:05:19 [vite] page reload script.js

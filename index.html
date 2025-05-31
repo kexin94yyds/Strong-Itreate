@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARK</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+    <nav>
+        <button class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1>越 来 越 强</h1>
+        <button class="close">×</button>
+    </nav>
+
+    <div class="side-menu">
+        <div class="search-bar">
+            <input type="text" placeholder="&#x1F50D;">
+        </div>
+        <div class="menu-items">
+            <button class="menu-item">
+                <span>WHO</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item">
+                <span>DO</span>
+                <span class="arrow">›</span>
+            </button>
+        </div>
+
+        <div class="person-grid" style="display: none;">
+            <div class="person-card">
+                <div class="person-image">
+                    <img src="kexin.jpg" alt="可鑫" class="profile-image">
+                </div>
+                <div class="person-name">可鑫</div>
+            </div>
+        </div>
+
+        <div class="action-grid" style="display: none;">
+            <button class="action-button">Build</button>
+            <button class="action-button">Create</button>
+            <button class="action-button">Sell</button>
+            <button class="action-button">Invest</button>
+            <button class="action-button">Own</button>
+            <button class="action-button">Read</button>
+            <button class="action-button">Run</button>
+            <button class="action-button">Recite</button>
+            <button class="action-button">Write</button>
+            <button class="action-button">Reflect</button>
+        </div>
+    </div>
+
+    <main>
+        <div class="main-default">
+            <canvas id="noiseCanvas"></canvas>
+            <div id="metamorphosis-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; z-index: 1;">
+                <canvas class="metamorphosis-canvas" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <div class="center-line">
+                <div class="star-marker"></div>
+            </div>
+        </div>
+        <div class="main-detail" style="display:none;">
+            <div class="main-detail-img">
+                <img src="越来越强.jpg" alt="越来越强">
+            </div>
+            <div class="main-detail-info">
+                <div class="season-info">SEASON 1 EPISODE 1</div>
+                <h2 class="detail-title">越 来 越 强</h2>
+                <div class="detail-description">
+                    可鑫正在通过不断的学习和实践提升自己。作为一个充满热情的开发者，
+                    他专注于创造优秀的用户体验和精美的界面设计。每一天都在追求进步，
+                    用代码诠释着"越来越强"的理念。
+                </div>
+                <div class="timeline-marker">
+                    <span class="year">2024</span>
+                    <div class="marker-line"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <button class="language-btn">LANGUAGE</button>
+        <button class="episodes-btn">EPISODES</button>
+    </footer>
+
+    <div class="detail-view" style="display: none;">
+        <div class="detail-content">
+            <div class="season-info">SEASON 1 EPISODE 1</div>
+            <h2 class="detail-title">越 来 越 强</h2>
+            <div class="detail-description">
+                可鑫正在通过不断的学习和实践提升自己。作为一个充满热情的开发者，
+                他专注于创造优秀的用户体验和精美的界面设计。每一天都在追求进步，
+                用代码诠释着"越来越强"的理念。
+            </div>
+            <div class="timeline-marker">
+                <span class="year">2024</span>
+                <div class="marker-line"></div>
+            </div>
+        </div>
+        <div class="detail-background">
+            <img src="越来越强.jpg" alt="越来越强">
+        </div>
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <button class="close-detail">×</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
