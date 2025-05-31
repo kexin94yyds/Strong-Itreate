@@ -182,20 +182,76 @@ const progressIndicator = document.querySelector('.progress-indicator');
 
 // main 区域切换逻辑
 const mainDefault = document.querySelector('.main-default');
-const mainDetail = document.querySelector('.main-detail');
+const mainDetails = document.querySelectorAll('.main-detail');
 
+// 初始化：隐藏所有详情页面，显示主页
+mainDefault.style.display = 'flex';
+mainDetails.forEach(detail => {
+    detail.style.display = 'none';
+});
+
+// 点击个人图片时显示第一个详情页面
 profileImage.addEventListener('click', () => {
     mainDefault.style.display = 'none';
-    mainDetail.style.display = 'flex';
+    mainDetails.forEach(detail => {
+        detail.style.display = 'none';
+    });
+    mainDetails[0].style.display = 'flex';
     document.body.classList.remove('menu-open'); // 自动关闭侧边栏
 });
 
+// 为每个"下一页"按钮添加点击事件
+const nextButtons = document.querySelectorAll('.next-episode-btn');
+nextButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+        // 隐藏当前页面
+        mainDetails[index].style.display = 'none';
+        
+        // 显示下一个页面（如果存在）
+        if (mainDetails[index + 1]) {
+            mainDetails[index + 1].style.display = 'flex';
+            
+            // 添加淡入动画
+            gsap.fromTo(mainDetails[index + 1],
+                { opacity: 0 },
+                { 
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+            );
+        } else {
+            // 如果是最后一页，返回主页
+            mainDetails[index].style.display = 'none';
+            mainDefault.style.display = 'flex';
+            gsap.fromTo(mainDefault,
+                { opacity: 0 },
+                { 
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+            );
+        }
+    });
+});
+
 // 可选：点击 main-detail 区域空白处返回主页
-mainDetail.addEventListener('click', (e) => {
-    if (e.target === mainDetail) {
-        mainDetail.style.display = 'none';
-        mainDefault.style.display = 'flex';
-    }
+mainDetails.forEach(detail => {
+    detail.addEventListener('click', (e) => {
+        if (e.target === detail) {
+            mainDetails.forEach(d => d.style.display = 'none');
+            mainDefault.style.display = 'flex';
+            gsap.fromTo(mainDefault,
+                { opacity: 0 },
+                { 
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+            );
+        }
+    });
 });
 
 // 关闭详情页面
