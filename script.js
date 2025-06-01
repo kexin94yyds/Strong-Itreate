@@ -104,6 +104,7 @@ menuToggle.addEventListener('click', () => {
 
 closeButton.addEventListener('click', () => {
     document.body.classList.remove('menu-open');
+    window.location.href = '/'; // 跳转到主页
 });
 
 // 点击菜单项时的效果
@@ -771,62 +772,216 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainDefault = document.querySelector('.main-default');
     
     writeButton.addEventListener('click', () => {
-        // 隐藏默认主页内容
         mainDefault.style.display = 'none';
-        
-        // 隐藏所有其他详情页面
         document.querySelectorAll('.main-detail').forEach(detail => {
+            if (!detail.classList.contains('write-detail')) {
             detail.style.display = 'none';
+            }
         });
         
-        // 创建微信公众号文章占位符
         let writeDetail = document.querySelector('.write-detail');
         if (!writeDetail) {
             writeDetail = document.createElement('div');
             writeDetail.className = 'main-detail write-detail';
+            writeDetail.style.flexDirection = 'column';
+            writeDetail.style.alignItems = 'stretch'; 
+            writeDetail.style.padding = '2rem 1.5rem'; 
+            writeDetail.style.textAlign = 'left';
+            writeDetail.style.justifyContent = 'flex-start';
+            writeDetail.style.backgroundColor = '#121212'; 
+
             writeDetail.innerHTML = `
-                <div class="main-detail-img">
-                    <div class="wechat-article-placeholder">
-                        <div class="wechat-logo">
-                            <svg viewBox="0 0 24 24" width="48" height="48">
-                                <path fill="currentColor" d="M8.5,7A8.5,8.5 0 0,1 17,15.5A8.5,8.5 0 0,1 8.5,24A8.5,8.5 0 0,1 0,15.5A8.5,8.5 0 0,1 8.5,7M8.5,9A6.5,6.5 0 0,0 2,15.5A6.5,6.5 0 0,0 8.5,22A6.5,6.5 0 0,0 15,15.5A6.5,6.5 0 0,0 8.5,9M15.5,0A8.5,8.5 0 0,1 24,8.5A8.5,8.5 0 0,1 15.5,17A8.5,8.5 0 0,1 7,8.5A8.5,8.5 0 0,1 15.5,0M15.5,2A6.5,6.5 0 0,0 9,8.5A6.5,6.5 0 0,0 15.5,15A6.5,6.5 0 0,0 22,8.5A6.5,6.5 0 0,0 15.5,2"></path>
-                            </svg>
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <div class="season-info" style="font-size: 0.8rem; color: #999; margin-bottom: 0.2rem;">MY WRITINGS</div>
+                    <!-- <h2 class="detail-title" style="font-size: 1.8rem; color: #e0e0e0; margin-top: 0; letter-spacing: 1px;">微信公众号文章</h2> -->
                         </div>
-                        <div class="wechat-article-header">微信公众号文章</div>
+                <div class="articles-container-wrapper" style="max-width: 750px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="wechat-articles-list" style="display: flex; flex-wrap: wrap; justify-content: space-between; overflow-y: auto; width: 100%; flex-grow: 1; align-content: space-around;">
+                        
+                        <!-- Article Card 1 -->
+                        <div class="wechat-article-card" data-article-id="article-1" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); /* Adjusted for space-between on parent */ box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-07-15</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">越来越强</h3>
+                                <!-- <p class="article-meta" style="font-size: 0.75rem; color: #777; margin-bottom: 0;">60 reads · 9 likes · 2 shared</p> -->
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="越来越强.jpg" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- Article Card 2 (New: 生命力) -->
+                        <div class="wechat-article-card" data-article-id="article-2" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); /* Adjusted for space-between on parent */ box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-05-10</p> <!-- Date from original article-3 -->
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">生命力</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="死不旋踵.webp" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                        
+                        <!-- Article Card 3 (New: TO 2024) -->
+                        <div class="wechat-article-card" data-article-id="article-3" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); /* Adjusted for space-between on parent */ box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-04-20</p> <!-- Date from original article-4 -->
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">TO 2024</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="世界在我面前.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                         <!-- Article Card 4 (New: 世界在我前面，缓缓展开) -->
+                        <div class="wechat-article-card" data-article-id="article-4" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); /* Adjusted for space-between on parent */ box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-06-28</p> <!-- Date from original article-2 -->
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">世界在我前面，缓缓展开</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="世界在我面前，缓缓展开.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- Article Card 5 -->
+                        <div class="wechat-article-card" data-article-id="article-5" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-03-15</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">与自己</h3>
+                                <!-- <p class="article-meta" style="font-size: 0.75rem; color: #777; margin-bottom: 0;">300 reads · 40 likes · 15 shared</p> -->
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="水仙花.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- Article Card 6 -->
+                        <div class="wechat-article-card" data-article-id="article-6" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-02-20</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">温暖内心的力量</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <img src="心中温暖.jpg" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 7 -->
+                        <div class="wechat-article-card" data-article-id="article-7" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-01-10</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 7</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 8 -->
+                        <div class="wechat-article-card" data-article-id="article-8" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-01-05</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 8</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 9 -->
+                        <div class="wechat-article-card" data-article-id="article-9" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-20</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 9</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 10 -->
+                        <div class="wechat-article-card" data-article-id="article-10" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-15</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 10</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 11 -->
+                        <div class="wechat-article-card" data-article-id="article-11" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-10</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 11</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
+                        <!-- Placeholder Article Card 12 -->
+                        <div class="wechat-article-card" data-article-id="article-12" 
+                             style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
+                            <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-05</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 12</h3>
+                            </div>
+                            <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
+                                <!-- No image tag for placeholders -->
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-                <div class="main-detail-info">
-                    <div class="season-info">WRITE</div>
-                    <h2 class="detail-title">写作是一种思考方式</h2>
-                    <div class="detail-description">
-                        通过写作，我们可以：<br><br>
-                        1. 整理思绪<br>
-                        2. 分享知识<br>
-                        3. 记录成长<br>
-                        4. 启发他人<br><br>
-                        点击开始写作，分享你的想法。
-                    </div>
-                    <div class="timeline-marker">
-                        <span class="year">2024</span>
-                        <div class="marker-line"></div>
-                    </div>
-                    <button class="start-writing-btn">开始写作 ›››</button>
                 </div>
             `;
             document.querySelector('main').appendChild(writeDetail);
             
-            // 添加开始写作按钮的点击事件
-            const startWritingBtn = writeDetail.querySelector('.start-writing-btn');
-            startWritingBtn.addEventListener('click', () => {
-                // 这里可以添加跳转到写作编辑器或其他写作相关功能
-                console.log('开始写作');
+            writeDetail.querySelectorAll('.wechat-article-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const articleId = card.dataset.articleId;
+                    const articleTitle = card.querySelector('.article-title').textContent;
+                    
+                    if (articleId === 'article-1') {
+                        window.open('https://mp.weixin.qq.com/s/Vo-UGtOUmVAqPQLt94SGdg', '_blank');
+                    } else if (articleId === 'article-2') { // New: 生命力
+                        window.open('https://mp.weixin.qq.com/s/VSDlvWIv2Q1M2udMvwkYUQ', '_blank');
+                    } else if (articleId === 'article-3') { // New: TO 2024
+                        window.open('https://mp.weixin.qq.com/s/qi__Z4IPiEQ4kW-mMzmHrw', '_blank');
+                    } else if (articleId === 'article-4') { // New: 世界在我前面，缓缓展开
+                        window.open('https://mp.weixin.qq.com/s/wjDEGHZ4FnAOOXnIT1Pw1w', '_blank');
+                    } else if (articleId === 'article-5') {
+                        window.open('https://mp.weixin.qq.com/s/E4djVYPjjknWaPjwttsFjA', '_blank');
+                    } else {
+                        console.log(`Navigating to article: ${articleTitle} (ID: ${articleId})`);
+                    }
+                });
+                card.addEventListener('mouseenter', () => {
+                    card.style.backgroundColor = '#2A2A2A'; // Slightly lighter on hover
+                    card.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.backgroundColor = '#1E1E1E';
+                    card.style.transform = 'translateY(0px)';
+            });
             });
         }
         
-        // 显示写作详情页面
         writeDetail.style.display = 'flex';
+        gsap.fromTo(writeDetail, {opacity: 0}, {opacity: 1, duration: 0.3});
         
-        // 关闭侧边栏
         document.body.classList.remove('menu-open');
     });
 });
