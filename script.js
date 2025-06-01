@@ -122,6 +122,8 @@ menuItems.forEach(item => {
         // 处理 WHO 按钮点击
         if (item.querySelector('span').textContent.trim() === 'WHO') {
             actionGrid.style.display = 'none';
+            const runStory = document.querySelector('.run-story');
+            runStory.style.display = 'none'; // 隐藏 run-story
             if (personGrid.style.display === 'none' || !personGrid.style.display) {
                 personGrid.style.display = 'block';
                 // 添加动画效果
@@ -142,8 +144,10 @@ menuItems.forEach(item => {
         // 处理 DO 按钮点击
         else if (item.querySelector('span').textContent.trim() === 'DO') {
             personGrid.style.display = 'none';
+            const runStory = document.querySelector('.run-story');
             if (actionGrid.style.display === 'none' || !actionGrid.style.display) {
                 actionGrid.style.display = 'grid';
+                runStory.style.display = 'none'; // 确保Run故事内容被隐藏
                 // 添加动画效果
                 const buttons = actionGrid.querySelectorAll('.action-button');
                 gsap.fromTo(buttons,
@@ -156,8 +160,32 @@ menuItems.forEach(item => {
                         ease: "power2.out"
                     }
                 );
+
+                // 为每个action按钮添加点击事件
+                buttons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        if (button.textContent.trim() === 'Run') {
+                            actionGrid.style.display = 'none';
+                            runStory.style.display = 'block';
+                            // 添加动画效果
+                            gsap.fromTo(runStory,
+                                { opacity: 0, y: 20 },
+                                {
+                                    opacity: 1,
+                                    y: 0,
+                                    duration: 0.5,
+                                    ease: "power2.out"
+                                }
+                            );
+                        } else {
+                            // 点击其他按钮时隐藏Run故事内容
+                            runStory.style.display = 'none';
+                        }
+                    });
+                });
             } else {
                 actionGrid.style.display = 'none';
+                runStory.style.display = 'none'; // 关闭菜单时也隐藏Run故事内容
             }
         } else {
             actionGrid.style.display = 'none';
@@ -695,9 +723,11 @@ document.querySelector('.action-button:nth-child(7)').addEventListener('click', 
         const img = document.createElement('img');
         img.className = 'running-record-image';
         img.src = '跑步2024.JPG';
-        img.style.width = '100%';
+        img.style.width = '90%';
         img.style.height = 'auto';
         img.style.opacity = '0';
+        img.style.display = 'block';
+        img.style.margin = '0 auto';
         
         // 创建下一页按钮
         const nextBtn = document.createElement('button');
@@ -865,7 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
                              style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
                             <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
                                 <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-02-20</p>
-                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">温暖内心的力量</h3>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">勇敢打开你的索引</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
                                 <img src="心中温暖.jpg" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
@@ -876,11 +906,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="wechat-article-card" data-article-id="article-7" 
                              style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
                             <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
-                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-01-10</p>
-                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 7</h3>
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-01</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">与江南书院</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <!-- No image tag for placeholders -->
+                                <img src="江南书院.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -888,11 +918,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="wechat-article-card" data-article-id="article-8" 
                              style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
                             <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
-                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2024-01-05</p>
-                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 8</h3>
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-11-25</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">你怎么就没血了</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <!-- No image tag for placeholders -->
+                                <img src="你怎么就没血了.PNG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -900,11 +930,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="wechat-article-card" data-article-id="article-9" 
                              style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
                             <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
-                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-20</p>
-                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 9</h3>
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-11-20</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">我们没有永远</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <!-- No image tag for placeholders -->
+                                <img src="我们没有永远.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -912,11 +942,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="wechat-article-card" data-article-id="article-10" 
                              style="background-color: #1E1E1E; display: flex; align-items: center; padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; border: 1px solid #282828; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease-out; width: calc(50% - 0.5rem); box-sizing: border-box;">
                             <div class="article-text-content" style="flex-grow: 1; margin-right: 1rem;">
-                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-12-15</p>
-                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">Placeholder Article 10</h3>
+                                <p class="article-date" style="font-size: 0.7rem; color: #888; margin-top: 0; margin-bottom: 0.3rem;">2023-11-15</p>
+                                <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">科目三</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <!-- No image tag for placeholders -->
+                                <img src="科目三.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -964,6 +994,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.open('https://mp.weixin.qq.com/s/wjDEGHZ4FnAOOXnIT1Pw1w', '_blank');
                     } else if (articleId === 'article-5') {
                         window.open('https://mp.weixin.qq.com/s/E4djVYPjjknWaPjwttsFjA', '_blank');
+                    } else if (articleId === 'article-6') {
+                        window.open('https://mp.weixin.qq.com/s/_L9UpYUw9YFz2cNpUVUqgQ', '_blank');
+                    } else if (articleId === 'article-7') {
+                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247483933&idx=1&sn=7a6360a478627b05e26cb91f0a8f5164&scene=21#wechat_redirect', '_blank');
+                    } else if (articleId === 'article-8') {
+                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247483962&idx=1&sn=e984f3909965e70e1cb2ab4d6936e457&scene=21&poc_token=HJodPGijFYYRg4UJPY7ZQJC05NQcdJyDCh145ups', '_blank');
+                    } else if (articleId === 'article-9') {
+                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247484150&idx=1&sn=9172b3d07a5f01b40782818c1da468b9&scene=21#wechat_redirect', '_blank');
+                    } else if (articleId === 'article-10') {
+                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247484288&idx=1&sn=bafb1665755d6d6abeba5a8e5d6b1d51&scene=21#wechat_redirect', '_blank');
                     } else {
                         console.log(`Navigating to article: ${articleTitle} (ID: ${articleId})`);
                     }
@@ -1299,3 +1339,24 @@ function showGPTSListView() {
     if (navBackButton) navBackButton.style.display = 'inline-block'; // Show nav back button
     gsap.fromTo(gptsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
 } 
+
+// 添加Run按钮点击事件处理
+const runStory = document.querySelector('.run-story');
+document.querySelectorAll('.action-button').forEach(button => {
+    button.addEventListener('click', () => {
+        if (button.textContent.trim() === 'Run') {
+            actionGrid.style.display = 'none';
+            runStory.style.display = 'block';
+            // 添加动画效果
+            gsap.fromTo(runStory,
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+            );
+        }
+    });
+});

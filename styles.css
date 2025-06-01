@@ -456,6 +456,58 @@ body.menu-open .menu-toggle span:nth-child(3) {
     background: rgba(0, 0, 0, 0.3);
 }
 
+/* 跑步故事样式 */
+.run-story {
+    display: none;
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.run-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.run-content h2 {
+    color: var(--text-color);
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+.story-text {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.story-text p {
+    margin-bottom: 15px;
+    text-align: justify;
+    opacity: 0.9;
+}
+
+.run-image {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.run-image img {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.run-image img:hover {
+    transform: scale(1.02);
+}
+
 .person-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
