@@ -179,6 +179,7 @@ const profileImage = document.querySelector('.profile-image');
 const detailView = document.querySelector('.detail-view');
 const closeDetail = document.querySelector('.close-detail');
 const progressIndicator = document.querySelector('.progress-indicator');
+const navBackButton = document.getElementById('nav-back-to-creations-btn'); // Get the button from nav
 
 // main 区域切换逻辑
 const mainDefault = document.querySelector('.main-default');
@@ -189,6 +190,7 @@ mainDefault.style.display = 'flex';
 mainDetails.forEach(detail => {
     detail.style.display = 'none';
 });
+if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button on init
 
 // 点击个人图片时显示第一个详情页面
 profileImage.addEventListener('click', () => {
@@ -197,6 +199,7 @@ profileImage.addEventListener('click', () => {
         detail.style.display = 'none';
     });
     mainDetails[0].style.display = 'flex';
+    if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
     document.body.classList.remove('menu-open'); // 自动关闭侧边栏
 });
 
@@ -204,6 +207,7 @@ profileImage.addEventListener('click', () => {
 const nextButtons = document.querySelectorAll('.next-episode-btn');
 nextButtons.forEach((button, index) => {
     button.addEventListener('click', () => {
+        if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
         // 隐藏当前页面
         mainDetails[index].style.display = 'none';
         
@@ -240,6 +244,7 @@ nextButtons.forEach((button, index) => {
 mainDetails.forEach(detail => {
     detail.addEventListener('click', (e) => {
         if (e.target === detail) {
+            if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
             mainDetails.forEach(d => d.style.display = 'none');
             mainDefault.style.display = 'flex';
             gsap.fromTo(mainDefault,
@@ -663,4 +668,479 @@ document.addEventListener('DOMContentLoaded', () => {
 // 确保在窗口大小改变时重新初始化动画
 window.addEventListener('resize', () => {
     initMetamorphosis();
-}); 
+});
+
+// 处理 Run 按钮点击事件
+document.querySelector('.action-button:nth-child(7)').addEventListener('click', () => {
+    const mainContent = document.querySelector('main');
+    const runningImage = document.querySelector('.running-record-image');
+    const nextButton = document.querySelector('.running-next-btn');
+    const mainDefault = document.querySelector('.main-default');
+    
+    // 如果不存在运动记录图片元素，则创建一个
+    if (!runningImage) {
+        // 创建包装容器
+        const container = document.createElement('div');
+        container.className = 'running-container';
+        container.style.position = 'absolute';
+        container.style.top = '50%';
+        container.style.left = '50%';
+        container.style.transform = 'translate(-50%, -50%)';
+        container.style.zIndex = '2';
+        container.style.width = '80%';
+        container.style.maxWidth = '1000px';
+        
+        // 创建图片元素
+        const img = document.createElement('img');
+        img.className = 'running-record-image';
+        img.src = '跑步2024.JPG';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.opacity = '0';
+        
+        // 创建下一页按钮
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'running-next-btn next-episode-btn';
+        nextBtn.textContent = '›››';
+        nextBtn.style.position = 'fixed';
+        nextBtn.style.bottom = '40px';
+        nextBtn.style.right = '40px';
+        nextBtn.style.background = 'none';
+        nextBtn.style.border = 'none';
+        nextBtn.style.color = 'white';
+        nextBtn.style.fontSize = '24px';
+        nextBtn.style.cursor = 'pointer';
+        nextBtn.style.padding = '10px';
+        nextBtn.style.zIndex = '3';
+        nextBtn.style.opacity = '0.8';
+        nextBtn.style.transition = 'opacity 0.3s';
+        
+        // 添加悬停效果
+        nextBtn.addEventListener('mouseenter', () => {
+            nextBtn.style.opacity = '1';
+        });
+        nextBtn.addEventListener('mouseleave', () => {
+            nextBtn.style.opacity = '0.8';
+        });
+        
+        // 添加按钮点击事件 - 返回主页
+        nextBtn.addEventListener('click', () => {
+            // 淡出当前内容
+            gsap.to(container, {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                    // 移除跑步记录相关元素
+                    container.remove();
+                    nextBtn.remove();
+                    
+                    // 显示主页内容
+                    mainDefault.style.display = 'flex';
+                    gsap.fromTo(mainDefault,
+                        { opacity: 0 },
+                        { 
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        }
+                    );
+                }
+            });
+        });
+        
+        // 将元素添加到页面
+        container.appendChild(img);
+        document.body.appendChild(nextBtn);
+        mainContent.appendChild(container);
+        
+        // 添加淡入动画
+        gsap.to(img, {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+        
+        // 隐藏主页内容
+        mainDefault.style.display = 'none';
+    }
+});
+
+// 处理 WRITE 按钮点击事件
+document.addEventListener('DOMContentLoaded', () => {
+    const writeButton = document.querySelector('.action-button:nth-child(9)'); // WRITE 按钮
+    const mainDefault = document.querySelector('.main-default');
+    
+    writeButton.addEventListener('click', () => {
+        // 隐藏默认主页内容
+        mainDefault.style.display = 'none';
+        
+        // 隐藏所有其他详情页面
+        document.querySelectorAll('.main-detail').forEach(detail => {
+            detail.style.display = 'none';
+        });
+        
+        // 创建微信公众号文章占位符
+        let writeDetail = document.querySelector('.write-detail');
+        if (!writeDetail) {
+            writeDetail = document.createElement('div');
+            writeDetail.className = 'main-detail write-detail';
+            writeDetail.innerHTML = `
+                <div class="main-detail-img">
+                    <div class="wechat-article-placeholder">
+                        <div class="wechat-logo">
+                            <svg viewBox="0 0 24 24" width="48" height="48">
+                                <path fill="currentColor" d="M8.5,7A8.5,8.5 0 0,1 17,15.5A8.5,8.5 0 0,1 8.5,24A8.5,8.5 0 0,1 0,15.5A8.5,8.5 0 0,1 8.5,7M8.5,9A6.5,6.5 0 0,0 2,15.5A6.5,6.5 0 0,0 8.5,22A6.5,6.5 0 0,0 15,15.5A6.5,6.5 0 0,0 8.5,9M15.5,0A8.5,8.5 0 0,1 24,8.5A8.5,8.5 0 0,1 15.5,17A8.5,8.5 0 0,1 7,8.5A8.5,8.5 0 0,1 15.5,0M15.5,2A6.5,6.5 0 0,0 9,8.5A6.5,6.5 0 0,0 15.5,15A6.5,6.5 0 0,0 22,8.5A6.5,6.5 0 0,0 15.5,2"></path>
+                            </svg>
+                        </div>
+                        <div class="wechat-article-header">微信公众号文章</div>
+                    </div>
+                </div>
+                <div class="main-detail-info">
+                    <div class="season-info">WRITE</div>
+                    <h2 class="detail-title">写作是一种思考方式</h2>
+                    <div class="detail-description">
+                        通过写作，我们可以：<br><br>
+                        1. 整理思绪<br>
+                        2. 分享知识<br>
+                        3. 记录成长<br>
+                        4. 启发他人<br><br>
+                        点击开始写作，分享你的想法。
+                    </div>
+                    <div class="timeline-marker">
+                        <span class="year">2024</span>
+                        <div class="marker-line"></div>
+                    </div>
+                    <button class="start-writing-btn">开始写作 ›››</button>
+                </div>
+            `;
+            document.querySelector('main').appendChild(writeDetail);
+            
+            // 添加开始写作按钮的点击事件
+            const startWritingBtn = writeDetail.querySelector('.start-writing-btn');
+            startWritingBtn.addEventListener('click', () => {
+                // 这里可以添加跳转到写作编辑器或其他写作相关功能
+                console.log('开始写作');
+            });
+        }
+        
+        // 显示写作详情页面
+        writeDetail.style.display = 'flex';
+        
+        // 关闭侧边栏
+        document.body.classList.remove('menu-open');
+    });
+});
+
+// 处理 CREATE 按钮点击事件
+document.addEventListener('DOMContentLoaded', () => {
+    const createButton = document.querySelector('.action-grid .action-button:nth-child(2)'); // CREATE 按钮
+    const mainDefault = document.querySelector('.main-default');
+    const mainContainer = document.querySelector('main');
+
+    if (createButton && mainDefault && mainContainer) {
+        createButton.addEventListener('click', () => {
+            // 隐藏默认主页内容
+            mainDefault.style.display = 'none';
+
+            // 隐藏所有其他 main-detail 页面
+            document.querySelectorAll('.main-detail').forEach(detail => {
+                detail.style.display = 'none';
+            });
+
+            // 检查是否已存在 create-detail 页面
+            let createDetailSection = document.querySelector('.create-detail');
+            if (!createDetailSection) {
+                createDetailSection = document.createElement('div');
+                createDetailSection.className = 'main-detail create-detail';
+                createDetailSection.style.flexDirection = 'column';
+                createDetailSection.style.alignItems = 'center';
+                createDetailSection.style.justifyContent = 'center';
+                createDetailSection.style.padding = '2rem';
+
+                createDetailSection.innerHTML = `
+                    <h2 class="create-section-title">MY CREATIONS</h2>
+                    <div class="product-categories-grid">
+                        <div class="product-category-card" data-category="plugins">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M20.5,11H19V7C19,5.89 18.11,5 17,5H13V3.5A2.5,2.5 0 0,0 10.5,1A2.5,2.5 0 0,0 8,3.5V5H4A2,2 0 0,0 2,7V10.5A2.5,2.5 0 0,0 4.5,13A2.5,2.5 0 0,0 2,15.5V19A2,2 0 0,0 4,21H8V19.5A2.5,2.5 0 0,0 10.5,17A2.5,2.5 0 0,0 8,14.5V13H12V17H13.5A2.5,2.5 0 0,0 16,19.5A2.5,2.5 0 0,0 13.5,22H17A2,2 0 0,0 19,20V16H20.5A2.5,2.5 0 0,0 23,13.5A2.5,2.5 0 0,0 20.5,11Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">插件</h3>
+                            <p class="product-category-desc">提升效率的浏览器与应用扩展。</p>
+                            <button class="view-products-btn">查看插件</button>
+                        </div>
+                        <div class="product-category-card" data-category="gpts">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4V6H10V4A2,2 0 0,1 12,2M19,11V13H16.8C16.42,14.18 15.61,15.18 14.54,15.82L16,17.27L14.59,18.69L13.04,17.14C12.71,17.19 12.36,17.22 12,17.22C11.64,17.22 11.29,17.19 10.96,17.14L9.41,18.69L8,17.27L9.46,15.82C8.39,15.18 7.58,14.18 7.2,13H5V11H7.2C7.07,10.68 7,10.35 7,10C7,9.65 7.07,9.32 7.2,9H5V7H7.2C7.58,5.82 8.39,4.82 9.46,4.18L8,2.73L9.41,1.31L10.96,2.86C11.29,2.81 11.64,2.78 12,2.78C12.36,2.78 12.71,2.81 13.04,2.86L14.59,1.31L16,2.73L14.54,4.18C15.61,4.82 16.42,5.82 16.8,7H19V9H16.8C16.93,9.32 17,9.65 17,10C17,10.35 16.93,10.68 16.8,11H19M12,9A1,1 0 0,0 11,10A1,1 0 0,0 12,11A1,1 0 0,0 13,10A1,1 0 0,0 12,9M10,10.5A1.5,1.5 0 0,0 8.5,12A1.5,1.5 0 0,0 10,13.5V15H14V13.5A1.5,1.5 0 0,0 15.5,12A1.5,1.5 0 0,0 14,10.5H10Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">GPTS</h3>
+                            <p class="product-category-desc">专为特定任务定制的智能模型。</p>
+                            <button class="view-products-btn">探索 GPTS</button>
+                        </div>
+                        <div class="product-category-card" data-category="apps">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1M17,19H7V5H17V19Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">APP</h3>
+                            <p class="product-category-desc">精心设计的移动与桌面应用。</p>
+                            <button class="view-products-btn">体验 APP</button>
+                        </div>
+                        <div class="product-category-card" data-category="crawlers">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,5.5A2.5,2.5 0 0,1 14.5,8A2.5,2.5 0 0,1 12,10.5A2.5,2.5 0 0,1 9.5,8A2.5,2.5 0 0,1 12,5.5M6,3C4.89,3 4,3.89 4,5V7H6V5H7V3H6M10,3V5H14V3H10M17,3V5H18V7H20V5C20,3.89 19.11,3 18,3H17M7,8V11H5V8H7M17,8V11H19V8H17M4.79,13.04L7.62,14.46L7.03,16.29L3.06,14.79L4.79,13.04M19.21,13.04L20.94,14.79L16.97,16.29L16.38,14.46L19.21,13.04M7.03,17.71L7.62,19.54L4.79,20.96L3.06,19.21L7.03,17.71M16.97,17.71L20.94,19.21L19.21,20.96L16.38,19.54L16.97,17.71M10,13V15H7V19H9V16H11V21H13V16H15V19H17V15H14V13H10Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">爬虫</h3>
+                            <p class="product-category-desc">自动化数据收集与处理工具。</p>
+                            <button class="view-products-btn">探索爬虫</button>
+                        </div>
+                    </div>
+                `;
+                mainContainer.appendChild(createDetailSection);
+
+                // 添加按钮点击事件
+                createDetailSection.querySelectorAll('.view-products-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const categoryCard = e.target.closest('.product-category-card');
+                        if (!categoryCard) return;
+                        const category = categoryCard.dataset.category;
+                        
+                        // 隐藏 "MY CREATIONS" 概览页面
+                        createDetailSection.style.display = 'none';
+
+                        if (category === 'plugins') {
+                            showPluginDetailView();
+                        } else if (category === 'gpts') {
+                            showGPTSListView();
+                        } else {
+                            console.log(`查看 ${category} 详情`);
+                            // 为其他类别创建类似 showPluginDetailView 的函数
+                            // 或者创建一个通用的函数来显示不同类别的内容
+                            // 暂时先返回到概览页，如果其他页面未实现
+                            // createDetailSection.style.display = 'flex'; 
+                        }
+                    });
+                });
+            }
+
+            // 显示 Create Detail 页面 (分类总览)
+            createDetailSection.style.display = 'flex';
+            if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
+            gsap.fromTo(createDetailSection, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+
+            // 关闭侧边栏
+            document.body.classList.remove('menu-open');
+        });
+    }
+});
+
+function showPluginDetailView() {
+    const mainContainer = document.querySelector('main');
+    let pluginView = document.querySelector('.plugin-detail-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn'); // Get the button from nav
+
+    if (!pluginView) {
+        pluginView = document.createElement('div');
+        pluginView.className = 'main-detail plugin-detail-view'; // 使用 main-detail 以便统一处理隐藏
+        pluginView.style.flexDirection = 'column';
+        pluginView.style.alignItems = 'center';
+        pluginView.style.justifyContent = 'center';
+        pluginView.style.padding = '2rem';
+        pluginView.style.textAlign = 'center';
+
+        pluginView.innerHTML = `
+            <div class="plugin-content-wrapper">
+                <img src="Slash Command Prompter.JPG" alt="Slash Command Prompter" class="plugin-image">
+                <div class="plugin-info">
+                    <h2 class="plugin-title">Slash Command Prompter</h2>
+                    <p class="plugin-description">我做了一个适用于所有AI的插件
+</p>
+                    <a href="https://chromewebstore.google.com/detail/slash-command-prompter/kjfihbeejjmdmkedgcopiglnhemejipl?hl=en-US&utm_source=ext_sidebar" target="_blank" class="plugin-store-link">
+                        <svg class="chrome-store-icon" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.93 4.93c1.52 1.52 2.47 3.59 2.47 5.87s-.95 4.34-2.47 5.87C15.41 20.22 13.78 21 12 21c-1.43 0-2.76-.54-3.77-1.45l6.22-6.22-4.01-4.01-6.22 6.22C3.17 14.25 2.5 12.62 2.5 11c0-1.78.54-3.41 1.45-4.77L10.17 10l4.01-4.01-6.22-6.22C9.24 3.17 10.57 2.5 12 2.5c1.78 0 3.41.54 4.77 1.45L10.55 10l6.38-6.07z"/><path fill="currentColor" d="M12,6.5c1.38 0 2.5 1.12 2.5 2.5S13.38 11.5 12,11.5 9.5 10.38 9.5 9s1.12-2.5 2.5-2.5zm0 7c2.49 0 4.5 2.01 4.5 4.5S14.49 22.5 12,22.5s-4.5-2.01-4.5-4.5 2.01-4.5 4.5-4.5z"/></svg>
+                        <span>在 Chrome 网上应用店查看</span>
+                    </a>
+                    <a href="https://mp.weixin.qq.com/s/x8a3cLB_YRRfmVvpUqYnYA" target="_blank" class="plugin-manual-link">
+                        <span>使用说明书</span>
+                    </a>
+                </div>
+            </div>
+        `;
+        mainContainer.appendChild(pluginView);
+
+        // INSTEAD, add event listener to the navBackButton
+        if (navBackButton) {
+            navBackButton.addEventListener('click', () => {
+                pluginView.style.display = 'none';
+                navBackButton.style.display = 'none'; // Hide nav back button
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    // 隐藏所有其他 main-detail 页面 (包括 create-detail 如果之前是它触发的)
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== pluginView) {
+            detail.style.display = 'none';
+        }
+    });
+    pluginView.style.display = 'flex';
+    if (navBackButton) navBackButton.style.display = 'inline-block'; // Show nav back button
+    gsap.fromTo(pluginView, {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.4, ease: "power2.out"});
+}
+
+function showGPTSListView() {
+    const mainContainer = document.querySelector('main');
+    let gptsView = document.querySelector('.gpts-list-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn'); // Get the button from nav
+
+    if (!gptsView) {
+        gptsView = document.createElement('div');
+        gptsView.className = 'main-detail gpts-list-view';
+        gptsView.style.flexDirection = 'column';
+        gptsView.style.alignItems = 'center';
+        gptsView.style.padding = '2rem';
+        gptsView.style.textAlign = 'center';
+
+        // Placeholder GPTS data - replace with actual data later
+        const myGPTS = [
+            {
+                id: 'gpts-xiaolai',
+                name: '笑来',
+                icon: '<img src="笑来.JPG" alt="笑来" class="gpts-card-img-icon">',
+                description: '读书、健身、投资、帮朋友、陪家人...' // 示例描述，请您后续提供
+            },
+            {
+                id: 'gpts-qingbian',
+                name: '请辩',
+                icon: '<img src="请辩.JPG" alt="请辩" class="gpts-card-img-icon">',
+                description: '思考永不止步' // 示例描述，请您后续提供
+            },
+            {
+                id: 'gpts-builder',
+                name: 'GPT Builder',
+                icon: '<img src="GPT Builder.JPG" alt="GPT Builder" class="gpts-card-img-icon">',
+                description: '用 AI 构建 AI'
+            },
+            {
+                id: 'gpts-learn',
+                name: 'Learn',
+                icon: '<img src="Learn.png" alt="Learn" class="gpts-card-img-icon">',
+                description: '辅助你学习想学的一切'
+            },
+            {
+                id: 'gpts-run',
+                name: 'Run',
+                icon: '<img src="Run.png" alt="Run" class="gpts-card-img-icon">',
+                description: '更快、更久、更强'
+            },
+            {
+                id: 'gpts-fact-checker',
+                name: 'Fact Checker',
+                icon: '<img src="事实核查员.png" alt="Fact Checker" class="gpts-card-img-icon">',
+                description: '打破 AI 幻觉'
+            }
+        ];
+
+        const gptsToShowTooltip = ['gpts-xiaolai', 'gpts-qingbian', 'gpts-builder'];
+
+        let gptsCardsHTML = '';
+        myGPTS.forEach(gpt => {
+            let actionButtonHTML;
+            if (gpt.id === 'gpts-learn') {
+                actionButtonHTML = `<a href="https://chatgpt.com/g/g-67be8d6b2dec819186d2ab6041969366-learn" target="_blank" class="gpts-action-btn">启动 GPTs</a>`;
+            } else if (gpt.id === 'gpts-run') {
+                actionButtonHTML = `<a href="https://chatgpt.com/g/g-67d4ce8e0894819183f11ae56e049445-run" target="_blank" class="gpts-action-btn">启动 GPTs</a>`;
+            } else if (gpt.id === 'gpts-fact-checker') {
+                actionButtonHTML = `<a href="https://chatgpt.com/g/g-67be8eb1a560819191efb6675cb8d169-shi-shi-he-cha-yuan" target="_blank" class="gpts-action-btn">启动 GPTs</a>`;
+            } else {
+                actionButtonHTML = `<button class="gpts-action-btn">启动 GPTs</button>`;
+            }
+
+            gptsCardsHTML += `
+                <div class="gpts-card" data-gptid="${gpt.id}">
+                    <div class="gpts-card-icon">${gpt.icon}</div>
+                    <h3 class="gpts-card-name">${gpt.name}</h3>
+                    <p class="gpts-card-description">${gpt.description}</p>
+                    ${actionButtonHTML}
+                    ${gptsToShowTooltip.includes(gpt.id) ? 
+                        `<div class="gpts-hover-tooltip">
+                            <img src="将抵月.png" alt="QR Code">
+                            <p>付费内容，联系作者获取</p>
+                        </div>` : ''}
+                </div>
+            `;
+        });
+
+        gptsView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${gptsCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(gptsView);
+
+        // Event listener for the main navigation back button
+        if (navBackButton) {
+            const currentView = gptsView; // Keep a reference to this view
+            const clickHandler = () => {
+                currentView.style.display = 'none';
+                navBackButton.style.display = 'none'; 
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+                // It's good practice to remove the event listener if the view is destroyed or a new one is created
+                // For this specific setup, we assume navBackButton persists and is reused.
+                // If showGPTSListView could be called multiple times creating multiple listeners on navBackButton,
+                // we would need a more robust way to manage listeners, e.g., remove previous before adding new.
+            };
+            // Check if a listener for gptsView already exists to avoid duplicates if this function can be re-entered.
+            // This is a simplified check; a more robust solution might involve flags or named functions.
+            if (!navBackButton.gptsViewListenerAttached) {
+                 navBackButton.addEventListener('click', clickHandler);
+                 navBackButton.gptsViewListenerAttached = true; // Mark that a listener for this context is attached
+            } else {
+                // If re-entering and a listener specific to gptsView might already be there and different,
+                // one might need to remove the old one and add the new one.
+                // For now, we assume one-time attachment or that the handler is generic enough.
+            }
+        }
+
+        // Tooltip event listeners for specific action buttons
+        gptsView.querySelectorAll('.gpts-card').forEach(card => {
+            const gptId = card.dataset.gptid;
+            const tooltip = card.querySelector('.gpts-hover-tooltip');
+
+            if (tooltip && gptsToShowTooltip.includes(gptId)) {
+                const actionButton = card.querySelector('.gpts-action-btn');
+                if (actionButton) {
+                    actionButton.addEventListener('mouseenter', () => {
+                        gsap.to(tooltip, { opacity: 1, visibility: 'visible', duration: 0.3, ease: 'power2.out' });
+                    });
+                    actionButton.addEventListener('mouseleave', () => {
+                        gsap.to(tooltip, { opacity: 0, visibility: 'hidden', duration: 0.2, ease: 'power2.in' });
+                    });
+                }
+            }
+        });
+
+        gptsView.querySelectorAll('.gpts-action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const gptId = e.target.closest('.gpts-card').dataset.gptid;
+                console.log(`启动或查看 GPTS 详情: ${gptId}`);
+                // Placeholder: Future navigation to specific GPT detail/interaction page
+            });
+        });
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== gptsView) {
+            detail.style.display = 'none';
+        }
+    });
+    gptsView.style.display = 'flex';
+    if (navBackButton) navBackButton.style.display = 'inline-block'; // Show nav back button
+    gsap.fromTo(gptsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+} 

@@ -105,6 +105,10 @@ nav h1 {
     font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
     text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
 }
 
 nav h1:hover {
@@ -638,23 +642,22 @@ body.menu-open .menu-toggle span:nth-child(3) {
     transition: width 0.3s ease;
 }
 
-.close-detail {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+.close {
+    background: none;
     border: none;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-color);
     font-size: 24px;
     cursor: pointer;
+    opacity: 0.8;
     transition: all 0.3s ease;
+    padding: 10px;
+    transform: rotate(90deg);
+    font-weight: 300;
 }
 
-.close-detail:hover {
-    color: white;
-    transform: scale(1.1);
+.close:hover {
+    opacity: 1;
+    transform: rotate(90deg) scale(1.1);
 }
 
 /* 响应式调整 */
@@ -812,5 +815,596 @@ body.menu-open .menu-toggle span:nth-child(3) {
         right: 1rem;
         bottom: 1rem;
         font-size: 2rem;
+    }
+}
+
+.main-detail:nth-child(12) .detail-title {
+    font-size: 2.2rem;  /* 进一步缩小标题 */
+    letter-spacing: 0.4rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.main-detail:nth-child(12) .detail-description {
+    font-size: 0.85rem;  /* 稍微调小内容字体 */
+    line-height: 1.9;
+    letter-spacing: 0.08rem;
+    white-space: pre-line;
+    opacity: 0.9;
+    max-width: 600px;
+}
+
+.main-detail:nth-child(13) .detail-title {
+    font-size: 3rem;  /* 标题放大 */
+    letter-spacing: 0.6rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+}
+
+.main-detail:nth-child(13) .detail-description {
+    font-size: 1.2rem;  /* 内容字体放大 */
+    line-height: 2.2;
+    letter-spacing: 0.15rem;
+    white-space: pre-line;
+    opacity: 0.95;
+    font-weight: 400;
+}
+
+.main-detail:nth-child(14) .detail-title {
+    font-size: 2.8rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    background: linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.main-detail:nth-child(14) .detail-description {
+    font-size: 1.1rem;
+    line-height: 2.2;
+    letter-spacing: 0.12rem;
+    white-space: pre-line;
+    opacity: 0.95;
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+}
+
+/* 写作页面样式 */
+.write-detail .wechat-article-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.write-detail .wechat-logo {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.write-detail .wechat-logo svg {
+    width: 48px;
+    height: 48px;
+    color: var(--text-color);
+}
+
+.write-detail .wechat-article-header {
+    font-size: 1.2em;
+    color: var(--text-color);
+    opacity: 0.8;
+    letter-spacing: 0.2em;
+}
+
+.write-detail .start-writing-btn {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 1rem 2rem;
+    font-size: 1em;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    border-radius: 4px;
+}
+
+.write-detail .start-writing-btn:hover {
+    background: var(--text-color);
+    color: var(--deep-charcoal);
+}
+
+.write-detail .detail-description {
+    line-height: 1.8;
+    opacity: 0.8;
+    font-size: 0.9em;
+    text-align: left;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .write-detail .wechat-article-placeholder {
+        padding: 1rem;
+    }
+    
+    .write-detail .wechat-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .write-detail .wechat-logo svg {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .write-detail .start-writing-btn {
+        padding: 0.8rem 1.6rem;
+        font-size: 0.9em;
+    }
+}
+
+/* CREATE 区域样式 */
+.create-detail {
+    text-align: center;
+}
+
+.create-section-title {
+    font-size: 2.5em;
+    letter-spacing: 0.3em;
+    color: var(--text-color);
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.product-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.product-category-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.product-category-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.product-category-icon {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.product-category-card:hover .product-category-icon {
+    opacity: 1;
+}
+
+.product-category-name {
+    font-size: 1.5em;
+    letter-spacing: 0.2em;
+    color: var(--text-color);
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+}
+
+.product-category-desc {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+    max-width: 250px;
+}
+
+.view-products-btn {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.view-products-btn:hover {
+    background: var(--text-color);
+    color: var(--deep-charcoal);
+    box-shadow: 0 2px 10px rgba(255,255,255,0.2);
+}
+
+/* CREATE 区域响应式 */
+@media (max-width: 768px) {
+    .create-section-title {
+        font-size: 2em;
+        margin-bottom: 2rem;
+    }
+
+    .product-categories-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .product-category-card {
+        padding: 1.5rem;
+    }
+
+    .product-category-name {
+        font-size: 1.3em;
+    }
+
+    .product-category-desc {
+        font-size: 0.85em;
+    }
+
+    .view-products-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.8em;
+    }
+}
+
+/* 插件详情视图样式 */
+.plugin-detail-view {
+    display: flex; /* 由 JS 控制显示/隐藏 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 垂直居中主要内容 */
+    width: 100%;
+    min-height: 80vh; /* 确保有足够空间 */
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+/* 返回创作列表按钮 - 现在在导航栏中 */
+.back-to-creations-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Restored border */
+    padding: 0.6rem 1.2rem; /* Kept */
+    border-radius: 6px; /* Kept */
+    font-size: 0.9em; /* Restored font-size */
+    letter-spacing: 0.1em; /* Restored letter-spacing */
+    font-weight: 500; /* Keeping this for now */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Restored transition */
+    display: inline-flex; /* Kept for nav flow */
+    align-items: center; /* Kept for nav flow */
+}
+
+.back-to-creations-btn:hover {
+    background: rgba(255, 255, 255, 0.2); /* Restored hover background */
+    border-color: rgba(255, 255, 255, 0.3); /* Restored hover border color */
+}
+
+.plugin-content-wrapper {
+    display: flex;
+    flex-direction: column; /* 在小屏幕上堆叠 */
+    align-items: center;
+    gap: 2rem;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 40px; /* 为返回按钮留出空间 */
+}
+
+.plugin-image {
+    width: 100%;
+    max-width: 200px; /* 限制图片最大宽度 */
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+.plugin-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 文本居中 */
+    text-align: center;
+    gap: 1rem;
+}
+
+.plugin-title {
+    font-size: 2.2em;
+    letter-spacing: 0.1em;
+    color: var(--text-color);
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+}
+
+.plugin-description {
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 500px;
+    margin-bottom: 1rem;
+}
+
+.plugin-store-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* Center content */
+    background: rgba(255, 255, 255, 0.1); /* Consistent with manual link */
+    color: var(--text-color); /* Consistent text color */
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Consistent border */
+}
+
+.plugin-store-link:hover {
+    background: rgba(255, 255, 255, 0.2); /* Consistent hover background */
+    border-color: rgba(255, 255, 255, 0.3); /* Consistent hover border */
+    transform: translateY(-2px);
+}
+
+.chrome-store-icon {
+    margin-right: 0.7rem;
+}
+
+.plugin-manual-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* Center text since there's no icon by default */
+    background: rgba(255, 255, 255, 0.1); /* Subtle background */
+    color: var(--text-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 0.75rem; /* Space between the two buttons */
+    width: fit-content; /* Adjust width to content */
+}
+
+.plugin-manual-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* 插件详情页响应式 */
+@media (min-width: 768px) {
+    .plugin-content-wrapper {
+        flex-direction: row; /* 在大屏幕上并排 */
+        text-align: left; /* 文本左对齐 */
+        align-items: flex-start; /* 顶部对齐 */
+        gap: 3rem;
+    }
+
+    .plugin-image {
+        max-width: 250px; /* 大屏幕图片可以稍大些 */
+        flex-shrink: 0; /* 防止图片被压缩 */
+    }
+
+    .plugin-info {
+        align-items: flex-start; /* 文本内容区域左对齐 */
+    }
+}
+
+@media (max-width: 600px) {
+    .back-to-creations-btn {
+        padding: 0.5rem 1rem; /* Kept for small screens */
+        font-size: 0.8em;   /* Kept for small screens */
+    }
+    .plugin-title {
+        font-size: 1.8em;
+    }
+    .plugin-description {
+        font-size: 1em;
+    }
+    .plugin-store-link {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9em;
+    }
+}
+
+/* GPTS 列表视图样式 */
+.gpts-list-view {
+    /* display: flex; // JS will handle display */
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    padding-top: 100px; /* Increased padding-top for back button and space */
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.gpts-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1100px; /* Slightly wider for potentially more content */
+    margin: 0 auto;
+}
+
+.gpts-card {
+    background: rgba(255, 255, 255, 0.035); /* Slightly different from product categories */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
+    box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+    position: relative; /* Added for tooltip positioning */
+}
+
+.gpts-hover-tooltip {
+    position: absolute;
+    top: 105%;      /* Position below the card */
+    left: 50%;
+    transform: translateX(-50%); /* Center the tooltip */
+    background-color: var(--deep-charcoal); /* Dark background for the tooltip */
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Increased z-index */
+    width: 220px; /* Adjust as needed */
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Matches GSAP duration */
+}
+
+.gpts-hover-tooltip img {
+    max-width: 150px; /* Adjust QR code size */
+    height: auto;
+    border-radius: 4px; /* Slight rounding for the image */
+    margin-bottom: 0.75rem;
+}
+
+.gpts-hover-tooltip p {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+/* Optional: Tooltip arrow (pseudo-element) */
+.gpts-hover-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%; /* Changed: Arrow pointing up (when tooltip is below) */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent var(--deep-charcoal) transparent; /* New: Arrow pointing up */
+}
+
+.gpts-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 7px 20px rgba(0,0,0,0.25);
+    z-index: 20; /* Elevate the hovered card itself */
+}
+
+.gpts-card-icon {
+    margin-bottom: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.75;
+    transition: opacity 0.3s ease;
+}
+
+.gpts-card:hover .gpts-card-icon {
+    opacity: 0.95;
+}
+
+.gpts-card-icon svg {
+    width: 48px; /* Ensure consistent icon size if not set inline */
+    height: 48px;
+}
+
+.gpts-card-img-icon {
+    width: 64px; /* Or your preferred size */
+    height: 64px;
+    object-fit: cover; /* Crop to fit, or use 'contain' */
+    border-radius: 8px; /* Optional: if you want rounded corners for the image icon */
+    margin-bottom: 1.2rem; /* Consistent with SVG icon margin */
+}
+
+.gpts-card-name {
+    font-size: 1.4em;
+    letter-spacing: 0.15em;
+    color: var(--text-color);
+    margin-bottom: 0.7rem;
+    font-weight: 400;
+}
+
+.gpts-card-description {
+    font-size: 0.95em;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 1.3rem;
+    flex-grow: 1; /* Allow description to take available space */
+    min-height: 60px; /* Ensure some minimum height for alignment */
+}
+
+.gpts-action-btn {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin-top: auto; /* Push to bottom if card heights vary */
+    text-decoration: none; /* Remove underline for <a> tags styled as buttons */
+    display: inline-block; /* Ensures <a> tags behave like buttons dimensionally */
+}
+
+.gpts-action-btn:hover {
+    background: var(--text-color);
+    color: var(--deep-charcoal);
+    box-shadow: 0 2px 8px rgba(255,255,255,0.15);
+}
+
+/* GPTS List View Responsive */
+@media (max-width: 768px) {
+    .gpts-cards-grid {
+        grid-template-columns: 1fr; /* Stack on smaller screens */
+        gap: 1.5rem;
+    }
+    .gpts-card {
+        padding: 1.5rem;
+    }
+    .gpts-card-name {
+        font-size: 1.25em;
+    }
+    .gpts-card-description {
+        font-size: 0.9em;
+        min-height: auto; /* Remove min-height on mobile if not needed */
+    }
+    .gpts-action-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8em;
     }
 }
