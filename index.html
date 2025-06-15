@@ -22,6 +22,10 @@
         <button class="close" style="background: none; border: none; color: rgba(255, 255, 255, 0.87); font-size: 28px; cursor: pointer; opacity: 0.8; transition: all 0.3s ease; padding: 10px; font-family: 'Times New Roman', serif; font-weight: 400;">∞</button>
     </nav>
 
+    <div id="metamorphosis-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;">
+        <canvas class="metamorphosis-canvas" style="width: 100%; height: 100%;"></canvas>
+    </div>
+
     <div class="side-menu">
         <div class="search-bar">
             <input type="text" placeholder="&#x1F50D;">
@@ -144,9 +148,6 @@
     <main>
         <div class="main-default">
             <canvas id="noiseCanvas"></canvas>
-            <div id="metamorphosis-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; z-index: 1;">
-                <canvas class="metamorphosis-canvas" style="width: 100%; height: 100%;"></canvas>
-            </div>
             <div class="center-line">
                 <div class="star-marker"></div>
             </div>
