@@ -104,7 +104,69 @@ menuToggle.addEventListener('click', () => {
 
 closeButton.addEventListener('click', () => {
     document.body.classList.remove('menu-open');
-    window.location.href = '/'; // 跳转到主页
+    
+    // 隐藏所有详情页面和特殊页面
+    mainDetails.forEach(detail => detail.style.display = 'none');
+    
+    // 隐藏Create相关页面
+    const createDetailSection = document.querySelector('.create-detail');
+    if (createDetailSection) {
+        createDetailSection.style.display = 'none';
+    }
+    
+    // 隐藏插件详情页面
+    const pluginView = document.querySelector('.plugin-detail-view');
+    if (pluginView) {
+        pluginView.style.display = 'none';
+    }
+    
+    // 隐藏GPTS列表页面
+    const gptsListView = document.querySelector('.gpts-list-view');
+    if (gptsListView) {
+        gptsListView.style.display = 'none';
+    }
+    
+    // 隐藏DO相关页面
+    const actionGrid = document.querySelector('.action-grid');
+    const runStory = document.querySelector('.run-story');
+    if (actionGrid) {
+        actionGrid.style.display = 'none';
+    }
+    if (runStory) {
+        runStory.style.display = 'none';
+    }
+    
+    // 隐藏Write相关页面
+    const writeDetail = document.querySelector('.write-detail');
+    if (writeDetail) {
+        writeDetail.style.display = 'none';
+    }
+    
+    // 隐藏跑步记录相关元素
+    const runningContainer = document.querySelector('.running-container');
+    const runningNextBtn = document.querySelector('.running-next-btn');
+    if (runningContainer) {
+        runningContainer.remove();
+    }
+    if (runningNextBtn) {
+        runningNextBtn.remove();
+    }
+    
+    // 隐藏返回按钮
+    if (navBackButton) {
+        navBackButton.style.display = 'none';
+    }
+    
+    // 显示主页面
+    mainDefault.style.display = 'flex';
+    gsap.fromTo(mainDefault,
+        { opacity: 0 },
+        { 
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out"
+        }
+    );
 });
 
 // 点击菜单项时的效果

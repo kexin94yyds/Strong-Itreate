@@ -98,12 +98,12 @@ nav h1 {
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 0.5em;
-    color: rgba(255, 255, 255, 0.75);
+    color: #F5F5DC;
     opacity: 0.85;
     margin: 0;
     text-transform: none;
     font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
-    text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 1px rgba(245, 245, 220, 0.2);
     transition: all 0.3s ease;
     position: absolute;
     left: 50%;
@@ -112,8 +112,8 @@ nav h1 {
 }
 
 nav h1:hover {
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+    color: #F5F5DC;
+    text-shadow: 0 0 2px rgba(245, 245, 220, 0.4);
 }
 
 .menu-toggle {
@@ -740,9 +740,12 @@ body.menu-open .menu-toggle span:nth-child(3) {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    z-index: 1;
-    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: transparent !important;
+    pointer-events: auto;
 }
 
 .main-detail-img {
