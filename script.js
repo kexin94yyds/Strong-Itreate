@@ -63,14 +63,14 @@ function animate() {
     }
     
     ctx.putImageData(imageData, 0, 0);
-    time += 0.01;
+    time += 0.03;
     requestAnimationFrame(animate);
 }
 
 // GSAP动画
 gsap.to('.venn-diagram', {
     rotation: 360,
-    duration: 45,
+    duration: 15,
     repeat: -1,
     ease: 'none'
 });
