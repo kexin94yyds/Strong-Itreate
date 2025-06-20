@@ -6,6 +6,9 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     rollupOptions: {
+      input: {
+        main: 'index.html'
+      },
       output: {
         manualChunks: undefined,
       },
@@ -15,4 +18,6 @@ export default defineConfig({
     host: true,
     port: 3000,
   },
+  // 确保静态资源被正确处理
+  assetsInclude: ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.webp', '**/*.JPG'],
 }) 
