@@ -1,3 +1,34 @@
+// 导入所有图片资源
+import 跑步2024 from './跑步2024.JPG';
+import 跑步2024愿望 from './跑步2024愿望.JPG';
+import 越来越强 from './越来越强.jpg';
+import 死不旋踵 from './死不旋踵.webp';
+import 世界在我面前 from './世界在我面前.png';
+import 世界在我面前缓缓展开 from './世界在我面前，缓缓展开.JPG';
+import 水仙花 from './水仙花.png';
+import 心中温暖 from './心中温暖.jpg';
+import 江南书院 from './江南书院.png';
+import 你怎么就没血了 from './你怎么就没血了.PNG';
+import 我们没有永远 from './我们没有永远.JPG';
+import 科目三 from './科目三.JPG';
+import SlashCommandPrompter from './Slash Command Prompter.JPG';
+import 笑来 from './笑来.JPG';
+import 请辩 from './请辩.JPG';
+import GPTBuilder from './GPT Builder.JPG';
+import Learn from './Learn.png';
+import Run from './Run.png';
+import 事实核查员 from './事实核查员.png';
+import 将抵月 from './将抵月.png';
+import 兰顿蚂蚁 from './兰顿蚂蚁.webp';
+import 做最好的自己 from './做最好的自己.jpeg';
+import 可控之事 from './可控之事.JPG';
+import 最好的 from './最好的.JPG';
+import 李笑来 from './李笑来.jpg';
+import 笔记神器 from './笔记神器.png';
+import 自救 from './自救.png';
+import 金刚柱 from './金刚柱.JPG';
+import 张鹏 from './张鹏.png';
+
 // Perlin噪声函数
 function noise(x, y) {
     const X = Math.floor(x) & 255;
@@ -784,7 +815,7 @@ document.querySelector('.action-button:nth-child(7)').addEventListener('click', 
         // 创建图片元素
         const img = document.createElement('img');
         img.className = 'running-record-image';
-        img.src = '跑步2024.JPG';
+        img.src = 跑步2024;
         img.style.width = '90%';
         img.style.height = 'auto';
         img.style.opacity = '0';
@@ -899,7 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- <p class="article-meta" style="font-size: 0.75rem; color: #777; margin-bottom: 0;">60 reads · 9 likes · 2 shared</p> -->
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="越来越强.jpg" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${越来越强}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -911,7 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">生命力</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="死不旋踵.webp" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${死不旋踵}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
                         
@@ -923,7 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">TO 2024</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="世界在我面前.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${世界在我面前}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -935,7 +966,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">世界在我前面，缓缓展开</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="世界在我面前，缓缓展开.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${世界在我面前缓缓展开}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -948,7 +979,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- <p class="article-meta" style="font-size: 0.75rem; color: #777; margin-bottom: 0;">300 reads · 40 likes · 15 shared</p> -->
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="水仙花.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${水仙花}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -960,7 +991,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">勇敢打开你的索引</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="心中温暖.jpg" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${心中温暖}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -972,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">与江南书院</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="江南书院.png" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${江南书院}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -984,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">你怎么就没血了</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="你怎么就没血了.PNG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${你怎么就没血了}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -996,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">我们没有永远</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="我们没有永远.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${我们没有永远}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -1008,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3 class="article-title" style="font-size: 1.1rem; font-weight: 500; color: #d0d0d0; margin-top: 0; margin-bottom: 0.4rem; line-height: 1.4;">科目三</h3>
                             </div>
                             <div class="article-thumbnail" style="flex-shrink: 0; width: 70px; height: 70px; background-color: #2C2C2C; border-radius: 6px; overflow: hidden;">
-                                <img src="科目三.JPG" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${科目三}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -1205,7 +1236,7 @@ function showPluginDetailView() {
 
         pluginView.innerHTML = `
             <div class="plugin-content-wrapper">
-                <img src="Slash Command Prompter.JPG" alt="Slash Command Prompter" class="plugin-image">
+                <img src="${SlashCommandPrompter}" alt="Slash Command Prompter" class="plugin-image">
                 <div class="plugin-info">
                     <h2 class="plugin-title">Slash Command Prompter</h2>
                     <p class="plugin-description">我做了一个适用于所有AI的插件
@@ -1265,37 +1296,37 @@ function showGPTSListView() {
             {
                 id: 'gpts-xiaolai',
                 name: '笑来',
-                icon: '<img src="笑来.JPG" alt="笑来" class="gpts-card-img-icon">',
+                icon: `<img src="${笑来}" alt="笑来" class="gpts-card-img-icon">`,
                 description: '读书、健身、投资、帮朋友、陪家人...' // 示例描述，请您后续提供
             },
             {
                 id: 'gpts-qingbian',
                 name: '请辩',
-                icon: '<img src="请辩.JPG" alt="请辩" class="gpts-card-img-icon">',
+                icon: `<img src="${请辩}" alt="请辩" class="gpts-card-img-icon">`,
                 description: '思考永不止步' // 示例描述，请您后续提供
             },
             {
                 id: 'gpts-builder',
                 name: 'GPT Builder',
-                icon: '<img src="GPT Builder.JPG" alt="GPT Builder" class="gpts-card-img-icon">',
+                icon: `<img src="${GPTBuilder}" alt="GPT Builder" class="gpts-card-img-icon">`,
                 description: '用 AI 构建 AI'
             },
             {
                 id: 'gpts-learn',
                 name: 'Learn',
-                icon: '<img src="Learn.png" alt="Learn" class="gpts-card-img-icon">',
+                icon: `<img src="${Learn}" alt="Learn" class="gpts-card-img-icon">`,
                 description: '辅助你学习想学的一切'
             },
             {
                 id: 'gpts-run',
                 name: 'Run',
-                icon: '<img src="Run.png" alt="Run" class="gpts-card-img-icon">',
+                icon: `<img src="${Run}" alt="Run" class="gpts-card-img-icon">`,
                 description: '更快、更久、更强'
             },
             {
                 id: 'gpts-fact-checker',
                 name: 'Fact Checker',
-                icon: '<img src="事实核查员.png" alt="Fact Checker" class="gpts-card-img-icon">',
+                icon: `<img src="${事实核查员}" alt="Fact Checker" class="gpts-card-img-icon">`,
                 description: '打破 AI 幻觉'
             }
         ];
@@ -1323,7 +1354,7 @@ function showGPTSListView() {
                     ${actionButtonHTML}
                     ${gptsToShowTooltip.includes(gpt.id) ? 
                         `<div class="gpts-hover-tooltip">
-                            <img src="将抵月.png" alt="QR Code">
+                            <img src="${将抵月}" alt="QR Code">
                             <p>付费内容，联系作者获取</p>
                         </div>` : ''}
                 </div>
