@@ -800,6 +800,36 @@ body.menu-open .menu-toggle span:nth-child(3) {
     max-width: 420px;
 }
 
+/* 第一个episode的特殊样式 - 18岁生日礼物 */
+.main-detail:nth-child(2) .detail-description {
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 650px;
+    height: 60vh;
+    overflow-y: auto;
+    padding-right: 15px;
+    color: rgba(255,255,255,0.85);
+}
+
+/* 自定义滚动条样式 */
+.main-detail:nth-child(2) .detail-description::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-detail:nth-child(2) .detail-description::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+}
+
+.main-detail:nth-child(2) .detail-description::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+}
+
+.main-detail:nth-child(2) .detail-description::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+
 .main-detail-info .timeline-marker {
     display: flex;
     align-items: center;
