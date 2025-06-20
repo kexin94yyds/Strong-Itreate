@@ -28,6 +28,7 @@ import 笔记神器 from './笔记神器.png';
 import 自救 from './自救.png';
 import 金刚柱 from './金刚柱.JPG';
 import 张鹏 from './张鹏.png';
+import 曾叔 from './曾叔.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1450,6 +1451,51 @@ document.querySelectorAll('.action-button').forEach(button => {
                     ease: "power2.out"
                 }
             );
+        }
+    });
+});
+
+// 更新HTML中的图片src
+document.addEventListener('DOMContentLoaded', () => {
+    // 创建图片映射
+    const imageMap = {
+        '跑步2024.JPG': 跑步2024,
+        '跑步2024愿望.JPG': 跑步2024愿望,
+        '越来越强.jpg': 越来越强,
+        '死不旋踵.webp': 死不旋踵,
+        '世界在我面前.png': 世界在我面前,
+        '世界在我面前，缓缓展开.JPG': 世界在我面前缓缓展开,
+        '水仙花.png': 水仙花,
+        '心中温暖.jpg': 心中温暖,
+        '江南书院.png': 江南书院,
+        '你怎么就没血了.PNG': 你怎么就没血了,
+        '我们没有永远.JPG': 我们没有永远,
+        '科目三.JPG': 科目三,
+        'Slash Command Prompter.JPG': SlashCommandPrompter,
+        '笑来.JPG': 笑来,
+        '请辩.JPG': 请辩,
+        'GPT Builder.JPG': GPTBuilder,
+        'Learn.png': Learn,
+        'Run.png': Run,
+        '事实核查员.png': 事实核查员,
+        '将抵月.png': 将抵月,
+        '兰顿蚂蚁.webp': 兰顿蚂蚁,
+        '做最好的自己.jpeg': 做最好的自己,
+        '可控之事.JPG': 可控之事,
+        '最好的.JPG': 最好的,
+        '李笑来.jpg': 李笑来,
+        '笔记神器.png': 笔记神器,
+        '自救.png': 自救,
+        '金刚柱.JPG': 金刚柱,
+        '张鹏.png': 张鹏,
+        '曾叔.png': 曾叔
+    };
+
+    // 更新所有img元素的src
+    document.querySelectorAll('img').forEach(img => {
+        const currentSrc = img.getAttribute('src');
+        if (imageMap[currentSrc]) {
+            img.src = imageMap[currentSrc];
         }
     });
 });
