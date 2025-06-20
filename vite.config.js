@@ -19,5 +19,5 @@ export default defineConfig({
     port: 3000,
   },
   // 确保静态资源被正确处理
-  assetsInclude: ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.webp', '**/*.JPG'],
+  assetsInclude: ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.webp', '**/*.JPG', '**/*.PNG', '**/*.JPEG'],
 }) 
