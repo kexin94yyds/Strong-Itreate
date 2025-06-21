@@ -29,6 +29,7 @@ import 自救 from './自救.png';
 import 金刚柱 from './金刚柱.JPG';
 import 张鹏 from './张鹏.png';
 import 曾叔 from './曾叔.png';
+import 时间管道 from './时间管道.JPG';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1488,7 +1489,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '自救.png': 自救,
         '金刚柱.JPG': 金刚柱,
         '张鹏.png': 张鹏,
-        '曾叔.png': 曾叔
+        '曾叔.png': 曾叔,
+        '时间管道.JPG': 时间管道
     };
 
     // 更新所有img元素的src
