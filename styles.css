@@ -900,12 +900,12 @@ body.menu-open .menu-toggle span:nth-child(3) {
 }
 
 .main-detail:nth-child(13) .detail-description {
-    font-size: 1.2rem;  /* 内容字体放大 */
-    line-height: 2.2;
-    letter-spacing: 0.15rem;
-    white-space: pre-line;
-    opacity: 0.95;
-    font-weight: 400;
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    line-height: 2.1;
+    letter-spacing: 0.12rem;
+    opacity: 0.98;
+    max-width: 700px;
 }
 
 .main-detail:nth-child(14) .detail-title {
@@ -1465,4 +1465,15 @@ body.menu-open .menu-toggle span:nth-child(3) {
         padding: 0.6rem 1.2rem;
         font-size: 0.8em;
     }
+}
+
+.lixiaolai-desc {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.12rem;
+    opacity: 0.98;
+    max-width: 700px;
+    color: #fff;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
