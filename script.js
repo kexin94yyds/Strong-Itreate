@@ -316,53 +316,23 @@ mainDetails.forEach(detail => {
 });
 if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button on init
 
-// 点击个人图片时显示第一个详情页面
+// 点击个人图片时显示第一个详情页面（集成滑动功能）
 profileImage.addEventListener('click', () => {
     mainDefault.style.display = 'none';
     mainDetails.forEach(detail => {
         detail.style.display = 'none';
     });
-    mainDetails[0].style.display = 'flex';
+    
+    // 重置状态并显示第一个Episode
+    currentEpisodeIndex = -1; // 设置为-1，这样showEpisode(0)会正确处理首次显示
+    isTransitioning = false;
+    showEpisode(0);
+    
     if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
     document.body.classList.remove('menu-open'); // 自动关闭侧边栏
 });
 
-// 为每个"下一页"按钮添加点击事件
-const nextButtons = document.querySelectorAll('.next-episode-btn');
-nextButtons.forEach((button, index) => {
-    button.addEventListener('click', () => {
-        if (navBackButton) navBackButton.style.display = 'none'; // Hide nav back button
-        // 隐藏当前页面
-        mainDetails[index].style.display = 'none';
-        
-        // 显示下一个页面（如果存在）
-        if (mainDetails[index + 1]) {
-            mainDetails[index + 1].style.display = 'flex';
-            
-            // 添加淡入动画
-            gsap.fromTo(mainDetails[index + 1],
-                { opacity: 0 },
-                { 
-                    opacity: 1,
-                    duration: 0.5,
-                    ease: "power2.out"
-                }
-            );
-        } else {
-            // 如果是最后一页，返回主页
-            mainDetails[index].style.display = 'none';
-            mainDefault.style.display = 'flex';
-            gsap.fromTo(mainDefault,
-                { opacity: 0 },
-                { 
-                    opacity: 1,
-                    duration: 0.5,
-                    ease: "power2.out"
-                }
-            );
-        }
-    });
-});
+// 原有的"下一页"按钮代码已移除，现在使用滑动切换功能
 
 // 可选：点击 main-detail 区域空白处返回主页
 mainDetails.forEach(detail => {
@@ -1501,3 +1471,280 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// 滑动切换功能
+let currentEpisodeIndex = 0;
+let isTransitioning = false;
+let startX = 0;
+let startY = 0;
+let currentX = 0;
+let currentY = 0;
+
+// 获取所有main-detail元素（使用已存在的变量）
+const totalEpisodes = mainDetails.length;
+
+// 显示指定索引的Episode
+function showEpisode(index) {
+    if (index < 0 || index >= totalEpisodes || isTransitioning) return;
+    
+    isTransitioning = true;
+    
+    const oldIndex = currentEpisodeIndex;
+    const direction = index > oldIndex ? 1 : -1; // 1表示向右，-1表示向左
+    
+    // 隐藏当前Episode
+    if (mainDetails[oldIndex] && oldIndex !== index && oldIndex >= 0) {
+        gsap.to(mainDetails[oldIndex], {
+            opacity: 0,
+            x: direction * -100, // 向右切换时当前页向左移出，向左切换时当前页向右移出
+            duration: 0.3,
+            ease: "power2.out",
+            onComplete: () => {
+                mainDetails[oldIndex].style.display = 'none';
+                mainDetails[oldIndex].style.transform = 'translateX(0)';
+            }
+        });
+    }
+    
+    // 显示新Episode
+    currentEpisodeIndex = index;
+    const targetEpisode = mainDetails[currentEpisodeIndex];
+    
+    if (!targetEpisode) {
+        isTransitioning = false;
+        return;
+    }
+    
+    targetEpisode.style.display = 'flex';
+    
+    // 如果是首次显示（oldIndex === index），直接显示不需要动画
+    if (oldIndex === index) {
+        targetEpisode.style.opacity = '1';
+        targetEpisode.style.transform = 'translateX(0)';
+        isTransitioning = false;
+        return;
+    }
+    
+    gsap.fromTo(targetEpisode, 
+        { 
+            opacity: 0,
+            x: direction * 100 // 向右切换时新页从右侧进入，向左切换时新页从左侧进入
+        },
+        { 
+            opacity: 1,
+            x: 0,
+            duration: 0.3,
+            ease: "power2.out",
+            onComplete: () => {
+                isTransitioning = false;
+            }
+        }
+    );
+}
+
+// 下一个Episode
+function nextEpisode() {
+    if (currentEpisodeIndex < totalEpisodes - 1) {
+        showEpisode(currentEpisodeIndex + 1);
+    }
+}
+
+// 上一个Episode
+function prevEpisode() {
+    if (currentEpisodeIndex > 0) {
+        showEpisode(currentEpisodeIndex - 1);
+    }
+}
+
+// 触摸事件处理
+function handleTouchStart(e) {
+    if (isTransitioning) return;
+    
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    currentX = startX;
+    currentY = startY;
+}
+
+function handleTouchMove(e) {
+    if (isTransitioning) return;
+    
+    const touch = e.touches[0];
+    currentX = touch.clientX;
+    currentY = touch.clientY;
+    
+    // 防止默认滚动行为
+    const deltaX = Math.abs(currentX - startX);
+    const deltaY = Math.abs(currentY - startY);
+    
+    if (deltaX > deltaY) {
+        e.preventDefault();
+    }
+}
+
+function handleTouchEnd(e) {
+    if (isTransitioning) return;
+    
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+    const threshold = 50; // 滑动阈值
+    
+    // 只有水平滑动距离大于垂直滑动距离时才触发切换
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+        if (deltaX > 0) {
+            // 向右滑动，显示上一个Episode
+            prevEpisode();
+        } else {
+            // 向左滑动，显示下一个Episode
+            nextEpisode();
+        }
+    }
+}
+
+// 鼠标事件处理（桌面端）
+function handleMouseDown(e) {
+    if (isTransitioning) return;
+    
+    startX = e.clientX;
+    startY = e.clientY;
+    currentX = startX;
+    currentY = startY;
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+}
+
+function handleMouseMove(e) {
+    if (isTransitioning) return;
+    
+    currentX = e.clientX;
+    currentY = e.clientY;
+}
+
+function handleMouseUp(e) {
+    if (isTransitioning) return;
+    
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+    const threshold = 50;
+    
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+        if (deltaX > 0) {
+            prevEpisode();
+        } else {
+            nextEpisode();
+        }
+    }
+    
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+}
+
+// 键盘事件处理
+function handleKeyDown(e) {
+    if (isTransitioning) return;
+    
+    // 检查是否有Episode在显示
+    const hasVisibleEpisode = Array.from(mainDetails).some(detail => 
+        detail.style.display !== 'none' && detail.style.display !== ''
+    );
+    
+    if (!hasVisibleEpisode) return;
+    
+    switch(e.key) {
+        case 'ArrowLeft':
+            e.preventDefault();
+            prevEpisode();
+            break;
+        case 'ArrowRight':
+            e.preventDefault();
+            nextEpisode();
+            break;
+    }
+}
+
+// 绑定事件监听器
+function initSwipeGestures() {
+    // 为每个main-detail添加事件监听器
+    mainDetails.forEach(detail => {
+        // 触摸事件
+        detail.addEventListener('touchstart', handleTouchStart, { passive: false });
+        detail.addEventListener('touchmove', handleTouchMove, { passive: false });
+        detail.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        // 鼠标事件
+        detail.addEventListener('mousedown', handleMouseDown);
+        
+        // 触控板滑动事件
+        detail.addEventListener('wheel', handleWheel, { passive: false });
+    });
+    
+    // 键盘事件
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // 全局触控板事件（作为备用）
+    document.addEventListener('wheel', handleWheel, { passive: false });
+}
+
+// 初始化滑动手势
+initSwipeGestures();
+
+// 修改现有的profileImage点击事件，集成滑动功能
+// 这个事件监听器会替换原有的profileImage点击逻辑
+
+// 触控板滑动事件处理
+let lastWheelTime = 0;
+let wheelDirection = 0; // 记录当前滑动方向
+let wheelAccumulator = 0; // 累积滑动距离
+
+function handleWheel(e) {
+    if (isTransitioning) return;
+    
+    // 检查是否有Episode在显示
+    const hasVisibleEpisode = Array.from(mainDetails).some(detail => 
+        detail.style.display !== 'none' && detail.style.display !== ''
+    );
+    
+    if (!hasVisibleEpisode) return;
+    
+    const now = Date.now();
+    const threshold = 80; // 提高阈值，需要更明确的滑动意图
+    const cooldown = 500; // 增加冷却时间，确保一次手势只触发一次
+    const resetTime = 150; // 方向重置时间
+    
+    // 如果距离上次触发太近，忽略
+    if (now - lastWheelTime < cooldown) {
+        return;
+    }
+    
+    // 如果滑动方向改变或间隔太久，重置累积器
+    const currentDirection = e.deltaX > 0 ? 1 : -1;
+    if (wheelDirection !== currentDirection || now - lastWheelTime > resetTime) {
+        wheelAccumulator = 0;
+        wheelDirection = currentDirection;
+    }
+    
+    // 只处理水平滑动
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        wheelAccumulator += Math.abs(e.deltaX);
+        
+        // 达到阈值时触发切换
+        if (wheelAccumulator >= threshold) {
+            if (e.deltaX > 0) {
+                // 向右滑动，显示下一个Episode
+                nextEpisode();
+            } else {
+                // 向左滑动，显示上一个Episode
+                prevEpisode();
+            }
+            
+            // 重置状态
+            lastWheelTime = now;
+            wheelAccumulator = 0;
+            wheelDirection = 0;
+        }
+        
+        e.preventDefault();
+    }
+}

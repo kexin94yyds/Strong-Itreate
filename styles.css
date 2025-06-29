@@ -874,36 +874,7 @@ body.menu-open .menu-toggle span:nth-child(3) {
     font-family: monospace;
 }
 
-.next-episode-btn {
-    position: absolute;
-    right: 2rem;
-    bottom: 2rem;
-    background: none;
-    border: none;
-    color: #FFFFFF;
-    font-size: 2.5rem;
-    cursor: pointer;
-    opacity: 0.85;
-    transition: all 0.3s ease;
-    padding: 1rem;
-    z-index: 10;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    font-family: "Inter", sans-serif;
-}
-
-.next-episode-btn:hover {
-    opacity: 1;
-    transform: translateX(5px);
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-}
-
-@media (max-width: 900px) {
-    .next-episode-btn {
-        right: 1rem;
-        bottom: 1rem;
-        font-size: 2rem;
-    }
-}
+/* .next-episode-btn 样式已移除，现在使用滑动切换 */
 
 .main-detail:nth-child(12) .detail-title {
     font-size: 2.2rem;  /* 进一步缩小标题 */
