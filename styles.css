@@ -1477,3 +1477,115 @@ body.menu-open .menu-toggle span:nth-child(3) {
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
+
+/* Invest View Styles */
+.invest-view {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 2rem;
+    background: transparent; /* Remove solid background */
+    z-index: 2; /* Lower z-index to stay below nav but above main content */
+}
+
+.invest-view-title {
+    font-size: 2.5em;
+    letter-spacing: 0.3em;
+    color: var(--text-color);
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    font-weight: 300;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.invest-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 350px;
+}
+
+.invest-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.invest-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+.invest-card-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.invest-card-name {
+    font-size: 1.4em;
+    letter-spacing: 0.2em;
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+/* Investment Portfolio Styles */
+.invest-portfolio {
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.invest-portfolio h2 {
+    color: var(--text-color);
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+.crypto-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.crypto-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.crypto-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.crypto-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.crypto-item span {
+    color: var(--text-color);
+    font-size: 1.1em;
+}

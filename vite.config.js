@@ -17,6 +17,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost'
+    }
   },
   // 确保静态资源被正确处理
   assetsInclude: ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.webp', '**/*.JPG', '**/*.PNG', '**/*.JPEG'],

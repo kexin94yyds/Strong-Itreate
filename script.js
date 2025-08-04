@@ -1,35 +1,38 @@
 // 导入所有图片资源
-import 跑步2024 from './跑步2024.JPG';
-import 跑步2024愿望 from './跑步2024愿望.JPG';
-import 越来越强 from './越来越强.jpg';
-import 死不旋踵 from './死不旋踵.webp';
-import 世界在我面前 from './世界在我面前.png';
-import 世界在我面前缓缓展开 from './世界在我面前，缓缓展开.JPG';
-import 水仙花 from './水仙花.png';
-import 心中温暖 from './心中温暖.jpg';
-import 江南书院 from './江南书院.png';
-import 你怎么就没血了 from './你怎么就没血了.PNG';
-import 我们没有永远 from './我们没有永远.JPG';
-import 科目三 from './科目三.JPG';
-import SlashCommandPrompter from './Slash Command Prompter.JPG';
-import 笑来 from './笑来.JPG';
-import 请辩 from './请辩.JPG';
-import GPTBuilder from './GPT Builder.JPG';
-import Learn from './Learn.png';
-import Run from './Run.png';
-import 事实核查员 from './事实核查员.png';
-import 将抵月 from './将抵月.png';
-import 兰顿蚂蚁 from './兰顿蚂蚁.webp';
-import 做最好的自己 from './做最好的自己.jpeg';
-import 可控之事 from './可控之事.JPG';
-import 最好的 from './最好的.JPG';
-import 李笑来 from './李笑来.jpg';
-import 笔记神器 from './笔记神器.png';
-import 自救 from './自救.png';
-import 金刚柱 from './金刚柱.JPG';
-import 张鹏 from './张鹏.png';
-import 曾叔 from './曾叔.png';
-import 时间管道 from './时间管道.JPG';
+import 跑步2024 from './images/跑步2024.JPG';
+import 跑步2024愿望 from './images/跑步2024愿望.JPG';
+import 越来越强 from './images/越来越强.jpg';
+import 死不旋踵 from './images/死不旋踵.webp';
+import 世界在我面前 from './images/世界在我面前.png';
+import 世界在我面前缓缓展开 from './images/世界在我面前，缓缓展开.JPG';
+import 水仙花 from './images/水仙花.png';
+import 心中温暖 from './images/心中温暖.jpg';
+import 江南书院 from './images/江南书院.png';
+import 你怎么就没血了 from './images/你怎么就没血了.PNG';
+import 我们没有永远 from './images/我们没有永远.JPG';
+import 科目三 from './images/科目三.JPG';
+import SlashCommandPrompter from './images/Slash Command Prompter.JPG';
+import 笑来 from './images/笑来.JPG';
+import 请辩 from './images/请辩.JPG';
+import GPTBuilder from './images/GPT Builder.JPG';
+import Learn from './images/Learn.png';
+import Run from './images/Run.png';
+import 事实核查员 from './images/事实核查员.png';
+import 将抵月 from './images/将抵月.png';
+import 兰顿蚂蚁 from './images/兰顿蚂蚁.webp';
+import 做最好的自己 from './images/做最好的自己.jpeg';
+import 可控之事 from './images/可控之事.JPG';
+import 最好的 from './images/最好的.JPG';
+import 李笑来 from './images/李笑来.jpg';
+import 笔记神器 from './images/笔记神器.png';
+import 自救 from './images/自救.png';
+import 金刚柱 from './images/金刚柱.JPG';
+import 张鹏 from './images/张鹏.png';
+import 曾叔 from './images/曾叔.png';
+import 时间管道 from './images/时间管道.JPG';
+import AttentionSpanTracker from './images/Attention-Span-Tracker.JPG';
+import EpubReaderIcon from './images/Epub 阅读器.png';
+import FloatingMD from './images/FloatingMD.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1091,6 +1094,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// 处理 INVEST 按钮点击事件
+document.addEventListener('DOMContentLoaded', () => {
+    const investButton = document.querySelector('.action-grid .action-button:nth-child(4)'); // INVEST 按钮
+    const mainDefault = document.querySelector('.main-default');
+    const investView = document.querySelector('.invest-view');
+
+    if (investButton) {
+        investButton.addEventListener('click', () => {
+            if (mainDefault) {
+                mainDefault.style.display = 'none';
+            }
+            if (investView) {
+                investView.style.display = 'flex';
+                gsap.fromTo(investView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+            }
+        });
+    }
+});
+
 // 处理 CREATE 按钮点击事件
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.querySelector('.action-grid .action-button:nth-child(2)'); // CREATE 按钮
@@ -1120,6 +1142,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 createDetailSection.innerHTML = `
                     <h2 class="create-section-title">MY CREATIONS</h2>
                     <div class="product-categories-grid">
+                        <div class="product-category-card" data-category="web">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M12,18H11V17H12V18M15,18H14V17H15V18M18,18H17V17H18V18M20,15H4V8H20V15Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">Web</h3>
+                            <p class="product-category-desc">个人网站与Web应用项目。</p>
+                            <button class="view-products-btn">访问网站</button>
+                        </div>
                         <div class="product-category-card" data-category="plugins">
                             <div class="product-category-icon">
                                 <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M20.5,11H19V7C19,5.89 18.11,5 17,5H13V3.5A2.5,2.5 0 0,0 10.5,1A2.5,2.5 0 0,0 8,3.5V5H4A2,2 0 0,0 2,7V10.5A2.5,2.5 0 0,0 4.5,13A2.5,2.5 0 0,0 2,15.5V19A2,2 0 0,0 4,21H8V19.5A2.5,2.5 0 0,0 10.5,17A2.5,2.5 0 0,0 8,14.5V13H12V17H13.5A2.5,2.5 0 0,0 16,19.5A2.5,2.5 0 0,0 13.5,22H17A2,2 0 0,0 19,20V16H20.5A2.5,2.5 0 0,0 23,13.5A2.5,2.5 0 0,0 20.5,11Z"></path></svg>
@@ -1130,7 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="product-category-card" data-category="gpts">
                             <div class="product-category-icon">
-                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4V6H10V4A2,2 0 0,1 12,2M19,11V13H16.8C16.42,14.18 15.61,15.18 14.54,15.82L16,17.27L14.59,18.69L13.04,17.14C12.71,17.19 12.36,17.22 12,17.22C11.64,17.22 11.29,17.19 10.96,17.14L9.41,18.69L8,17.27L9.46,15.82C8.39,15.18 7.58,14.18 7.2,13H5V11H7.2C7.07,10.68 7,10.35 7,10C7,9.65 7.07,9.32 7.2,9H5V7H7.2C7.58,5.82 8.39,4.82 9.46,4.18L8,2.73L9.41,1.31L10.96,2.86C11.29,2.81 11.64,2.78 12,2.78C12.36,2.78 12.71,2.81 13.04,2.86L14.59,1.31L16,2.73L14.54,4.18C15.61,4.82 16.42,5.82 16.8,7H19V9H16.8C16.93,9.32 17,9.65 17,10C17,10.35 16.93,10.68 16.8,11H19M12,9A1,1 0 0,0 11,10A1,1 0 0,0 12,11A1,1 0 0,0 13,10A1,1 0 0,0 12,9M10,10.5A1.5,1.5 0 0,0 8.5,12A1.5,1.5 0 0,0 10,13.5V15H14V13.5A1.5,1.5 0 0,0 15.5,12A1.5,1.5 0 0,0 14,10.5H10Z"></path></svg>
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4V6H10V4A2,2 0 0,1 12,2M19,11V13H16V15H8V13H5V11H19M8.5,9.5A1,1 0 0,1 9.5,8.5A1,1 0 0,1 10.5,9.5A1,1 0 0,1 9.5,10.5A1,1 0 0,1 8.5,9.5M14.5,9.5A1,1 0 0,1 15.5,8.5A1,1 0 0,1 16.5,9.5A1,1 0 0,1 15.5,10.5A1,1 0 0,1 14.5,9.5Z"></path></svg>
                             </div>
                             <h3 class="product-category-name">GPTS</h3>
                             <p class="product-category-desc">专为特定任务定制的智能模型。</p>
@@ -1170,6 +1200,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             showPluginDetailView();
                         } else if (category === 'gpts') {
                             showGPTSListView();
+                        } else if (category === 'web') {
+                            showWebProjectsView();
+                        } else if (category === 'crawlers') {
+                            showCrawlersView();
                         } else {
                             console.log(`查看 ${category} 详情`);
                             // 为其他类别创建类似 showPluginDetailView 的函数
@@ -1195,41 +1229,71 @@ document.addEventListener('DOMContentLoaded', () => {
 function showPluginDetailView() {
     const mainContainer = document.querySelector('main');
     let pluginView = document.querySelector('.plugin-detail-view');
-    const navBackButton = document.getElementById('nav-back-to-creations-btn'); // Get the button from nav
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
 
     if (!pluginView) {
         pluginView = document.createElement('div');
-        pluginView.className = 'main-detail plugin-detail-view'; // 使用 main-detail 以便统一处理隐藏
+        pluginView.className = 'main-detail plugin-detail-view';
         pluginView.style.flexDirection = 'column';
         pluginView.style.alignItems = 'center';
-        pluginView.style.justifyContent = 'center';
         pluginView.style.padding = '2rem';
+        pluginView.style.paddingTop = '100px';
         pluginView.style.textAlign = 'center';
 
-        pluginView.innerHTML = `
-            <div class="plugin-content-wrapper">
-                <img src="${SlashCommandPrompter}" alt="Slash Command Prompter" class="plugin-image">
-                <div class="plugin-info">
-                    <h2 class="plugin-title">Slash Command Prompter</h2>
-                    <p class="plugin-description">我做了一个适用于所有AI的插件
-</p>
-                    <a href="https://chromewebstore.google.com/detail/slash-command-prompter/kjfihbeejjmdmkedgcopiglnhemejipl?hl=en-US&utm_source=ext_sidebar" target="_blank" class="plugin-store-link">
-                        <svg class="chrome-store-icon" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.93 4.93c1.52 1.52 2.47 3.59 2.47 5.87s-.95 4.34-2.47 5.87C15.41 20.22 13.78 21 12 21c-1.43 0-2.76-.54-3.77-1.45l6.22-6.22-4.01-4.01-6.22 6.22C3.17 14.25 2.5 12.62 2.5 11c0-1.78.54-3.41 1.45-4.77L10.17 10l4.01-4.01-6.22-6.22C9.24 3.17 10.57 2.5 12 2.5c1.78 0 3.41.54 4.77 1.45L10.55 10l6.38-6.07z"/><path fill="currentColor" d="M12,6.5c1.38 0 2.5 1.12 2.5 2.5S13.38 11.5 12,11.5 9.5 10.38 9.5 9s1.12-2.5 2.5-2.5zm0 7c2.49 0 4.5 2.01 4.5 4.5S14.49 22.5 12,22.5s-4.5-2.01-4.5-4.5 2.01-4.5 4.5-4.5z"/></svg>
-                        <span>在 Chrome 网上应用店查看</span>
-                    </a>
-                    <a href="https://mp.weixin.qq.com/s/x8a3cLB_YRRfmVvpUqYnYA" target="_blank" class="plugin-manual-link">
-                        <span>使用说明书</span>
-                    </a>
+        const myPlugins = [
+            {
+                id: 'slash-prompter',
+                name: 'Slash Command Prompter',
+                icon: `<img src="${SlashCommandPrompter}" alt="Slash Command Prompter" class="gpts-card-img-icon">`,
+                description: '我做了一个适用于所有AI的插件',
+                storeUrl: 'https://chromewebstore.google.com/detail/slash-command-prompter/kjfihbeejjmdmkedgcopiglnhemejipl?hl=en-US&utm_source=ext_sidebar',
+                manualUrl: 'https://mp.weixin.qq.com/s/x8a3cLB_YRRfmVvpUqYnYA'
+            },
+            {
+                id: 'floating-md',
+                name: 'FloatingMD',
+                icon: `<img src="${FloatingMD}" alt="FloatingMD" class="gpts-card-img-icon">`,
+                description: '我做了一个笔记神器',
+                storeUrl: 'https://chromewebstore.google.com/detail/floatingmd/ceccfecoiifcejbfeadoognfinknapii',
+                manualUrl: 'https://mp.weixin.qq.com/s/hLf1nPbkcPKSe08UuFuHgA'
+            }
+        ];
+
+        let pluginCardsHTML = '';
+        myPlugins.forEach(plugin => {
+            const storeButton = plugin.storeUrl ? `
+                <a href="${plugin.storeUrl}" target="_blank" class="gpts-action-btn" style="margin-bottom: 10px;">
+                    <svg class="chrome-store-icon" viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.93 4.93c1.52 1.52 2.47 3.59 2.47 5.87s-.95 4.34-2.47 5.87C15.41 20.22 13.78 21 12 21c-1.43 0-2.76-.54-3.77-1.45l6.22-6.22-4.01-4.01-6.22 6.22C3.17 14.25 2.5 12.62 2.5 11c0-1.78.54-3.41 1.45-4.77L10.17 10l4.01-4.01-6.22-6.22C9.24 3.17 10.57 2.5 12 2.5c1.78 0 3.41.54 4.77 1.45L10.55 10l6.38-6.07z"/><path fill="currentColor" d="M12,6.5c1.38 0 2.5 1.12 2.5 2.5S13.38 11.5 12,11.5 9.5 10.38 9.5 9s1.12-2.5 2.5-2.5zm0 7c2.49 0 4.5 2.01 4.5 4.5S14.49 22.5 12,22.5s-4.5-2.01-4.5-4.5 2.01-4.5 4.5-4.5z"/></svg>
+                    <span>Chrome 应用店</span>
+                </a>` : '';
+            const manualButton = plugin.manualUrl ? `<a href="${plugin.manualUrl}" target="_blank" class="gpts-action-btn">使用说明书</a>` : '';
+
+            pluginCardsHTML += `
+                <div class="gpts-card" data-pluginid="${plugin.id}">
+                    <div class="gpts-card-icon">${plugin.icon}</div>
+                    <h3 class="gpts-card-name">${plugin.name}</h3>
+                    <p class="gpts-card-description">${plugin.description}</p>
+                    <div style="margin-top: auto; display: flex; flex-direction: column; align-items: center;">
+                        ${storeButton}
+                        ${manualButton}
+                    </div>
                 </div>
+            `;
+        });
+
+        pluginView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${pluginCardsHTML}
             </div>
         `;
         mainContainer.appendChild(pluginView);
 
-        // INSTEAD, add event listener to the navBackButton
         if (navBackButton) {
-            navBackButton.addEventListener('click', () => {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
                 pluginView.style.display = 'none';
-                navBackButton.style.display = 'none'; // Hide nav back button
+                newBtn.style.display = 'none';
                 const creationsView = document.querySelector('.create-detail');
                 if (creationsView) {
                     creationsView.style.display = 'flex';
@@ -1239,15 +1303,16 @@ function showPluginDetailView() {
         }
     }
 
-    // 隐藏所有其他 main-detail 页面 (包括 create-detail 如果之前是它触发的)
     document.querySelectorAll('.main-detail').forEach(detail => {
         if (detail !== pluginView) {
             detail.style.display = 'none';
         }
     });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
     pluginView.style.display = 'flex';
-    if (navBackButton) navBackButton.style.display = 'inline-block'; // Show nav back button
-    gsap.fromTo(pluginView, {opacity: 0, scale: 0.95}, {opacity: 1, scale: 1, duration: 0.4, ease: "power2.out"});
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(pluginView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
 }
 
 function showGPTSListView() {
@@ -1403,64 +1468,196 @@ function showGPTSListView() {
     gptsView.style.display = 'flex';
     if (navBackButton) navBackButton.style.display = 'inline-block'; // Show nav back button
     gsap.fromTo(gptsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
-} 
+}
 
-// 添加Run按钮点击事件处理
-const runStory = document.querySelector('.run-story');
-document.querySelectorAll('.action-button').forEach(button => {
-    button.addEventListener('click', () => {
-        if (button.textContent.trim() === 'Run') {
-            actionGrid.style.display = 'none';
-            runStory.style.display = 'block';
-            // 添加动画效果
-            gsap.fromTo(runStory,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: "power2.out"
+function showWebProjectsView() {
+    const mainContainer = document.querySelector('main');
+    let webProjectsView = document.querySelector('.web-projects-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!webProjectsView) {
+        webProjectsView = document.createElement('div');
+        webProjectsView.className = 'main-detail web-projects-view';
+        webProjectsView.style.flexDirection = 'column';
+        webProjectsView.style.alignItems = 'center';
+        webProjectsView.style.padding = '2rem';
+        webProjectsView.style.paddingTop = '100px';
+        webProjectsView.style.textAlign = 'center';
+
+        const webProjects = [
+            {
+                id: 'attention-tracker',
+                name: 'Attention Span Tracker',
+                icon: `<img src="${AttentionSpanTracker}" alt="Attention Span Tracker" class="gpts-card-img-icon">`,
+                description: '追踪并分析您的注意力时间，以提高生产力。',
+                url: 'https://attention-span-tracker.netlify.app/'
+            },
+            {
+                id: 'epub-reader',
+                name: 'Epub Reader',
+                icon: `<img src="${EpubReaderIcon}" alt="Epub Reader" class="gpts-card-img-icon">`,
+                description: '一个简洁、高效的在线Epub电子书阅读器。',
+                url: 'https://tobooks.netlify.app/'
+            }
+        ];
+
+        let webCardsHTML = '';
+        webProjects.forEach(project => {
+            webCardsHTML += `
+                <div class="gpts-card" data-projectid="${project.id}">
+                    <div class="gpts-card-icon">${project.icon}</div>
+                    <h3 class="gpts-card-name">${project.name}</h3>
+                    <p class="gpts-card-description">${project.description}</p>
+                    <a href="${project.url}" target="_blank" class="gpts-action-btn">访问网站</a>
+                </div>
+            `;
+        });
+
+        webProjectsView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${webCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(webProjectsView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                webProjectsView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
                 }
-            );
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== webProjectsView) {
+            detail.style.display = 'none';
         }
     });
-});
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    webProjectsView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(webProjectsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
+function showCrawlersView() {
+    const mainContainer = document.querySelector('main');
+    let crawlersView = document.querySelector('.crawlers-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!crawlersView) {
+        crawlersView = document.createElement('div');
+        crawlersView.className = 'main-detail crawlers-view';
+        crawlersView.style.flexDirection = 'column';
+        crawlersView.style.alignItems = 'center';
+        crawlersView.style.padding = '2rem';
+        crawlersView.style.paddingTop = '100px';
+        crawlersView.style.textAlign = 'center';
+
+        const myCrawlers = [
+            {
+                id: 'youtube-crawler',
+                name: 'YouTube Crawler',
+                icon: `<svg viewBox="0 0 24 24" width="64" height="45"><path fill="currentColor" d="M21.582,6.186c-0.23-0.854-0.908-1.532-1.762-1.762C18.254,4,12,4,12,4S5.746,4,4.18,4.424c-0.854,0.23-1.532,0.908-1.762,1.762C2,7.75,2,12,2,12s0,4.25,0.418,5.814c0.23,0.854,0.908,1.532,1.762,1.762C5.746,20,12,20,12,20s6.254,0,7.82-0.424c0.854-0.23,1.532-0.908,1.762-1.762C22,16.25,22,12,22,12S22,7.75,21.582,6.186z M10,15.5v-7l6,3.5L10,15.5z"></path></svg>`,
+                description: '抓取YouTube视频。'
+            },
+            {
+                id: 'twitter-crawler',
+                name: 'Twitter/X Crawler',
+                icon: `<svg viewBox="0 0 24 24" width="50" height="50"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>`,
+                description: '抓取推文和用户数据。'
+            }
+        ];
+
+        let crawlerCardsHTML = '';
+        myCrawlers.forEach(crawler => {
+            crawlerCardsHTML += `
+                <div class="gpts-card" data-crawlerid="${crawler.id}">
+                    <div class="gpts-card-icon">${crawler.icon}</div>
+                    <h3 class="gpts-card-name">${crawler.name}</h3>
+                    <p class="gpts-card-description">${crawler.description}</p>
+                    <button class="gpts-action-btn">查看详情</button>
+                </div>
+            `;
+        });
+
+        crawlersView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${crawlerCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(crawlersView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                crawlersView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== crawlersView) {
+            detail.style.display = 'none';
+        }
+    });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    crawlersView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(crawlersView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
 
 // 更新HTML中的图片src
 document.addEventListener('DOMContentLoaded', () => {
     // 创建图片映射
     const imageMap = {
-        '跑步2024.JPG': 跑步2024,
-        '跑步2024愿望.JPG': 跑步2024愿望,
-        '越来越强.jpg': 越来越强,
-        '死不旋踵.webp': 死不旋踵,
-        '世界在我面前.png': 世界在我面前,
-        '世界在我面前，缓缓展开.JPG': 世界在我面前缓缓展开,
-        '水仙花.png': 水仙花,
-        '心中温暖.jpg': 心中温暖,
-        '江南书院.png': 江南书院,
-        '你怎么就没血了.PNG': 你怎么就没血了,
-        '我们没有永远.JPG': 我们没有永远,
-        '科目三.JPG': 科目三,
-        'Slash Command Prompter.JPG': SlashCommandPrompter,
-        '笑来.JPG': 笑来,
-        '请辩.JPG': 请辩,
-        'GPT Builder.JPG': GPTBuilder,
-        'Learn.png': Learn,
-        'Run.png': Run,
-        '事实核查员.png': 事实核查员,
-        '将抵月.png': 将抵月,
-        '兰顿蚂蚁.webp': 兰顿蚂蚁,
-        '做最好的自己.jpeg': 做最好的自己,
-        '可控之事.JPG': 可控之事,
-        '最好的.JPG': 最好的,
-        '李笑来.jpg': 李笑来,
-        '笔记神器.png': 笔记神器,
-        '自救.png': 自救,
-        '金刚柱.JPG': 金刚柱,
-        '张鹏.png': 张鹏,
-        '曾叔.png': 曾叔,
-        '时间管道.JPG': 时间管道
+        'images/跑步2024.JPG': 跑步2024,
+        'images/跑步2024愿望.JPG': 跑步2024愿望,
+        'images/越来越强.jpg': 越来越强,
+        'images/死不旋踵.webp': 死不旋踵,
+        'images/世界在我面前.png': 世界在我面前,
+        'images/世界在我面前，缓缓展开.JPG': 世界在我面前缓缓展开,
+        'images/水仙花.png': 水仙花,
+        'images/心中温暖.jpg': 心中温暖,
+        'images/江南书院.png': 江南书院,
+        'images/你怎么就没血了.PNG': 你怎么就没血了,
+        'images/我们没有永远.JPG': 我们没有永远,
+        'images/科目三.JPG': 科目三,
+        'images/Slash Command Prompter.JPG': SlashCommandPrompter,
+        'images/笑来.JPG': 笑来,
+        'images/请辩.JPG': 请辩,
+        'images/GPT Builder.JPG': GPTBuilder,
+        'images/Learn.png': Learn,
+        'images/Run.png': Run,
+        'images/事实核查员.png': 事实核查员,
+        'images/将抵月.png': 将抵月,
+        'images/兰顿蚂蚁.webp': 兰顿蚂蚁,
+        'images/做最好的自己.jpeg': 做最好的自己,
+        'images/可控之事.JPG': 可控之事,
+        'images/最好的.JPG': 最好的,
+        'images/李笑来.jpg': 李笑来,
+        'images/笔记神器.png': 笔记神器,
+        'images/自救.png': 自救,
+        'images/金刚柱.JPG': 金刚柱,
+        'images/张鹏.png': 张鹏,
+        'images/曾叔.png': 曾叔,
+        'images/时间管道.JPG': 时间管道
     };
 
     // 更新所有img元素的src

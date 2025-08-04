@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "puppeteer": {
+      "command": "/opt/homebrew/bin/mcp-server-puppeteer",
+      "args": []
+    }
+  }
+} 
