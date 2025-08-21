@@ -1589,3 +1589,146 @@ body.menu-open .menu-toggle span:nth-child(3) {
     color: var(--text-color);
     font-size: 1.1em;
 }
+
+/* Build View Styles */
+.build-view {
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: transparent;
+    z-index: 2;
+}
+
+.social-buttons-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.social-button {
+    position: relative; /* For QR code positioning */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.87);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+}
+
+.qr-code {
+    position: absolute;
+    bottom: calc(100% + 15px);
+    left: 50%;
+    background: #1c1c1e;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    transform: translateX(-50%) translateY(10px);
+    transform-origin: bottom center;
+    pointer-events: none; /* So it doesn't interfere with hover */
+}
+
+.qr-code img {
+    width: 160px;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+}
+
+.wechat-btn .qr-code img,
+.xiaohongshu-btn .qr-code img,
+.zhishixingqiu-btn .qr-code img {
+    width: 180px;
+}
+
+.qr-code::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #1c1c1e transparent transparent transparent;
+}
+
+.social-button:hover .qr-code {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.social-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon {
+    width: 4.5em;
+    height: 4.5em;
+    fill: currentColor;
+}
+
+.social-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Specific button colors */
+.youtube-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.4);
+}
+
+.bilibili-btn:hover {
+    background: rgba(0, 174, 236, 0.2);
+    border-color: rgba(0, 174, 236, 0.4);
+}
+
+.xiaohongshu-btn:hover {
+    background: rgba(255, 45, 85, 0.2);
+    border-color: rgba(255, 45, 85, 0.4);
+}
+
+.twitter-btn:hover {
+    background: rgba(29, 161, 242, 0.2);
+    border-color: rgba(29, 161, 242, 0.4);
+}
+
+.wechat-btn:hover {
+    background: rgba(7, 193, 96, 0.2);
+    border-color: rgba(7, 193, 96, 0.4);
+}
+
+.gongzhonghao-btn:hover {
+    background: rgba(7, 193, 96, 0.2);
+    border-color: rgba(7, 193, 96, 0.4);
+}
+
+.zhishixingqiu-btn:hover {
+    background: rgba(0, 118, 255, 0.2);
+    border-color: rgba(0, 118, 255, 0.4);
+}
