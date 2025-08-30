@@ -196,6 +196,7 @@ closeButton.addEventListener('click', () => {
     }
     
     // 隐藏返回按钮
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
     if (navBackButton) {
         navBackButton.style.display = 'none';
     }
