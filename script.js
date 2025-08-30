@@ -33,6 +33,7 @@ import 时间管道 from './images/时间管道.JPG';
 import AttentionSpanTracker from './images/Attention-Span-Tracker.JPG';
 import EpubReaderIcon from './images/Epub 阅读器.png';
 import FloatingMD from './images/FloatingMD.png';
+import RelaxIcon from './images/relax.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1588,7 +1589,7 @@ function showCrawlersView() {
                     <button class="gpts-action-btn crawler-detail-btn">查看详情</button>
                     <div class="crawler-hover-tooltip">
                         <p>付费内容，请联系作者获取</p>
-                        <img src="images/将抵月.png" alt="将抵月 QR Code">
+                        <img src="${将抵月}" alt="将抵月 QR Code">
                     </div>
                 </div>
             `;
@@ -1970,7 +1971,7 @@ function showAppsView() {
             {
                 id: 'relax-app',
                 name: 'Relax',
-                icon: `<img src="images/relax.png" alt="Relax" class="gpts-card-img-icon">`,
+                icon: `<img src="${RelaxIcon}" alt="Relax" class="gpts-card-img-icon">`,
                 description: '一个帮助你放松和冥想的应用。',
                 url: 'https://need-relax.netlify.app/'
             }

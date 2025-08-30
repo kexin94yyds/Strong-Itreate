@@ -8,8 +8,8 @@
     <link rel="apple-touch-icon" href="./assets/%E6%97%B6%E9%97%B4%E7%AE%A1%E9%81%93-BHQP_UTA.JPG">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script type="module" crossorigin src="./assets/main-CeaEmseO.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-DoqqVRos.css">
+  <script type="module" crossorigin src="./assets/main-BoVq4a94.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-BcIt0J47.css">
 </head>
 <body>
     <nav>
@@ -22,7 +22,12 @@
             <button id="nav-back-to-creations-btn" class="back-to-creations-btn" style="display: none; margin-left: 10px; margin-right: 10px;">‹ 返回创作列表</button>
         </div>
         <h1>越 来 越 强</h1>
-        <button class="close" style="background: none; border: none; color: rgba(255, 255, 255, 0.87); font-size: 28px; cursor: pointer; opacity: 0.8; transition: all 0.3s ease; padding: 10px; font-family: 'Times New Roman', serif; font-weight: 400;">∞</button>
+        <button class="close" style="background: none; border: none; color: rgba(255, 255, 255, 0.87); cursor: pointer; opacity: 0.8; transition: all 0.3s ease; padding: 10px; display: flex; align-items: center; justify-content: center;">
+            <div class="infinity-symbol" style="width: 24px; height: 12px; position: relative; transform: rotate(90deg);">
+                <div style="position: absolute; left: 0; top: 0; width: 12px; height: 12px; border: 2px solid rgba(255, 255, 255, 0.87); border-radius: 50%; border-right: none;"></div>
+                <div style="position: absolute; right: 0; top: 0; width: 12px; height: 12px; border: 2px solid rgba(255, 255, 255, 0.87); border-radius: 50%; border-left: none;"></div>
+            </div>
+        </button>
     </nav>
 
     <div id="metamorphosis-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;">
@@ -67,6 +72,7 @@
             <button class="action-button">Music</button>
 
         </div>
+
 
         <div class="run-story" style="display: none;">
             <div class="run-content">
@@ -473,6 +479,70 @@
                 </div>
             </div>
         </div>
+
+        <div class="invest-view" style="display: none;">
+            <h2 class="invest-view-title">Investment Portfolio</h2>
+            <div class="invest-cards-container">
+                <div class="invest-card">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" alt="Bitcoin" class="invest-card-icon">
+                    <span class="invest-card-name">Bitcoin</span>
+                </div>
+                <div class="invest-card">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png" alt="Ethereum" class="invest-card-icon">
+                    <span class="invest-card-name">Ethereum</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="build-view" style="display: none;">
+            <div class="social-buttons-container">
+                <button class="social-button youtube-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582,6.186c-0.23-0.854-0.908-1.532-1.762-1.762C18.254,4,12,4,12,4S5.746,4,4.18,4.424 c-0.854,0.23-1.532,0.908-1.762,1.762C2,7.752,2,12,2,12s0,4.248,0.418,5.814c0.23,0.854,0.908,1.532,1.762,1.762 C5.746,20,12,20,12,20s6.254,0,7.82-0.424c0.854-0.23,1.532-0.908,1.762-1.762C22,16.248,22,12,22,12S22,7.752,21.582,6.186z M10,15.464V8.536L16,12L10,15.464z"></path></svg>
+                    <span class="social-text">Youtube</span>
+                </button>
+                <button class="social-button bilibili-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,6H4C2.895,6,2,6.895,2,8v10c0,1.105,0.895,2,2,2h16c1.105,0,2-0.895,2-2V8C22,6.895,21.105,6,20,6z M7.5,14 C6.672,14,6,13.328,6,12.5S6.672,11,7.5,11S9,11.672,9,12.5S8.328,14,7.5,14z M16.5,14c-0.828,0-1.5-0.672-1.5-1.5s0.672-1.5,1.5-1.5 s1.5,0.672,1.5,1.5S17.328,14,16.5,14z M5,4L7,2h10l2,2H5z"></path></svg>
+                    <span class="social-text">Bilibili</span>
+                </button>
+                <button class="social-button xiaohongshu-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V4C20,2.9,19.1,2,18,2z M6,4h5v8l-2.5-1.5L6,12V4z"></path></svg>
+                    <span class="social-text">小红书</span>
+                    <div class="qr-code">
+                        <img src="./assets/%E5%B0%8F%E7%BA%A2%E4%B9%A6-HpJfWAjm.JPG" alt="小红书 QR Code">
+                    </div>
+                </button>
+                <button class="social-button twitter-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244,2.25h3.308l-7.227,8.26,8.502,11.24H16.17l-5.214-6.817L4.99,21.75H1.68l7.738-8.974L1,2.25h6.54l4.632,6.148L18.244,2.25z M17.07,19.75h1.64l-9.426-12.95h-1.71L17.07,19.75z"></path></svg>
+                    <span class="social-text">X</span>
+                </button>
+                <button class="social-button wechat-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.4,3.6C18.2,1.5,15.2,0.8,12,1.5C8.8,2.2,6,4.8,5.3,8c-0.7,3.2,0,6.2,2.1,8.4c1.2,1.2,2.8,2,4.6,2 c1.1,0,2.2-0.3,3.2-0.8l3.6,1.8l-1.1-3.3c1.5-1.4,2.5-3.2,2.8-5.2C21.2,8.8,21.2,6.2,20.4,3.6z M9.5,12.5 c-0.8,0-1.5-0.7-1.5-1.5s0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5S10.3,12.5,9.5,12.5z M14.5,12.5c-0.8,0-1.5-0.7-1.5-1.5 s0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5S15.3,12.5,14.5,12.5z"></path></svg>
+                    <span class="social-text">WeChat</span>
+                    <div class="qr-code">
+                        <img src="./assets/%E6%88%91%E7%9A%84%E5%BE%AE%E4%BF%A1-D9ZwUYH7.JPG" alt="微信 QR Code">
+                    </div>
+                </button>
+                <button class="social-button gongzhonghao-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M16,18H8v-2h8V18z M16,14H8v-2h8V14z M13,9V3.5L18.5,9H13z"></path></svg>
+                    <span class="social-text">公众号</span>
+                    <div class="qr-code">
+                        <img src="./assets/%E6%88%91%E7%9A%84%E5%85%AC%E4%BC%97%E5%8F%B7-C0Qhmy9D.JPG" alt="公众号 QR Code">
+                    </div>
+                </button>
+                <button class="social-button zhishixingqiu-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93s3.06-7.44 7-7.93v15.86zm2-15.86c3.94.49 7 3.85 7 7.93s-3.06 7.44-7 7.93V4.07z"></path></svg>
+                    <span class="social-text">知识星球</span>
+                    <div class="qr-code">
+                        <img src="./assets/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83-DPniLG-3.JPG" alt="知识星球 QR Code">
+                    </div>
+                </button>
+                <a href="https://kexin-podcast.onrender.com/" target="_blank" class="social-button podcast-btn">
+                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v2h-2v-2zm0 4h2v6h-2v-6z"></path></svg>
+                    <span class="social-text">播客</span>
+                </a>
+            </div>
+        </div>
+
     </main>
 
     <footer>
@@ -503,5 +573,74 @@
         <button class="close-detail">×</button>
     </div>
 
+    <script src="navigation-fix.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const investButton = document.querySelector('.action-button:nth-child(4)'); // INVEST 按钮
+            const investView = document.querySelector('.invest-view');
+            const buildButton = document.querySelector('.action-button:nth-child(1)'); // Build 按钮
+            const buildView = document.querySelector('.build-view');
+            const mainDefault = document.querySelector('.main-default');
+
+            function hideAllActionViews() {
+                if (investView) investView.style.display = 'none';
+                if (buildView) buildView.style.display = 'none';
+            }
+
+            if (investButton) {
+                investButton.addEventListener('click', () => {
+                    hideAllActionViews();
+                    if (mainDefault) mainDefault.style.display = 'none';
+                    if (investView) {
+                        investView.style.display = 'flex';
+                        gsap.fromTo(investView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                    }
+                });
+            }
+
+            if (buildButton) {
+                buildButton.addEventListener('click', () => {
+                    hideAllActionViews();
+                    if (mainDefault) mainDefault.style.display = 'none';
+                    if (buildView) {
+                        buildView.style.display = 'flex';
+                        gsap.fromTo(buildView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                    }
+                });
+            }
+
+            // Hide investment and build views when other navigation occurs
+            const profileImage = document.querySelector('.profile-image');
+            const closeButton = document.querySelector('.close');
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            if (profileImage) {
+                profileImage.addEventListener('click', hideAllActionViews);
+            }
+
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    if ((investView && investView.style.display !== 'none') || (buildView && buildView.style.display !== 'none')) {
+                        hideAllActionViews();
+                        if (mainDefault) {
+                            mainDefault.style.display = 'flex';
+                        }
+                    }
+                });
+            }
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', hideAllActionViews);
+            });
+
+            const allActionButtons = document.querySelectorAll('.action-button');
+            allActionButtons.forEach((button, index) => {
+                // Skip the invest (3) and build (0) buttons
+                if (index !== 3 && index !== 0) {
+                    button.addEventListener('click', hideAllActionViews);
+                }
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>
