@@ -163,6 +163,12 @@ closeButton.addEventListener('click', () => {
         gptsListView.style.display = 'none';
     }
     
+    // 隐藏Apps列表页面
+    const appsView = document.querySelector('.apps-view');
+    if (appsView) {
+        appsView.style.display = 'none';
+    }
+    
     // 隐藏DO相关页面
     const actionGrid = document.querySelector('.action-grid');
     const runStory = document.querySelector('.run-story');
