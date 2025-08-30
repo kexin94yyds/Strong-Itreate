@@ -169,6 +169,18 @@ closeButton.addEventListener('click', () => {
         appsView.style.display = 'none';
     }
     
+    // 隐藏Web项目列表页面
+    const webProjectsView = document.querySelector('.web-projects-view');
+    if (webProjectsView) {
+        webProjectsView.style.display = 'none';
+    }
+    
+    // 隐藏Crawlers列表页面
+    const crawlersView = document.querySelector('.crawlers-view');
+    if (crawlersView) {
+        crawlersView.style.display = 'none';
+    }
+    
     // 隐藏DO相关页面
     const actionGrid = document.querySelector('.action-grid');
     const runStory = document.querySelector('.run-story');
@@ -202,15 +214,18 @@ closeButton.addEventListener('click', () => {
     }
     
     // 显示主页面
-    mainDefault.style.display = 'flex';
-    gsap.fromTo(mainDefault,
-        { opacity: 0 },
-        { 
-            opacity: 1,
-            duration: 0.5,
-            ease: "power2.out"
-        }
-    );
+    const mainDefault = document.querySelector('.main-default');
+    if (mainDefault) {
+        mainDefault.style.display = 'flex';
+        gsap.fromTo(mainDefault,
+            { opacity: 0 },
+            { 
+                opacity: 1,
+                duration: 0.5,
+                ease: "power2.out"
+            }
+        );
+    }
 });
 
 // 点击菜单项时的效果
