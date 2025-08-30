@@ -1740,5 +1740,56 @@ body.menu-open .menu-toggle span:nth-child(3) {
 }
 
 .podcast-btn .social-text {
-    letter-spacing: 0.2em; /* 为“播客”文字增加字间距 */
+    letter-spacing: 0.2em; /* 为"播客"文字增加字间距 */
+}
+
+/* 爬虫悬停提示样式 */
+.crawler-hover-tooltip {
+    position: absolute;
+    bottom: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--deep-charcoal);
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 220px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+}
+
+.crawler-hover-tooltip img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 0.75rem;
+}
+
+.crawler-hover-tooltip p {
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.crawler-hover-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--deep-charcoal) transparent transparent transparent;
+}
+
+.gpts-card:hover .crawler-hover-tooltip {
+    opacity: 1;
+    visibility: visible;
 }

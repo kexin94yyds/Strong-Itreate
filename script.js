@@ -1204,6 +1204,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             showWebProjectsView();
                         } else if (category === 'crawlers') {
                             showCrawlersView();
+                        } else if (category === 'apps') {
+                            showAppsView();
                         } else {
                             console.log(`查看 ${category} 详情`);
                             // 为其他类别创建类似 showPluginDetailView 的函数
@@ -1583,7 +1585,11 @@ function showCrawlersView() {
                     <div class="gpts-card-icon">${crawler.icon}</div>
                     <h3 class="gpts-card-name">${crawler.name}</h3>
                     <p class="gpts-card-description">${crawler.description}</p>
-                    <button class="gpts-action-btn">查看详情</button>
+                    <button class="gpts-action-btn crawler-detail-btn">查看详情</button>
+                    <div class="crawler-hover-tooltip">
+                        <p>付费内容，请联系作者获取</p>
+                        <img src="images/将抵月.png" alt="将抵月 QR Code">
+                    </div>
                 </div>
             `;
         });
@@ -1944,4 +1950,74 @@ function handleWheel(e) {
         
         e.preventDefault();
     }
+}
+
+function showAppsView() {
+    const mainContainer = document.querySelector('main');
+    let appsView = document.querySelector('.apps-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!appsView) {
+        appsView = document.createElement('div');
+        appsView.className = 'main-detail apps-view';
+        appsView.style.flexDirection = 'column';
+        appsView.style.alignItems = 'center';
+        appsView.style.padding = '2rem';
+        appsView.style.paddingTop = '100px';
+        appsView.style.textAlign = 'center';
+
+        const myApps = [
+            {
+                id: 'relax-app',
+                name: 'Relax',
+                icon: `<img src="images/relax.png" alt="Relax" class="gpts-card-img-icon">`,
+                description: '一个帮助你放松和冥想的应用。',
+                url: 'https://need-relax.netlify.app/'
+            }
+        ];
+
+        let appCardsHTML = '';
+        myApps.forEach(app => {
+            appCardsHTML += `
+                <div class="gpts-card" data-appid="${app.id}">
+                    <div class="gpts-card-icon">${app.icon}</div>
+                    <h3 class="gpts-card-name">${app.name}</h3>
+                    <p class="gpts-card-description">${app.description}</p>
+                    <a href="${app.url}" target="_blank" class="gpts-action-btn">访问网站</a>
+                </div>
+            `;
+        });
+
+        appsView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${appCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(appsView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                appsView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== appsView) {
+            detail.style.display = 'none';
+        }
+    });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    appsView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(appsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
 }
