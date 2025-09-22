@@ -36,6 +36,7 @@ import FloatingMD from './images/FloatingMD.png';
 import RelaxIcon from './images/relax.png';
 import 单词记录器 from './images/单词.png';
 import FireIcon from './images/Fire.png';
+import 闹钟Icon from './images/闹钟.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1698,7 +1699,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'images/曾叔.png': 曾叔,
         'images/时间管道.JPG': 时间管道,
         'images/单词.png': 单词记录器,
-        'images/Fire.png': FireIcon
+        'images/Fire.png': FireIcon,
+        'images/闹钟.png': 闹钟Icon
     };
 
     // 更新所有img元素的src
@@ -2015,6 +2017,13 @@ function showAppsView() {
                 icon: `<img src="${FireIcon}" alt="Fire" class="gpts-card-img-icon">`,
                 description: 'Fire计划。',
                 url: 'https://example.com/fire-app'
+            },
+            {
+                id: 'standing-app',
+                name: '久坐提醒',
+                icon: `<img src="${闹钟Icon}" alt="久坐提醒" class="gpts-card-img-icon">`,
+                description: '提醒间隔设置，循环提醒，帮助您保持健康的工作习惯。',
+                url: 'https://standing.netlify.app/'
             }
         ];
 
