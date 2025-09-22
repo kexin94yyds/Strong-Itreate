@@ -34,6 +34,8 @@ import AttentionSpanTracker from './images/Attention-Span-Tracker.JPG';
 import EpubReaderIcon from './images/Epub 阅读器.png';
 import FloatingMD from './images/FloatingMD.png';
 import RelaxIcon from './images/relax.png';
+import 单词记录器 from './images/单词.png';
+import FireIcon from './images/Fire.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1281,6 +1283,14 @@ function showPluginDetailView() {
                 description: '我做了一个笔记神器',
                 storeUrl: 'https://chromewebstore.google.com/detail/floatingmd/ceccfecoiifcejbfeadoognfinknapii',
                 manualUrl: 'https://mp.weixin.qq.com/s/hLf1nPbkcPKSe08UuFuHgA'
+            },
+            {
+                id: 'word-recorder',
+                name: '单词记录器',
+                icon: `<img src="${单词记录器}" alt="单词记录器" class="gpts-card-img-icon">`,
+                description: '点击按钮将剪贴板的内容保存为单词，支持复习、管理、导出',
+                storeUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar',
+                manualUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar'
             }
         ];
 
@@ -1686,7 +1696,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'images/金刚柱.JPG': 金刚柱,
         'images/张鹏.png': 张鹏,
         'images/曾叔.png': 曾叔,
-        'images/时间管道.JPG': 时间管道
+        'images/时间管道.JPG': 时间管道,
+        'images/单词.png': 单词记录器,
+        'images/Fire.png': FireIcon
     };
 
     // 更新所有img元素的src
@@ -1996,6 +2008,13 @@ function showAppsView() {
                 icon: `<img src="${RelaxIcon}" alt="Relax" class="gpts-card-img-icon">`,
                 description: '一个帮助你放松和冥想的应用。',
                 url: 'https://need-relax.netlify.app/'
+            },
+            {
+                id: 'fire-app',
+                name: 'Fire',
+                icon: `<img src="${FireIcon}" alt="Fire" class="gpts-card-img-icon">`,
+                description: 'Fire计划。',
+                url: 'https://example.com/fire-app'
             }
         ];
 
