@@ -2016,7 +2016,7 @@ function showAppsView() {
                 name: 'Fire',
                 icon: `<img src="${FireIcon}" alt="Fire" class="gpts-card-img-icon">`,
                 description: 'Fire计划。',
-                url: 'https://example.com/fire-app'
+                url: 'https://fire-plan.netlify.app/'
             },
             {
                 id: 'standing-app',
