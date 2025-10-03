@@ -1880,3 +1880,83 @@ body.menu-open .menu-toggle span:nth-child(3) {
     opacity: 1;
     visibility: visible;
 }
+
+/* 移动端响应式样式 */
+@media screen and (max-width: 768px) {
+    /* 基础文字大小调整 */
+    body {
+        font-size: 14px;
+        letter-spacing: 0.25em;
+    }
+
+    /* 标题大小调整 */
+    h1, h2 {
+        font-size: 1.5em;
+    }
+
+    /* 详情页面文字调整 */
+    .main-detail-info {
+        padding: 1rem;
+    }
+
+    .detail-description {
+        font-size: 0.9em;
+        line-height: 1.8;
+        letter-spacing: 0.15em;
+        padding: 0 0.5rem;
+    }
+
+    /* 诗歌部分特殊处理 */
+    .detail-description br + br {
+        display: none;  /* 减少过多的空行 */
+    }
+
+    /* 调整图片容器 */
+    .main-detail-img {
+        height: 40vh;  /* 减小图片高度 */
+    }
+
+    /* 调整导航按钮 */
+    footer button {
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+    }
+
+    /* 调整菜单项 */
+    .menu-item {
+        font-size: 0.9em;
+        padding: 0.8rem;
+    }
+
+    /* 调整时间线标记 */
+    .timeline-marker {
+        margin-top: 1rem;
+    }
+
+    .timeline-marker .year {
+        font-size: 0.8em;
+    }
+
+    /* 优化段落间距 */
+    .detail-description p {
+        margin: 0.5em 0;
+    }
+
+    /* 强调文本调整 */
+    .detail-description strong {
+        font-size: 1.1em;
+        letter-spacing: 0.2em;
+    }
+
+    /* 调整season信息 */
+    .season-info {
+        font-size: 0.8em;
+        margin-bottom: 0.5rem;
+    }
+
+    /* 优化标题间距 */
+    .detail-title {
+        margin: 0.5rem 0;
+        letter-spacing: 0.3em;
+    }
+}
