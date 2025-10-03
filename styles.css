@@ -227,6 +227,25 @@ footer {
     padding: 2rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+footer .language-btn {
+    flex: 0 0 auto;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+footer .episodes-btn {
+    flex: 0 0 auto;
+}
+
+footer .music-icon {
+    flex: 0 0 auto;
 }
 
 footer button {
@@ -242,6 +261,74 @@ footer button {
 
 footer button:hover {
     opacity: 1;
+}
+
+/* 音乐符号样式 */
+.music-icon {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: 20px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.music-icon:hover {
+    opacity: 1;
+}
+
+.music-bar {
+    width: 3px;
+    background-color: var(--text-color);
+    border-radius: 1px;
+    transition: height 0.1s ease-out;
+    transform-origin: bottom;
+}
+
+.music-bar:nth-child(1) {
+    height: 8px;
+}
+
+.music-bar:nth-child(2) {
+    height: 12px;
+}
+
+.music-bar:nth-child(3) {
+    height: 16px;
+}
+
+.music-bar:nth-child(4) {
+    height: 20px;
+}
+
+/* 音乐符号动画效果 */
+.music-icon:hover .music-bar {
+    animation: musicPulse 1.5s ease-in-out infinite;
+}
+
+.music-icon:hover .music-bar:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.music-icon:hover .music-bar:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.music-icon:hover .music-bar:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.music-icon:hover .music-bar:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+@keyframes musicPulse {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(1.5);
+    }
 }
 
 /* 按钮交互优化 */
@@ -824,10 +911,10 @@ body.menu-open .menu-toggle span:nth-child(3) {
     font-weight: 300;
 }
 
-.main-detail:nth-child(3) .detail-description {
-    font-size: 12px;
-    line-height: 1.6;
-    max-width: 420px;
+.main-detail:nth-child(2) .detail-description {
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 500px;
     color: rgba(255,255,255,0.8);
     margin-bottom: 36px;
 }
