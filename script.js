@@ -1173,40 +1173,48 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M12,18H11V17H12V18M15,18H14V17H15V18M18,18H17V17H18V18M20,15H4V8H20V15Z"></path></svg>
                             </div>
                             <h3 class="product-category-name">Web</h3>
-                            <p class="product-category-desc">个人网站与Web应用项目。</p>
+                            <p class="product-category-desc">个人网站与 Web 应用项目。</p>
                             <button class="view-products-btn">访问网站</button>
                         </div>
                         <div class="product-category-card" data-category="plugins">
                             <div class="product-category-icon">
                                 <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M20.5,11H19V7C19,5.89 18.11,5 17,5H13V3.5A2.5,2.5 0 0,0 10.5,1A2.5,2.5 0 0,0 8,3.5V5H4A2,2 0 0,0 2,7V10.5A2.5,2.5 0 0,0 4.5,13A2.5,2.5 0 0,0 2,15.5V19A2,2 0 0,0 4,21H8V19.5A2.5,2.5 0 0,0 10.5,17A2.5,2.5 0 0,0 8,14.5V13H12V17H13.5A2.5,2.5 0 0,0 16,19.5A2.5,2.5 0 0,0 13.5,22H17A2,2 0 0,0 19,20V16H20.5A2.5,2.5 0 0,0 23,13.5A2.5,2.5 0 0,0 20.5,11Z"></path></svg>
                             </div>
-                            <h3 class="product-category-name">插件</h3>
+                            <h3 class="product-category-name">Extensions</h3>
                             <p class="product-category-desc">提升效率的浏览器与应用扩展。</p>
-                            <button class="view-products-btn">查看插件</button>
-                        </div>
-                        <div class="product-category-card" data-category="gpts">
-                            <div class="product-category-icon">
-                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4V6H10V4A2,2 0 0,1 12,2M19,11V13H16V15H8V13H5V11H19M8.5,9.5A1,1 0 0,1 9.5,8.5A1,1 0 0,1 10.5,9.5A1,1 0 0,1 9.5,10.5A1,1 0 0,1 8.5,9.5M14.5,9.5A1,1 0 0,1 15.5,8.5A1,1 0 0,1 16.5,9.5A1,1 0 0,1 15.5,10.5A1,1 0 0,1 14.5,9.5Z"></path></svg>
-                            </div>
-                            <h3 class="product-category-name">GPTS</h3>
-                            <p class="product-category-desc">专为特定任务定制的智能模型。</p>
-                            <button class="view-products-btn">探索 GPTS</button>
+                            <button class="view-products-btn">查看扩展</button>
                         </div>
                         <div class="product-category-card" data-category="apps">
                             <div class="product-category-icon">
                                 <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M17,1H7C5.89,1 5,1.89 5,3V21C5,22.11 5.89,23 7,23H17C18.11,23 19,22.11 19,21V3C19,1.89 18.11,1 17,1M17,19H7V5H17V19Z"></path></svg>
                             </div>
-                            <h3 class="product-category-name">APP</h3>
+                            <h3 class="product-category-name">Apps</h3>
                             <p class="product-category-desc">精心设计的移动与桌面应用。</p>
-                            <button class="view-products-btn">体验 APP</button>
+                            <button class="view-products-btn">体验应用</button>
                         </div>
-                        <div class="product-category-card" data-category="crawlers">
+                        <div class="product-category-card" data-category="tools">
                             <div class="product-category-icon">
-                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,5.5A2.5,2.5 0 0,1 14.5,8A2.5,2.5 0 0,1 12,10.5A2.5,2.5 0 0,1 9.5,8A2.5,2.5 0 0,1 12,5.5M6,3C4.89,3 4,3.89 4,5V7H6V5H7V3H6M10,3V5H14V3H10M17,3V5H18V7H20V5C20,3.89 19.11,3 18,3H17M7,8V11H5V8H7M17,8V11H19V8H17M4.79,13.04L7.62,14.46L7.03,16.29L3.06,14.79L4.79,13.04M19.21,13.04L20.94,14.79L16.97,16.29L16.38,14.46L19.21,13.04M7.03,17.71L7.62,19.54L4.79,20.96L3.06,19.21L7.03,17.71M16.97,17.71L20.94,19.21L19.21,20.96L16.38,19.54L16.97,17.71M10,13V15H7V19H9V16H11V21H13V16H15V19H17V15H14V13H10Z"></path></svg>
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M22.7,19L13.6,9.9C14.5,7.6 14,4.9 12.1,3C10.1,1 7.1,0.6 4.7,1.7L9,6L6,9L1.6,4.7C0.4,7.1 0.9,10.1 2.9,12.1C4.8,14 7.5,14.5 9.8,13.6L18.9,22.7C19.3,23.1 19.9,23.1 20.3,22.7L22.6,20.4C23.1,20 23.1,19.3 22.7,19Z"></path></svg>
                             </div>
-                            <h3 class="product-category-name">爬虫</h3>
-                            <p class="product-category-desc">自动化数据收集与处理工具。</p>
-                            <button class="view-products-btn">探索爬虫</button>
+                            <h3 class="product-category-name">Tools</h3>
+                            <p class="product-category-desc">Iterate、爬虫与 MCP 工具集。</p>
+                            <button class="view-products-btn">探索工具</button>
+                        </div>
+                        <div class="product-category-card" data-category="scripts">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H9V10H15V15L13,19H10Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">Scripts</h3>
+                            <p class="product-category-desc">自动化脚本与实用工具。</p>
+                            <button class="view-products-btn">查看脚本</button>
+                        </div>
+                        <div class="product-category-card" data-category="gpts">
+                            <div class="product-category-icon">
+                                <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4V6H10V4A2,2 0 0,1 12,2M19,11V13H16V15H8V13H5V11H19M8.5,9.5A1,1 0 0,1 9.5,8.5A1,1 0 0,1 10.5,9.5A1,1 0 0,1 9.5,10.5A1,1 0 0,1 8.5,9.5M14.5,9.5A1,1 0 0,1 15.5,8.5A1,1 0 0,1 16.5,9.5A1,1 0 0,1 15.5,10.5A1,1 0 0,1 14.5,9.5Z"></path></svg>
+                            </div>
+                            <h3 class="product-category-name">GPTs</h3>
+                            <p class="product-category-desc">专为特定任务定制的智能模型。</p>
+                            <button class="view-products-btn">探索 GPTs</button>
                         </div>
                     </div>
                 `;
@@ -1228,16 +1236,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             showGPTSListView();
                         } else if (category === 'web') {
                             showWebProjectsView();
-                        } else if (category === 'crawlers') {
-                            showCrawlersView();
+                        } else if (category === 'tools') {
+                            showToolsView();
+                        } else if (category === 'scripts') {
+                            showScriptsView();
                         } else if (category === 'apps') {
                             showAppsView();
                         } else {
-                            console.log(`查看 ${category} 详情`);
-                            // 为其他类别创建类似 showPluginDetailView 的函数
-                            // 或者创建一个通用的函数来显示不同类别的内容
-                            // 暂时先返回到概览页，如果其他页面未实现
-                            // createDetailSection.style.display = 'flex'; 
+                            console.log(`View ${category} details`);
                         }
                     });
                 });
@@ -2071,4 +2077,158 @@ function showAppsView() {
     appsView.style.display = 'flex';
     if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
     gsap.fromTo(appsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
+function showToolsView() {
+    const mainContainer = document.querySelector('main');
+    let toolsView = document.querySelector('.tools-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!toolsView) {
+        toolsView = document.createElement('div');
+        toolsView.className = 'main-detail tools-view';
+        toolsView.style.flexDirection = 'column';
+        toolsView.style.alignItems = 'center';
+        toolsView.style.padding = '2rem';
+        toolsView.style.paddingTop = '100px';
+        toolsView.style.textAlign = 'center';
+
+        const myTools = [
+            {
+                id: 'iterate',
+                name: 'Iterate',
+                icon: `<svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M18.6,6.62C17.16,6.62 15.8,7.18 14.83,8.15L7.8,14.39C7.16,15.03 6.31,15.38 5.4,15.38C3.53,15.38 2,13.87 2,12C2,10.13 3.53,8.62 5.4,8.62C6.31,8.62 7.16,8.97 7.84,9.65L8.97,10.65L10.5,9.31L9.22,8.2C8.2,7.18 6.84,6.62 5.4,6.62C2.42,6.62 0,9.04 0,12C0,14.96 2.42,17.38 5.4,17.38C6.84,17.38 8.2,16.82 9.17,15.85L16.2,9.61C16.84,8.97 17.69,8.62 18.6,8.62C20.47,8.62 22,10.13 22,12C22,13.87 20.47,15.38 18.6,15.38C17.7,15.38 16.84,15.03 16.16,14.35L15,13.34L13.5,14.68L14.78,15.8C15.8,16.81 17.15,17.37 18.6,17.37C21.58,17.37 24,14.96 24,12C24,9.04 21.58,6.62 18.6,6.62Z"></path></svg>`,
+                description: 'AI 对话控制器与 MCP 工具。',
+                url: 'https://github.com/kexin94yyds/iterate'
+            },
+            {
+                id: 'youtube-crawler',
+                name: 'YouTube Crawler',
+                icon: `<svg viewBox="0 0 24 24" width="64" height="45"><path fill="currentColor" d="M21.582,6.186c-0.23-0.854-0.908-1.532-1.762-1.762C18.254,4,12,4,12,4S5.746,4,4.18,4.424c-0.854,0.23-1.532,0.908-1.762,1.762C2,7.75,2,12,2,12s0,4.25,0.418,5.814c0.23,0.854,0.908,1.532,1.762,1.762C5.746,20,12,20,12,20s6.254,0,7.82-0.424c0.854-0.23,1.532-0.908,1.762-1.762C22,16.25,22,12,22,12S22,7.75,21.582,6.186z M10,15.5v-7l6,3.5L10,15.5z"></path></svg>`,
+                description: '抓取 YouTube 视频与数据。',
+                url: null
+            },
+            {
+                id: 'twitter-crawler',
+                name: 'Twitter/X Crawler',
+                icon: `<svg viewBox="0 0 24 24" width="50" height="50"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>`,
+                description: '抓取推文与用户数据。',
+                url: null
+            }
+        ];
+
+        let toolCardsHTML = '';
+        myTools.forEach(tool => {
+            const btnText = tool.url ? '查看 GitHub' : '联系获取';
+            const btnClass = tool.url ? 'gpts-action-btn' : 'gpts-action-btn crawler-detail-btn';
+            toolCardsHTML += `
+                <div class="gpts-card" data-toolid="${tool.id}">
+                    <div class="gpts-card-icon">${tool.icon}</div>
+                    <h3 class="gpts-card-name">${tool.name}</h3>
+                    <p class="gpts-card-description">${tool.description}</p>
+                    ${tool.url ? `<a href="${tool.url}" target="_blank" class="${btnClass}">${btnText}</a>` : `<button class="${btnClass}">${btnText}</button>`}
+                </div>
+            `;
+        });
+
+        toolsView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${toolCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(toolsView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                toolsView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== toolsView) {
+            detail.style.display = 'none';
+        }
+    });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    toolsView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(toolsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
+function showScriptsView() {
+    const mainContainer = document.querySelector('main');
+    let scriptsView = document.querySelector('.scripts-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!scriptsView) {
+        scriptsView = document.createElement('div');
+        scriptsView.className = 'main-detail scripts-view';
+        scriptsView.style.flexDirection = 'column';
+        scriptsView.style.alignItems = 'center';
+        scriptsView.style.padding = '2rem';
+        scriptsView.style.paddingTop = '100px';
+        scriptsView.style.textAlign = 'center';
+
+        const myScripts = [
+            {
+                id: 'coming-soon',
+                name: '敬请期待',
+                icon: `<svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"></path></svg>`,
+                description: '自动化脚本正在准备中...'
+            }
+        ];
+
+        let scriptCardsHTML = '';
+        myScripts.forEach(script => {
+            scriptCardsHTML += `
+                <div class="gpts-card" data-scriptid="${script.id}">
+                    <div class="gpts-card-icon">${script.icon}</div>
+                    <h3 class="gpts-card-name">${script.name}</h3>
+                    <p class="gpts-card-description">${script.description}</p>
+                </div>
+            `;
+        });
+
+        scriptsView.innerHTML = `
+            <div class="gpts-cards-grid">
+                ${scriptCardsHTML}
+            </div>
+        `;
+        mainContainer.appendChild(scriptsView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                scriptsView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== scriptsView) {
+            detail.style.display = 'none';
+        }
+    });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    scriptsView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(scriptsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
 }
