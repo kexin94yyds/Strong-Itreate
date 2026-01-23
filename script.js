@@ -37,10 +37,6 @@ import RelaxIcon from './images/relax.png';
 import 单词记录器 from './images/单词.png';
 import FireIcon from './images/Fire.png';
 import 闹钟Icon from './images/闹钟.png';
-import YouTubeTranscript from './images/YouTube-Transcript.png';
-import TwitterCrawler from './images/Twitter-Crawler.png';
-import GeminiWatermarkRemover from './images/Gemini-Watermark-Remover.png';
-import AIStudioNotifier from './images/AI-Studio-Notifier.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1302,38 +1298,6 @@ function showPluginDetailView() {
                 description: '点击按钮将剪贴板的内容保存为单词，支持复习、管理、导出',
                 storeUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar',
                 manualUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar'
-            },
-            {
-                id: 'youtube-transcript',
-                name: 'YouTube Transcript',
-                icon: `<img src="${YouTubeTranscript}" alt="YouTube Transcript" class="gpts-card-img-icon">`,
-                description: '一键获取 YouTube 视频字幕，支持导出',
-                storeUrl: '',
-                manualUrl: ''
-            },
-            {
-                id: 'twitter-crawler',
-                name: '推特爬虫',
-                icon: `<img src="${TwitterCrawler}" alt="推特爬虫" class="gpts-card-img-icon">`,
-                description: '自动化抓取推特内容',
-                storeUrl: '',
-                manualUrl: ''
-            },
-            {
-                id: 'gemini-watermark-remover',
-                name: 'Gemini 去水印',
-                icon: `<img src="${GeminiWatermarkRemover}" alt="Gemini 去水印" class="gpts-card-img-icon">`,
-                description: '一键去除 Gemini 生成图片的水印',
-                storeUrl: '',
-                manualUrl: ''
-            },
-            {
-                id: 'aistudio-notifier',
-                name: 'AI Studio 通知',
-                icon: `<img src="${AIStudioNotifier}" alt="AI Studio 通知" class="gpts-card-img-icon">`,
-                description: 'AI Studio 任务完成后发送通知提醒',
-                storeUrl: '',
-                manualUrl: ''
             }
         ];
 
