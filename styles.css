@@ -961,12 +961,6 @@ body.menu-open .menu-toggle span:nth-child(3) {
         width: 100vw;
         flex-shrink: 0;
     }
-    /* 特定章节图片缩小 - 第2张(启点)、第3张(曾叔)、第5张(死不瞑目) */
-    .main-detail:nth-child(2) .main-detail-img,
-    .main-detail:nth-child(3) .main-detail-img,
-    .main-detail:nth-child(5) .main-detail-img {
-        height: 12vh;
-    }
 }
 
 .arrow-icon {
