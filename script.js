@@ -1892,11 +1892,12 @@ function handleTouchMove(e) {
     currentX = touch.clientX;
     currentY = touch.clientY;
     
-    // 防止默认滚动行为
+    // 只在明显的水平滑动时阻止默认行为，允许垂直滚动
     const deltaX = Math.abs(currentX - startX);
     const deltaY = Math.abs(currentY - startY);
     
-    if (deltaX > deltaY) {
+    // 只有当水平滑动距离明显大于垂直滑动时才阻止默认行为
+    if (deltaX > deltaY && deltaX > 30) {
         e.preventDefault();
     }
 }

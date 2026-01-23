@@ -939,17 +939,33 @@ body.menu-open .menu-toggle span:nth-child(3) {
 @media (max-width: 900px) {
     .main-detail {
         flex-direction: column;
-        height: auto;
-        min-height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: scroll !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y !important;
+        overscroll-behavior: contain;
     }
     .main-detail-img {
         width: 100vw;
         height: 40vh;
+        flex-shrink: 0;
     }
     .main-detail-info {
         padding: 24px 12px;
+        padding-bottom: 100px;
         min-width: 0;
         width: 100vw;
+        flex-shrink: 0;
+    }
+    /* 特定章节图片缩小 - 第2张(启点)、第3张(曾叔)、第5张(死不瞑目) */
+    .main-detail:nth-child(2) .main-detail-img,
+    .main-detail:nth-child(3) .main-detail-img,
+    .main-detail:nth-child(5) .main-detail-img {
+        height: 12vh;
     }
 }
 
@@ -1103,6 +1119,8 @@ body.menu-open .menu-toggle span:nth-child(3) {
 /* CREATE 区域样式 */
 .create-detail {
     text-align: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .create-section-title {
@@ -1230,12 +1248,15 @@ body.menu-open .menu-toggle span:nth-child(3) {
     align-items: center;
     justify-content: flex-start; /* 从顶部开始，允许滚动 */
     width: 100%;
-    min-height: auto;
+    height: 100vh;
     padding: 2rem;
     padding-top: 100px; /* 为导航栏留出空间 */
     padding-bottom: 100px; /* 底部留出空间 */
     box-sizing: border-box;
-    overflow-y: auto; /* 允许垂直滚动 */
+    overflow-y: scroll !important; /* 允许垂直滚动 */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y !important;
+    overscroll-behavior: contain;
 }
 
 /* 返回创作列表按钮 - 现在在导航栏中 */
@@ -1396,6 +1417,8 @@ body.menu-open .menu-toggle span:nth-child(3) {
     padding-top: 100px; /* Increased padding-top for back button and space */
     box-sizing: border-box;
     width: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .gpts-cards-grid {
