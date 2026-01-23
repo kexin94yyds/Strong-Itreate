@@ -37,6 +37,18 @@ import RelaxIcon from './images/relax.png';
 import 单词记录器 from './images/单词.png';
 import FireIcon from './images/Fire.png';
 import 闹钟Icon from './images/闹钟.png';
+import YouTubeTranscript from './images/YouTube-Transcript.png';
+import TwitterCrawler from './images/Twitter-Crawler.png';
+import GeminiWatermarkRemover from './images/Gemini-Watermark-Remover.png';
+import AISidebar from './images/AI-Sidebar.png';
+import PixelTunePhoto from './images/PixelTunePhoto.png';
+import ContentDash from './images/ContentDash.png';
+import Monoshot from './images/Monoshot.png';
+import RIIcon from './images/RI.png';
+import PrompterIcon from './images/Prompter.png';
+import FlowIcon from './images/Flow.png';
+import WechatQR from './images/可鑫二维码.JPG';
+import PodcastIcon from './images/Podcast.jpeg';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1292,12 +1304,44 @@ function showPluginDetailView() {
                 manualUrl: 'https://mp.weixin.qq.com/s/hLf1nPbkcPKSe08UuFuHgA'
             },
             {
+                id: 'ai-sidebar',
+                name: 'AI Sidebar',
+                icon: `<img src="${AISidebar}" alt="AI Sidebar" class="gpts-card-img-icon">`,
+                description: '侧边栏 AI 助手，随时调用',
+                storeUrl: '',
+                manualUrl: ''
+            },
+            {
                 id: 'word-recorder',
                 name: '单词记录器',
                 icon: `<img src="${单词记录器}" alt="单词记录器" class="gpts-card-img-icon">`,
                 description: '点击按钮将剪贴板的内容保存为单词，支持复习、管理、导出',
                 storeUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar',
                 manualUrl: 'https://chromewebstore.google.com/detail/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95%E5%99%A8/ecihmcbeijcdgmbbabdmpgfbhpchbfpj?hl=zh-CN&utm_source=ext_sidebar'
+            },
+            {
+                id: 'youtube-transcript',
+                name: 'YouTube Transcript',
+                icon: `<img src="${YouTubeTranscript}" alt="YouTube Transcript" class="gpts-card-img-icon">`,
+                description: '一键获取 YouTube 视频字幕，支持导出',
+                storeUrl: '',
+                manualUrl: ''
+            },
+            {
+                id: 'twitter-crawler',
+                name: '推特爬虫',
+                icon: `<img src="${TwitterCrawler}" alt="推特爬虫" class="gpts-card-img-icon">`,
+                description: '自动化抓取推特内容',
+                storeUrl: '',
+                manualUrl: ''
+            },
+            {
+                id: 'gemini-watermark-remover',
+                name: 'Gemini 去水印',
+                icon: `<img src="${GeminiWatermarkRemover}" alt="Gemini 去水印" class="gpts-card-img-icon">`,
+                description: '一键去除 Gemini 生成图片的水印',
+                storeUrl: '',
+                manualUrl: ''
             }
         ];
 
@@ -1540,6 +1584,34 @@ function showWebProjectsView() {
                 icon: `<img src="${EpubReaderIcon}" alt="Epub Reader" class="gpts-card-img-icon">`,
                 description: '一个简洁、高效的在线Epub电子书阅读器。',
                 url: 'https://tobooks.netlify.app/'
+            },
+            {
+                id: 'pixeltune-photo',
+                name: 'PixelTune Photo',
+                icon: `<img src="${PixelTunePhoto}" alt="PixelTune Photo" class="gpts-card-img-icon">`,
+                description: '图片调整工具，随意调整图片大小。',
+                url: 'https://pixeltunephoto.netlify.app/'
+            },
+            {
+                id: 'content-dash',
+                name: 'ContentDash',
+                icon: `<img src="${ContentDash}" alt="ContentDash" class="gpts-card-img-icon">`,
+                description: '内容管理与订阅工具。',
+                url: 'https://cotentdash.netlify.app/'
+            },
+            {
+                id: 'monoshot-web',
+                name: 'Monoshot',
+                icon: `<img src="${Monoshot}" alt="Monoshot" class="gpts-card-img-icon">`,
+                description: '截图工具，快速捕捉屏幕内容。',
+                url: 'https://monoshot-vault.netlify.app/'
+            },
+            {
+                id: 'podcast',
+                name: 'KeXin Podcast',
+                icon: `<img src="${PodcastIcon}" alt="KeXin Podcast" class="gpts-card-img-icon">`,
+                description: '可鑫的播客。',
+                url: 'https://kexin-podcast.netlify.app/'
             }
         ];
 
@@ -2011,6 +2083,41 @@ function showAppsView() {
 
         const myApps = [
             {
+                id: 'ai-sidebar-app',
+                name: 'AI Sidebar',
+                icon: `<img src="${AISidebar}" alt="AI Sidebar" class="gpts-card-img-icon">`,
+                description: '侧边栏 AI 助手，支持 Mac 和 iOS。',
+                url: ''
+            },
+            {
+                id: 'monoshot-app',
+                name: 'Monoshot',
+                icon: `<img src="${Monoshot}" alt="Monoshot" class="gpts-card-img-icon">`,
+                description: '截图工具，快速捕捉屏幕内容。',
+                url: ''
+            },
+            {
+                id: 'ri-app',
+                name: 'Replace Information',
+                icon: `<img src="${RIIcon}" alt="Replace Information" class="gpts-card-img-icon">`,
+                description: '信息置换工具，智能管理你的信息。',
+                url: ''
+            },
+            {
+                id: 'prompter-app',
+                name: 'Prompter',
+                icon: `<img src="${PrompterIcon}" alt="Prompter" class="gpts-card-img-icon">`,
+                description: '提示词管理工具，支持手机和电脑。',
+                url: ''
+            },
+            {
+                id: 'flow-app',
+                name: 'Flow',
+                icon: `<img src="${FlowIcon}" alt="Flow" class="gpts-card-img-icon">`,
+                description: '信息过滤器，过滤优质信息。',
+                url: ''
+            },
+            {
                 id: 'relax-app',
                 name: 'Relax',
                 icon: `<img src="${RelaxIcon}" alt="Relax" class="gpts-card-img-icon">`,
@@ -2035,12 +2142,21 @@ function showAppsView() {
 
         let appCardsHTML = '';
         myApps.forEach(app => {
+            const buttonHTML = app.url 
+                ? `<a href="${app.url}" target="_blank" class="gpts-action-btn">访问 App</a>`
+                : `<button class="gpts-action-btn app-contact-btn">联系获取</button>`;
+            const tooltipHTML = !app.url ? `
+                <div class="gpts-hover-tooltip">
+                    <img src="${WechatQR}" alt="QR Code">
+                    <p>付费内容，联系作者获取</p>
+                </div>` : '';
             appCardsHTML += `
                 <div class="gpts-card" data-appid="${app.id}">
                     <div class="gpts-card-icon">${app.icon}</div>
                     <h3 class="gpts-card-name">${app.name}</h3>
                     <p class="gpts-card-description">${app.description}</p>
-                    <a href="${app.url}" target="_blank" class="gpts-action-btn">访问网站</a>
+                    ${buttonHTML}
+                    ${tooltipHTML}
                 </div>
             `;
         });
@@ -2051,6 +2167,23 @@ function showAppsView() {
             </div>
         `;
         mainContainer.appendChild(appsView);
+
+        // 添加悬停显示二维码事件
+        appsView.querySelectorAll('.gpts-card').forEach(card => {
+            const tooltip = card.querySelector('.gpts-hover-tooltip');
+            const actionButton = card.querySelector('.app-contact-btn');
+
+            if (tooltip && actionButton) {
+                actionButton.addEventListener('mouseenter', () => {
+                    tooltip.style.opacity = '1';
+                    tooltip.style.visibility = 'visible';
+                });
+                actionButton.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                    tooltip.style.visibility = 'hidden';
+                });
+            }
+        });
 
         if (navBackButton) {
             const newBtn = navBackButton.cloneNode(true);
@@ -2077,6 +2210,35 @@ function showAppsView() {
     appsView.style.display = 'flex';
     if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
     gsap.fromTo(appsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
+// 显示微信二维码弹窗
+function showQRModal(appName) {
+    // 移除已存在的弹窗
+    const existingModal = document.querySelector('.qr-modal');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'qr-modal';
+    modal.innerHTML = `
+        <div class="qr-modal-content">
+            <button class="qr-modal-close">&times;</button>
+            <h3>联系获取 ${appName}</h3>
+            <p>扫描下方二维码添加微信</p>
+            <img src="${WechatQR}" alt="微信二维码" class="qr-code-img">
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    // 点击关闭按钮或背景关闭弹窗
+    modal.querySelector('.qr-modal-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+
+    // 动画显示
+    gsap.fromTo(modal, {opacity: 0}, {opacity: 1, duration: 0.3});
+    gsap.fromTo(modal.querySelector('.qr-modal-content'), {scale: 0.8, y: 20}, {scale: 1, y: 0, duration: 0.3, ease: "back.out(1.7)"});
 }
 
 function showToolsView() {

@@ -1222,15 +1222,20 @@ body.menu-open .menu-toggle span:nth-child(3) {
 }
 
 /* 插件详情视图样式 */
-.plugin-detail-view {
+.plugin-detail-view,
+.apps-view,
+.web-projects-view {
     display: flex; /* 由 JS 控制显示/隐藏 */
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* 垂直居中主要内容 */
+    justify-content: flex-start; /* 从顶部开始，允许滚动 */
     width: 100%;
-    min-height: 80vh; /* 确保有足够空间 */
+    min-height: auto;
     padding: 2rem;
+    padding-top: 100px; /* 为导航栏留出空间 */
+    padding-bottom: 100px; /* 底部留出空间 */
     box-sizing: border-box;
+    overflow-y: auto; /* 允许垂直滚动 */
 }
 
 /* 返回创作列表按钮 - 现在在导航栏中 */
@@ -1959,4 +1964,64 @@ body.menu-open .menu-toggle span:nth-child(3) {
         margin: 0.5rem 0;
         letter-spacing: 0.3em;
     }
+}
+
+/* 微信二维码弹窗样式 */
+.qr-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.qr-modal-content {
+    background: var(--deep-charcoal);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    max-width: 320px;
+}
+
+.qr-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.qr-modal-close:hover {
+    opacity: 1;
+}
+
+.qr-modal-content h3 {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2em;
+    letter-spacing: 0.1em;
+}
+
+.qr-modal-content p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+    font-size: 0.9em;
+}
+
+.qr-code-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
 }
