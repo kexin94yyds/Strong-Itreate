@@ -1,5 +1,7 @@
 // 导入所有图片资源
 import 跑步2024 from './images/跑步2024.JPG';
+import 跑步2025 from './images/跑步2025.png';
+import 跑步2025PB from './images/跑步2025-20.26公里.png';
 import 跑步2024愿望 from './images/跑步2024愿望.JPG';
 import 越来越强 from './images/越来越强.jpg';
 import 死不旋踵 from './images/死不旋踵.webp';
@@ -19,6 +21,7 @@ import Learn from './images/Learn.png';
 import Run from './images/Run.png';
 import 事实核查员 from './images/事实核查员.png';
 import 将抵月 from './images/将抵月.png';
+import 猫咪头像 from './images/cat-avatar.jpg';
 import 兰顿蚂蚁 from './images/兰顿蚂蚁.webp';
 import 做最好的自己 from './images/做最好的自己.jpeg';
 import 可控之事 from './images/可控之事.JPG';
@@ -49,6 +52,8 @@ import PrompterIcon from './images/Prompter.png';
 import FlowIcon from './images/Flow.png';
 import WechatQR from './images/可鑫二维码.JPG';
 import PodcastIcon from './images/Podcast.jpeg';
+import WechatIcon from './images/公众号头像.png';
+import WechatGzhQR from './images/公众号二维码.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -196,6 +201,18 @@ closeButton.addEventListener('click', () => {
         crawlersView.style.display = 'none';
     }
     
+    // 隐藏Iterate页面
+    const iterateView = document.querySelector('.iterate-view');
+    if (iterateView) {
+        iterateView.style.display = 'none';
+    }
+    
+    // 隐藏Tools列表页面
+    const toolsView = document.querySelector('.tools-view');
+    if (toolsView) {
+        toolsView.style.display = 'none';
+    }
+    
     // 隐藏DO相关页面
     const actionGrid = document.querySelector('.action-grid');
     const runStory = document.querySelector('.run-story');
@@ -313,6 +330,9 @@ menuItems.forEach(item => {
                                     ease: "power2.out"
                                 }
                             );
+                        } else if (button.textContent.trim() === 'iterate') {
+                            actionGrid.style.display = 'none';
+                            showIterateView();
                         } else {
                             // 点击其他按钮时隐藏Run故事内容
                             runStory.style.display = 'none';
@@ -828,7 +848,7 @@ document.querySelector('.action-button:nth-child(7)').addEventListener('click', 
         // 创建图片元素
         const img = document.createElement('img');
         img.className = 'running-record-image';
-        img.src = 跑步2024;
+        img.src = 跑步2025;
         img.style.width = '90%';
         img.style.height = 'auto';
         img.style.opacity = '0';
@@ -1412,6 +1432,7 @@ function showGPTSListView() {
         gptsView.style.flexDirection = 'column';
         gptsView.style.alignItems = 'center';
         gptsView.style.padding = '2rem';
+gptsView.style.paddingTop = '100px';
         gptsView.style.textAlign = 'center';
 
         // Placeholder GPTS data - replace with actual data later
@@ -1429,10 +1450,10 @@ function showGPTSListView() {
                 description: '思考永不止步' // 示例描述，请您后续提供
             },
             {
-                id: 'gpts-builder',
-                name: 'GPT Builder',
-                icon: `<img src="${GPTBuilder}" alt="GPT Builder" class="gpts-card-img-icon">`,
-                description: '用 AI 构建 AI'
+                id: 'gpts-wechat',
+                name: '将抵月',
+                icon: `<img src="${猫咪头像}" alt="将抵月" class="gpts-card-img-icon">`,
+                description: '微信公众号文章智能体'
             },
             {
                 id: 'gpts-learn',
@@ -1451,10 +1472,16 @@ function showGPTSListView() {
                 name: 'Fact Checker',
                 icon: `<img src="${事实核查员}" alt="Fact Checker" class="gpts-card-img-icon">`,
                 description: '打破 AI 幻觉'
+            },
+            {
+                id: 'gpts-builder',
+                name: 'GPT Builder',
+                icon: `<img src="${GPTBuilder}" alt="GPT Builder" class="gpts-card-img-icon">`,
+                description: '用 AI 构建 AI'
             }
         ];
 
-        const gptsToShowTooltip = ['gpts-xiaolai', 'gpts-qingbian', 'gpts-builder'];
+        const gptsToShowTooltip = ['gpts-xiaolai', 'gpts-qingbian', 'gpts-builder', 'gpts-wechat'];
 
         let gptsCardsHTML = '';
         myGPTS.forEach(gpt => {
@@ -1465,6 +1492,8 @@ function showGPTSListView() {
                 actionButtonHTML = `<a href="https://chatgpt.com/g/g-67d4ce8e0894819183f11ae56e049445-run" target="_blank" class="gpts-action-btn">启动 GPTs</a>`;
             } else if (gpt.id === 'gpts-fact-checker') {
                 actionButtonHTML = `<a href="https://chatgpt.com/g/g-67be8eb1a560819191efb6675cb8d169-shi-shi-he-cha-yuan" target="_blank" class="gpts-action-btn">启动 GPTs</a>`;
+            } else if (gpt.id === 'gpts-wechat') {
+                actionButtonHTML = `<a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzk0MjU2OTA1Nw==" target="_blank" class="gpts-action-btn">访问公众号</a>`;
             } else {
                 actionButtonHTML = `<button class="gpts-action-btn">启动 GPTs</button>`;
             }
@@ -1477,8 +1506,8 @@ function showGPTSListView() {
                     ${actionButtonHTML}
                     ${gptsToShowTooltip.includes(gpt.id) ? 
                         `<div class="gpts-hover-tooltip">
-                            <img src="${将抵月}" alt="QR Code">
-                            <p>付费内容，联系作者获取</p>
+                            <img src="${gpt.id === 'gpts-wechat' ? 将抵月 : WechatQR}" alt="QR Code">
+                            <p>${gpt.id === 'gpts-wechat' ? '打开微信扫描二维码，即刻开始聊天' : '微信扫码添加好友即可获取'}</p>
                         </div>` : ''}
                 </div>
             `;
@@ -1580,8 +1609,8 @@ function showWebProjectsView() {
             },
             {
                 id: 'epub-reader',
-                name: 'Epub Reader',
-                icon: `<img src="${EpubReaderIcon}" alt="Epub Reader" class="gpts-card-img-icon">`,
+                name: 'Tobooks',
+                icon: `<img src="${EpubReaderIcon}" alt="Tobooks" class="gpts-card-img-icon">`,
                 description: '一个简洁、高效的在线Epub电子书阅读器。',
                 url: 'https://tobooks.netlify.app/'
             },
@@ -2242,6 +2271,68 @@ function showQRModal(appName) {
     gsap.fromTo(modal.querySelector('.qr-modal-content'), {scale: 0.8, y: 20}, {scale: 1, y: 0, duration: 0.3, ease: "back.out(1.7)"});
 }
 
+function showIterateView() {
+    const mainContainer = document.querySelector('main');
+    let iterateView = document.querySelector('.iterate-view');
+    const navBackButton = document.getElementById('nav-back-to-creations-btn');
+
+    if (!iterateView) {
+        iterateView = document.createElement('div');
+        iterateView.className = 'main-detail iterate-view';
+        iterateView.style.flexDirection = 'column';
+        iterateView.style.alignItems = 'center';
+        iterateView.style.padding = '2rem';
+        iterateView.style.paddingTop = '100px';
+        iterateView.style.textAlign = 'center';
+
+        const iterateCard = `
+            <div class="gpts-card" data-toolid="iterate">
+                <div class="gpts-card-icon">
+                    <div style="width: 64px; height: 32px; position: relative;">
+                        <div style="position: absolute; left: 0; top: 0; width: 32px; height: 32px; border: 3px solid currentColor; border-radius: 50%; border-right: none;"></div>
+                        <div style="position: absolute; right: 0; top: 0; width: 32px; height: 32px; border: 3px solid currentColor; border-radius: 50%; border-left: none;"></div>
+                    </div>
+                </div>
+                <h3 class="gpts-card-name">Iterate</h3>
+                <p class="gpts-card-description">AI 对话控制器与 MCP 工具。</p>
+                <button class="gpts-action-btn crawler-detail-btn">联系获取</button>
+            </div>
+        `;
+
+        iterateView.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; min-height: 400px;">
+                ${iterateCard}
+            </div>
+        `;
+        mainContainer.appendChild(iterateView);
+
+        if (navBackButton) {
+            const newBtn = navBackButton.cloneNode(true);
+            navBackButton.parentNode.replaceChild(newBtn, navBackButton);
+            newBtn.addEventListener('click', () => {
+                iterateView.style.display = 'none';
+                newBtn.style.display = 'none';
+                const creationsView = document.querySelector('.create-detail');
+                if (creationsView) {
+                    creationsView.style.display = 'flex';
+                    gsap.fromTo(creationsView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.main-detail').forEach(detail => {
+        if (detail !== iterateView) {
+            detail.style.display = 'none';
+        }
+    });
+
+    const newNavBackButton = document.getElementById('nav-back-to-creations-btn');
+    iterateView.style.display = 'flex';
+    if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
+    gsap.fromTo(iterateView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+}
+
 function showToolsView() {
     const mainContainer = document.querySelector('main');
     let toolsView = document.querySelector('.tools-view');
@@ -2270,7 +2361,7 @@ function showToolsView() {
             {
                 id: 'youtube-crawler',
                 name: 'YouTube Crawler',
-                icon: `<svg viewBox="0 0 24 24" width="64" height="45"><path fill="currentColor" d="M21.582,6.186c-0.23-0.854-0.908-1.532-1.762-1.762C18.254,4,12,4,12,4S5.746,4,4.18,4.424c-0.854,0.23-1.532,0.908-1.762,1.762C2,7.75,2,12,2,12s0,4.25,0.418,5.814c0.23,0.854,0.908,1.532,1.762,1.762C5.746,20,12,20,12,20s6.254,0,7.82-0.424c0.854-0.23,1.532-0.908,1.762-1.762C22,16.25,22,12,22,12S22,7.75,21.582,6.186z M10,15.5v-7l6,3.5L10,15.5z"></path></svg>`,
+                icon: `<svg viewBox="0 0 24 24" width="64" height="45"><path fill="currentColor" d="M21.582,6.186c-0.23-0.854-0.908-1.532-1.762-1.762C18.254,4,12,4,12,4S5.746,4,4.18,4.424c-0.854,0.23-1.532,0.908-1.762,1.762C2,7.75,2,12,2,12s0,4.25,0.418,5.814c0.23,0.854,0.908,1.532,1.762,1.762C5.746,20,12,20,12,20s6.254,0,7.82-0.424c0.854-0.23,1.532,0.908,1.762-1.762C22,16.25,22,12,22,12S22,7.75,21.582,6.186z M10,15.5v-7l6,3.5L10,15.5z"></path></svg>`,
                 description: '抓取 YouTube 视频与数据。',
                 url: null
             },
@@ -2298,7 +2389,7 @@ function showToolsView() {
         });
 
         toolsView.innerHTML = `
-            <div class="gpts-cards-grid">
+            <div style="display: flex; justify-content: center; align-items: center; min-height: 400px;">
                 ${toolCardsHTML}
             </div>
         `;
