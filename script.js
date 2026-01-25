@@ -1112,42 +1112,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('main').appendChild(writeDetail);
             
             writeDetail.querySelectorAll('.wechat-article-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const articleId = card.dataset.articleId;
-                    const articleTitle = card.querySelector('.article-title').textContent;
-                    
-                    if (articleId === 'article-1') {
-                        window.open('https://mp.weixin.qq.com/s/Vo-UGtOUmVAqPQLt94SGdg', '_blank');
-                    } else if (articleId === 'article-2') { // New: 生命力
-                        window.open('https://mp.weixin.qq.com/s/VSDlvWIv2Q1M2udMvwkYUQ', '_blank');
-                    } else if (articleId === 'article-3') { // New: TO 2024
-                        window.open('https://mp.weixin.qq.com/s/qi__Z4IPiEQ4kW-mMzmHrw', '_blank');
-                    } else if (articleId === 'article-4') { // New: 世界在我前面，缓缓展开
-                        window.open('https://mp.weixin.qq.com/s/wjDEGHZ4FnAOOXnIT1Pw1w', '_blank');
-                    } else if (articleId === 'article-5') {
-                        window.open('https://mp.weixin.qq.com/s/E4djVYPjjknWaPjwttsFjA', '_blank');
-                    } else if (articleId === 'article-6') {
-                        window.open('https://mp.weixin.qq.com/s/_L9UpYUw9YFz2cNpUVUqgQ', '_blank');
-                    } else if (articleId === 'article-7') {
-                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247483933&idx=1&sn=7a6360a478627b05e26cb91f0a8f5164&scene=21#wechat_redirect', '_blank');
-                    } else if (articleId === 'article-8') {
-                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247483962&idx=1&sn=e984f3909965e70e1cb2ab4d6936e457&scene=21&poc_token=HJodPGijFYYRg4UJPY7ZQJC05NQcdJyDCh145ups', '_blank');
-                    } else if (articleId === 'article-9') {
-                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247484150&idx=1&sn=9172b3d07a5f01b40782818c1da468b9&scene=21#wechat_redirect', '_blank');
-                    } else if (articleId === 'article-10') {
-                        window.open('https://mp.weixin.qq.com/s?__biz=Mzk0MjU2OTA1Nw==&mid=2247484288&idx=1&sn=bafb1665755d6d6abeba5a8e5d6b1d51&scene=21#wechat_redirect', '_blank');
-                    } else {
-                        console.log(`Navigating to article: ${articleTitle} (ID: ${articleId})`);
-                    }
-                });
                 card.addEventListener('mouseenter', () => {
-                    card.style.backgroundColor = '#2A2A2A'; // Slightly lighter on hover
+                    card.style.backgroundColor = '#2A2A2A';
                     card.style.transform = 'translateY(-2px)';
                 });
                 card.addEventListener('mouseleave', () => {
                     card.style.backgroundColor = '#1E1E1E';
                     card.style.transform = 'translateY(0px)';
-            });
+                });
             });
         }
         
