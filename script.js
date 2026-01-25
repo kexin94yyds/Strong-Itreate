@@ -1,59 +1,59 @@
 // 导入所有图片资源
-import 跑步2024 from './images/跑步2024.JPG';
-import 跑步2025 from './images/跑步2025.png';
-import 跑步2025PB from './images/跑步2025-20.26公里.png';
-import 跑步2024愿望 from './images/跑步2024愿望.JPG';
-import 越来越强 from './images/越来越强.jpg';
-import 死不旋踵 from './images/死不旋踵.webp';
-import 世界在我面前 from './images/世界在我面前.png';
-import 世界在我面前缓缓展开 from './images/世界在我面前，缓缓展开.JPG';
-import 水仙花 from './images/水仙花.png';
-import 心中温暖 from './images/心中温暖.jpg';
-import 江南书院 from './images/江南书院.png';
-import 你怎么就没血了 from './images/你怎么就没血了.PNG';
-import 我们没有永远 from './images/我们没有永远.JPG';
-import 科目三 from './images/科目三.JPG';
-import SlashCommandPrompter from './images/Slash Command Prompter.JPG';
-import 笑来 from './images/笑来.JPG';
-import 请辩 from './images/请辩.JPG';
-import GPTBuilder from './images/GPT Builder.JPG';
-import Learn from './images/Learn.png';
-import Run from './images/Run.png';
-import 事实核查员 from './images/事实核查员.png';
-import 将抵月 from './images/将抵月.png';
-import 猫咪头像 from './images/cat-avatar.jpg';
-import 兰顿蚂蚁 from './images/兰顿蚂蚁.webp';
-import 做最好的自己 from './images/做最好的自己.jpeg';
-import 可控之事 from './images/可控之事.JPG';
-import 最好的 from './images/最好的.JPG';
-import 李笑来 from './images/李笑来.jpg';
-import 笔记神器 from './images/笔记神器.png';
-import 自救 from './images/自救.png';
-import 金刚柱 from './images/金刚柱.JPG';
-import 张鹏 from './images/张鹏.png';
-import 曾叔 from './images/曾叔.png';
-import 时间管道 from './images/时间管道.JPG';
-import AttentionSpanTracker from './images/Attention-Span-Tracker.JPG';
-import EpubReaderIcon from './images/Epub 阅读器.png';
-import FloatingMD from './images/FloatingMD.png';
-import RelaxIcon from './images/relax.png';
-import 单词记录器 from './images/单词.png';
-import FireIcon from './images/Fire.png';
-import 闹钟Icon from './images/闹钟.png';
-import YouTubeTranscript from './images/YouTube-Transcript.png';
-import TwitterCrawler from './images/Twitter-Crawler.png';
-import GeminiWatermarkRemover from './images/Gemini-Watermark-Remover.png';
-import AISidebar from './images/AI-Sidebar.png';
-import PixelTunePhoto from './images/PixelTunePhoto.png';
-import ContentDash from './images/ContentDash.png';
-import Monoshot from './images/Monoshot.png';
-import RIIcon from './images/RI.png';
-import PrompterIcon from './images/Prompter.png';
-import FlowIcon from './images/Flow.png';
-import WechatQR from './images/可鑫二维码.JPG';
-import PodcastIcon from './images/Podcast.jpeg';
-import WechatIcon from './images/公众号头像.png';
-import WechatGzhQR from './images/公众号二维码.png';
+import 跑步2024 from '/images/跑步2024.JPG';
+import 跑步2025 from '/images/跑步2025.png';
+import 跑步2025PB from '/images/跑步2025-20.26公里.png';
+import 跑步2024愿望 from '/images/跑步2024愿望.JPG';
+import 越来越强 from '/images/越来越强.jpg';
+import 死不旋踵 from '/images/死不旋踵.webp';
+import 世界在我面前 from '/images/世界在我面前.png';
+import 世界在我面前缓缓展开 from '/images/世界在我面前，缓缓展开.JPG';
+import 水仙花 from '/images/水仙花.png';
+import 心中温暖 from '/images/心中温暖.jpg';
+import 江南书院 from '/images/江南书院.png';
+import 你怎么就没血了 from '/images/你怎么就没血了.PNG';
+import 我们没有永远 from '/images/我们没有永远.JPG';
+import 科目三 from '/images/科目三.JPG';
+import SlashCommandPrompter from '/images/Slash Command Prompter.JPG';
+import 笑来 from '/images/笑来.JPG';
+import 请辩 from '/images/请辩.JPG';
+import GPTBuilder from '/images/GPT Builder.JPG';
+import Learn from '/images/Learn.png';
+import Run from '/images/Run.png';
+import 事实核查员 from '/images/事实核查员.png';
+import 将抵月 from '/images/将抵月.png';
+import 猫咪头像 from '/images/cat-avatar.jpg';
+import 兰顿蚂蚁 from '/images/兰顿蚂蚁.webp';
+import 做最好的自己 from '/images/做最好的自己.jpeg';
+import 可控之事 from '/images/可控之事.JPG';
+import 最好的 from '/images/最好的.JPG';
+import 李笑来 from '/images/李笑来.jpg';
+import 笔记神器 from '/images/笔记神器.png';
+import 自救 from '/images/自救.png';
+import 金刚柱 from '/images/金刚柱.JPG';
+import 张鹏 from '/images/张鹏.png';
+import 曾叔 from '/images/曾叔.png';
+import 时间管道 from '/images/时间管道.JPG';
+import AttentionSpanTracker from '/images/Attention-Span-Tracker.JPG';
+import EpubReaderIcon from '/images/Epub 阅读器.png';
+import FloatingMD from '/images/FloatingMD.png';
+import RelaxIcon from '/images/relax.png';
+import 单词记录器 from '/images/单词.png';
+import FireIcon from '/images/Fire.png';
+import 闹钟Icon from '/images/闹钟.png';
+import YouTubeTranscript from '/images/YouTube-Transcript.png';
+import TwitterCrawler from '/images/Twitter-Crawler.png';
+import GeminiWatermarkRemover from '/images/Gemini-Watermark-Remover.png';
+import AISidebar from '/images/AI-Sidebar.png';
+import PixelTunePhoto from '/images/PixelTunePhoto.png';
+import ContentDash from '/images/ContentDash.png';
+import Monoshot from '/images/Monoshot.png';
+import RIIcon from '/images/RI.png';
+import PrompterIcon from '/images/Prompter.png';
+import FlowIcon from '/images/Flow.png';
+import WechatQR from '/images/可鑫二维码.JPG';
+import PodcastIcon from '/images/Podcast.jpeg';
+import WechatIcon from '/images/公众号头像.png';
+import WechatGzhQR from '/images/公众号二维码.png';
 
 // Perlin噪声函数
 function noise(x, y) {
@@ -1752,40 +1752,40 @@ function showCrawlersView() {
 document.addEventListener('DOMContentLoaded', () => {
     // 创建图片映射
     const imageMap = {
-        'images/跑步2024.JPG': 跑步2024,
-        'images/跑步2024愿望.JPG': 跑步2024愿望,
-        'images/越来越强.jpg': 越来越强,
-        'images/死不旋踵.webp': 死不旋踵,
-        'images/世界在我面前.png': 世界在我面前,
-        'images/世界在我面前，缓缓展开.JPG': 世界在我面前缓缓展开,
-        'images/水仙花.png': 水仙花,
-        'images/心中温暖.jpg': 心中温暖,
-        'images/江南书院.png': 江南书院,
-        'images/你怎么就没血了.PNG': 你怎么就没血了,
-        'images/我们没有永远.JPG': 我们没有永远,
-        'images/科目三.JPG': 科目三,
-        'images/Slash Command Prompter.JPG': SlashCommandPrompter,
-        'images/笑来.JPG': 笑来,
-        'images/请辩.JPG': 请辩,
-        'images/GPT Builder.JPG': GPTBuilder,
-        'images/Learn.png': Learn,
-        'images/Run.png': Run,
-        'images/事实核查员.png': 事实核查员,
-        'images/将抵月.png': 将抵月,
-        'images/兰顿蚂蚁.webp': 兰顿蚂蚁,
-        'images/做最好的自己.jpeg': 做最好的自己,
-        'images/可控之事.JPG': 可控之事,
-        'images/最好的.JPG': 最好的,
-        'images/李笑来.jpg': 李笑来,
-        'images/笔记神器.png': 笔记神器,
-        'images/自救.png': 自救,
-        'images/金刚柱.JPG': 金刚柱,
-        'images/张鹏.png': 张鹏,
-        'images/曾叔.png': 曾叔,
-        'images/时间管道.JPG': 时间管道,
-        'images/单词.png': 单词记录器,
-        'images/Fire.png': FireIcon,
-        'images/闹钟.png': 闹钟Icon
+        '/images/跑步2024.JPG': 跑步2024,
+        '/images/跑步2024愿望.JPG': 跑步2024愿望,
+        '/images/越来越强.jpg': 越来越强,
+        '/images/死不旋踵.webp': 死不旋踵,
+        '/images/世界在我面前.png': 世界在我面前,
+        '/images/世界在我面前，缓缓展开.JPG': 世界在我面前缓缓展开,
+        '/images/水仙花.png': 水仙花,
+        '/images/心中温暖.jpg': 心中温暖,
+        '/images/江南书院.png': 江南书院,
+        '/images/你怎么就没血了.PNG': 你怎么就没血了,
+        '/images/我们没有永远.JPG': 我们没有永远,
+        '/images/科目三.JPG': 科目三,
+        '/images/Slash Command Prompter.JPG': SlashCommandPrompter,
+        '/images/笑来.JPG': 笑来,
+        '/images/请辩.JPG': 请辩,
+        '/images/GPT Builder.JPG': GPTBuilder,
+        '/images/Learn.png': Learn,
+        '/images/Run.png': Run,
+        '/images/事实核查员.png': 事实核查员,
+        '/images/将抵月.png': 将抵月,
+        '/images/兰顿蚂蚁.webp': 兰顿蚂蚁,
+        '/images/做最好的自己.jpeg': 做最好的自己,
+        '/images/可控之事.JPG': 可控之事,
+        '/images/最好的.JPG': 最好的,
+        '/images/李笑来.jpg': 李笑来,
+        '/images/笔记神器.png': 笔记神器,
+        '/images/自救.png': 自救,
+        '/images/金刚柱.JPG': 金刚柱,
+        '/images/张鹏.png': 张鹏,
+        '/images/曾叔.png': 曾叔,
+        '/images/时间管道.JPG': 时间管道,
+        '/images/单词.png': 单词记录器,
+        '/images/Fire.png': FireIcon,
+        '/images/闹钟.png': 闹钟Icon
     };
 
     // 更新所有img元素的src
