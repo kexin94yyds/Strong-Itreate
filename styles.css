@@ -903,12 +903,60 @@ body.menu-open .menu-toggle span:nth-child(3) {
     margin-bottom: 36px;
 }
 
-/* 第3章（曾叔）的样式 */
+/* 第3章（启点）的样式 - 文字缩小避免和3D动画重叠 */
 .main-detail:nth-child(3) .detail-title {
+    font-size: 2rem;
+    letter-spacing: 0.4rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.main-detail:nth-child(3) .detail-description {
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 400px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 24px;
+}
+
+/* 第4章（曾叔）的样式 - 文字缩小 */
+.main-detail:nth-child(4) .detail-title {
+    font-size: 2rem;
+    letter-spacing: 0.4rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.main-detail:nth-child(4) .detail-description {
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 400px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 24px;
+}
+
+/* 第12章（你认真的样子真的超帅）的样式 - 两列展示 */
+.main-detail:nth-child(12) .main-detail-info {
+    margin-left: 2rem;
+    max-width: 450px;
+}
+
+.main-detail:nth-child(12) .detail-title {
     font-size: 2.5rem;
     letter-spacing: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     font-weight: 300;
+}
+
+.main-detail:nth-child(12) .detail-description {
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 400px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 20px;
+    column-count: 2;
+    column-gap: 20px;
+    letter-spacing: 0.03em;
 }
 
 .main-detail:nth-child(2) .detail-description {
@@ -972,22 +1020,6 @@ body.menu-open .menu-toggle span:nth-child(3) {
 }
 
 /* .next-episode-btn 样式已移除，现在使用滑动切换 */
-
-.main-detail:nth-child(12) .detail-title {
-    font-size: 2.2rem;  /* 进一步缩小标题 */
-    letter-spacing: 0.4rem;
-    margin-bottom: 2rem;
-    font-weight: 300;
-}
-
-.main-detail:nth-child(12) .detail-description {
-    font-size: 0.85rem;  /* 稍微调小内容字体 */
-    line-height: 1.9;
-    letter-spacing: 0.08rem;
-    white-space: pre-line;
-    opacity: 0.9;
-    max-width: 600px;
-}
 
 .main-detail:nth-child(13) .detail-title {
     font-size: 3rem;  /* 标题放大 */
