@@ -213,6 +213,12 @@ closeButton.addEventListener('click', () => {
         toolsView.style.display = 'none';
     }
     
+    // 隐藏Music页面
+    const musicView = document.querySelector('.music-view');
+    if (musicView) {
+        musicView.style.display = 'none';
+    }
+    
     // 隐藏DO相关页面
     const actionGrid = document.querySelector('.action-grid');
     const runStory = document.querySelector('.run-story');
@@ -2489,3 +2495,38 @@ function showScriptsView() {
     if (newNavBackButton) newNavBackButton.style.display = 'inline-block';
     gsap.fromTo(scriptsView, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
 }
+
+// 处理 MUSIC 按钮点击事件
+document.addEventListener('DOMContentLoaded', () => {
+    const musicButton = document.querySelector('.action-grid .action-button:nth-child(11)'); // MUSIC 按钮
+    const mainDefault = document.querySelector('.main-default');
+    const musicView = document.querySelector('.music-view');
+
+    if (musicButton && musicView) {
+        musicButton.addEventListener('click', () => {
+            if (mainDefault) {
+                mainDefault.style.display = 'none';
+            }
+            // 隐藏所有其他视图
+            document.querySelectorAll('.main-detail').forEach(detail => {
+                detail.style.display = 'none';
+            });
+            const investView = document.querySelector('.invest-view');
+            if (investView) investView.style.display = 'none';
+            const buildView = document.querySelector('.build-view');
+            if (buildView) buildView.style.display = 'none';
+            
+            musicView.style.display = 'flex';
+            gsap.fromTo(musicView, {opacity: 0, y: -20}, {opacity: 1, y: 0, duration: 0.5, ease: "power2.out"});
+            
+            // 为音乐卡片添加动画
+            const musicCards = musicView.querySelectorAll('.music-card');
+            gsap.fromTo(musicCards, 
+                {opacity: 0, y: 20}, 
+                {opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out"}
+            );
+            
+            document.body.classList.remove('menu-open');
+        });
+    }
+});
