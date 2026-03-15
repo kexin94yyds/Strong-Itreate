@@ -1,0 +1,132 @@
+import {
+  hashValue,
+  json,
+  normalizeContact,
+  randomInviteCode,
+  requestIp,
+  requestUserAgent,
+  safeJsonParse,
+} from './_invite-utils.js'
+import {
+  getApplicationByContactHash,
+  getApplicationByInviteCode,
+  insertApplication,
+  isSupabaseConfigured,
+  listApplicationsByInviter,
+} from './_supabase.js'
+
+function buildInviteUrl(origin, code) {
+  const siteOrigin = origin || 'https://iterate.xin'
+  return `${siteOrigin.replace(/\/$/, '')}/iterate/index.html?ref=${code}`
+}
+
+async function buildStatus(application) {
+  const referrals = await listApplicationsByInviter(application.id)
+  const qualifiedCount = referrals.filter(item => item.referral_status === 'qualified').length
+
+  return {
+    inviteCode: application.invite_code,
+    inviteLink: buildInviteUrl('', application.invite_code),
+    applicationStatus: application.application_status,
+    referralStatus: application.referral_status,
+    qualifiedInviteCount: qualifiedCount,
+  }
+}
+
+export async function handler(event) {
+  if (event.httpMethod === 'OPTIONS')
+    return json(200, { ok: true })
+
+  if (event.httpMethod !== 'POST')
+    return json(405, { error: 'Method not allowed' })
+
+  if (!isSupabaseConfigured()) {
+    return json(500, { error: '邀请服务未配置好 Supabase 环境变量' })
+  }
+
+  const payload = safeJsonParse(event.body)
+  if (!payload) {
+    return json(400, { error: '请求体不是合法 JSON' })
+  }
+
+  try {
+    const contactType = String(payload.contactType || '').trim().toLowerCase()
+    const contactValue = normalizeContact(contactType, payload.contactValue)
+    const usageNote = String(payload.usageNote || '').trim()
+    const referralCode = String(payload.referralCode || '').trim().toLowerCase() || null
+
+    if (usageNote.length < 8) {
+      return json(400, { error: '请简单描述你的使用场景，至少 8 个字' })
+    }
+
+    const contactHash = hashValue(`${contactType}:${contactValue}`)
+    const existing = await getApplicationByContactHash(contactHash)
+    if (existing) {
+      return json(200, {
+        ok: true,
+        duplicate: true,
+        message: '你之前已经提交过申请，已返回现有邀请信息',
+        data: await buildStatus(existing),
+      })
+    }
+
+    let inviter = null
+    if (referralCode) {
+      inviter = await getApplicationByInviteCode(referralCode)
+    }
+
+    const ipHash = hashValue(`ip:${requestIp(event.headers)}`)
+    const userAgentHash = hashValue(`ua:${requestUserAgent(event.headers)}`)
+
+    let inviteCode = randomInviteCode()
+    while (await getApplicationByInviteCode(inviteCode)) {
+      inviteCode = randomInviteCode()
+    }
+
+    let referralStatus = 'none'
+    let inviterApplicationId = null
+    if (inviter) {
+      if (inviter.contact_hash === contactHash) {
+        referralStatus = 'self_referral'
+      }
+      else {
+        referralStatus = 'qualified'
+        inviterApplicationId = inviter.id
+      }
+    }
+
+    const created = await insertApplication({
+      invite_code: inviteCode,
+      contact_type: contactType,
+      contact_value: contactValue,
+      contact_hash: contactHash,
+      usage_note: usageNote,
+      referral_code: referralCode,
+      inviter_application_id: inviterApplicationId,
+      application_status: 'submitted',
+      referral_status: referralStatus,
+      ip_hash: ipHash,
+      user_agent_hash: userAgentHash,
+      qualified_at: referralStatus === 'qualified' ? new Date().toISOString() : null,
+      metadata: {
+        source: 'iterate-landing',
+      },
+    })
+
+    return json(200, {
+      ok: true,
+      duplicate: false,
+      message: '申请已提交',
+      data: {
+        inviteCode: created.invite_code,
+        inviteLink: buildInviteUrl(event.headers.origin, created.invite_code),
+        applicationStatus: created.application_status,
+        referralStatus: created.referral_status,
+        qualifiedInviteCount: 0,
+      },
+    })
+  }
+  catch (error) {
+    return json(500, { error: error.message || '申请提交失败' })
+  }
+}

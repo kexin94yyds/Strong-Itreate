@@ -382,26 +382,26 @@
       <div class="card">
         <h2 class="card-title">邀请进度</h2>
         <div class="progress-top">
-          <div class="progress-main">1 / 3</div>
-          <div class="muted">再邀请 2 位，即可优先审核</div>
+          <div class="progress-main" id="progress-main">0 / 3</div>
+          <div class="muted" id="progress-meta">再邀请 3 位，即可优先审核</div>
         </div>
         <div class="progress-bar">
-          <div class="progress-fill"></div>
+          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
         </div>
-        <div class="progress-note">
+        <div class="progress-note" id="progress-note">
           只有完成有效申请才会计入进度。我们更想通过这一步找到真正会高频使用 iterate 的同类用户，而不是拉一批只点开看看的人。
         </div>
 
         <div class="link-box">
-          <div class="mono-box" id="invite-link">https://iterate.xin/iterate?ref=founding-beta-kx001</div>
+          <div class="mono-box" id="invite-link">https://iterate.xin/iterate/index.html?ref=demo</div>
           <button class="button" data-copy-target="invite-link">复制链接</button>
         </div>
 
         <div class="button-row">
-          <button class="button secondary" data-copy-text="让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。我已经申请了，你也可以试试： https://iterate.xin/iterate?ref=founding-beta-kx001">复制推荐文案</button>
-          <button class="button secondary" data-copy-text="https://iterate.xin/iterate?ref=founding-beta-kx001">复制到微信</button>
-          <button class="button secondary" data-copy-text="我在 iterate 的首批内测候选名单里。它不是另一个 AI IDE，而是给 AI 工作流加了一层 Agent Loop。你如果平时做长链路任务，这个值得试： https://iterate.xin/iterate?ref=founding-beta-kx001">复制 Founder 文案</button>
-          <a class="button secondary" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=iterate%20%E4%B8%8D%E6%98%AF%E5%8F%A6%E4%B8%80%E4%B8%AA%20AI%20IDE%EF%BC%8C%E8%80%8C%E6%98%AF%E6%8E%A5%E4%BD%8F%20AI%20%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%9A%84%20Agent%20Loop%E3%80%82%20https%3A%2F%2Fiterate.xin%2Fiterate%3Fref%3Dfounding-beta-kx001">分享到 X</a>
+          <button class="button secondary" id="copy-primary">复制推荐文案</button>
+          <button class="button secondary" id="copy-wechat">复制到微信</button>
+          <button class="button secondary" id="copy-founder">复制 Founder 文案</button>
+          <a class="button secondary" id="share-x" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=iterate">分享到 X</a>
         </div>
 
         <div class="copy-note" id="copy-feedback"></div>
@@ -444,17 +444,85 @@
 
     <section class="card" style="margin-top: 24px;">
       <h2 class="card-title">推荐文案</h2>
-      <div class="share-copy">
-        让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。如果你平时用 AI IDE、CLI 或桌面宿主做长链路任务，这个值得试。\n\nhttps://iterate.xin/iterate?ref=founding-beta-kx001
+        <div class="share-copy" id="share-copy">
+        让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。如果你平时用 AI IDE、CLI 或桌面宿主做长链路任务，这个值得试。\n\nhttps://iterate.xin/iterate/index.html?ref=demo
       </div>
       <div class="footnote">
-        有效邀请只统计完整申请，不统计点击量。真实版本里，这里还应该继续补邀请人数同步、奖励状态回显和分享海报。
+        有效邀请只统计完整申请，不统计点击量。系统会区分点击、申请和有效邀请，不会按单纯流量发奖励。
       </div>
     </section>
   </div>
 
   <script>
     const feedback = document.getElementById('copy-feedback');
+    const progressMain = document.getElementById('progress-main');
+    const progressMeta = document.getElementById('progress-meta');
+    const progressFill = document.getElementById('progress-fill');
+    const progressNote = document.getElementById('progress-note');
+    const inviteLinkNode = document.getElementById('invite-link');
+    const shareCopyNode = document.getElementById('share-copy');
+    const copyPrimary = document.getElementById('copy-primary');
+    const copyWechat = document.getElementById('copy-wechat');
+    const copyFounder = document.getElementById('copy-founder');
+    const shareX = document.getElementById('share-x');
+
+    function currentInviteCode() {
+      const url = new URL(window.location.href);
+      return url.searchParams.get('code') || window.localStorage.getItem('iterate_beta_last_invite_code') || 'demo';
+    }
+
+    function currentInviteLink(code) {
+      return `${window.location.origin}/iterate/index.html?ref=${code}`;
+    }
+
+    function primaryCopy(link) {
+      return `让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。我已经申请了，你也可以试试： ${link}`;
+    }
+
+    function founderCopy(link) {
+      return `我在 iterate 的首批内测候选名单里。它不是另一个 AI IDE，而是给 AI 工作流加了一层 Agent Loop。你如果平时做长链路任务，这个值得试： ${link}`;
+    }
+
+    function updateCopyActions(link) {
+      copyPrimary.dataset.copyText = primaryCopy(link);
+      copyWechat.dataset.copyText = link;
+      copyFounder.dataset.copyText = founderCopy(link);
+      shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`iterate 不是另一个 AI IDE，而是接住 AI 工作流的 Agent Loop。 ${link}`)}`;
+      shareCopyNode.textContent = `让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。如果你平时用 AI IDE、CLI 或桌面宿主做长链路任务，这个值得试。\n\n${link}`;
+    }
+
+    function applyInviteStatus(data) {
+      const qualified = data.qualifiedInviteCount || 0;
+      const target = data.targetCount || 3;
+      const remaining = Math.max(0, target - qualified);
+      const width = Math.min(100, (qualified / target) * 100);
+      const link = data.inviteLink || currentInviteLink(data.inviteCode || currentInviteCode());
+
+      progressMain.textContent = `${qualified} / ${target}`;
+      progressMeta.textContent = remaining > 0 ? `再邀请 ${remaining} 位，即可优先审核` : '已进入优先审核通道';
+      progressFill.style.width = `${width}%`;
+      progressNote.textContent = `当前已记录 ${data.clickCount || 0} 次打开，${data.appliedInviteCount || 0} 位提交申请，其中 ${qualified} 位属于有效邀请。`;
+      inviteLinkNode.textContent = link;
+      updateCopyActions(link);
+    }
+
+    async function loadInviteStatus() {
+      const code = currentInviteCode();
+      const fallbackLink = currentInviteLink(code);
+      inviteLinkNode.textContent = fallbackLink;
+      updateCopyActions(fallbackLink);
+
+      try {
+        const response = await fetch(`/.netlify/functions/invite-status?code=${encodeURIComponent(code)}`);
+        const result = await response.json();
+        if (!response.ok || !result?.ok) {
+          throw new Error(result?.error || '加载邀请状态失败');
+        }
+        applyInviteStatus(result.data);
+      } catch (error) {
+        progressNote.textContent = '暂时还没拿到实时邀请状态，先用你的专属邀请链接继续传播。';
+      }
+    }
 
     async function copyText(value) {
       try {
@@ -473,11 +541,13 @@
       });
     });
 
-    document.querySelectorAll('[data-copy-text]').forEach(button => {
+    [copyPrimary, copyWechat, copyFounder].forEach((button) => {
       button.addEventListener('click', () => {
-        copyText(button.getAttribute('data-copy-text'));
+        copyText(button.dataset.copyText || '');
       });
     });
+
+    loadInviteStatus();
   </script>
 </body>
 </html>
