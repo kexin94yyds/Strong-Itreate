@@ -2272,7 +2272,7 @@ function showIterateView() {
                     </div>
                 </div>
                 <h3 class="gpts-card-name">Iterate</h3>
-                <p class="gpts-card-description">面向 AI IDE、CLI 与桌面宿主的持续交互层，现已开放内测申请。</p>
+                <p class="gpts-card-description">连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。</p>
                 <a href="/iterate/" class="gpts-action-btn">申请内测</a>
             </div>
         `;
@@ -2333,7 +2333,7 @@ function showToolsView() {
                     <div style="position: absolute; left: 0; top: 0; width: 32px; height: 32px; border: 3px solid currentColor; border-radius: 50%; border-right: none;"></div>
                     <div style="position: absolute; right: 0; top: 0; width: 32px; height: 32px; border: 3px solid currentColor; border-radius: 50%; border-left: none;"></div>
                 </div>`,
-                description: '面向 AI IDE、CLI 与桌面宿主的持续交互层，现已开放内测申请。',
+                description: '连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。',
                 url: '/iterate/',
                 actionLabel: '申请内测'
             },
