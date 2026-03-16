@@ -77,3 +77,57 @@ export function safeJsonParse(value) {
     return null
   }
 }
+
+export function getTurnstileSiteKey() {
+  return getEnv(['TURNSTILE_SITE_KEY', 'CF_TURNSTILE_SITE_KEY'])
+}
+
+function getTurnstileSecretKey() {
+  return getEnv(['TURNSTILE_SECRET_KEY', 'CF_TURNSTILE_SECRET_KEY'])
+}
+
+export async function verifyTurnstileToken(token, remoteIp) {
+  const secretKey = getTurnstileSecretKey()
+  if (!secretKey) {
+    return {
+      enabled: false,
+      success: true,
+    }
+  }
+
+  if (!token) {
+    return {
+      enabled: true,
+      success: false,
+      error: '请先完成人机校验',
+    }
+  }
+
+  const body = new URLSearchParams({
+    secret: secretKey,
+    response: token,
+  })
+
+  if (remoteIp) {
+    body.set('remoteip', remoteIp)
+  }
+
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  })
+
+  if (!response.ok) {
+    throw new Error('Turnstile 验证请求失败')
+  }
+
+  const result = await response.json()
+  return {
+    enabled: true,
+    success: Boolean(result.success),
+    error: result.success ? null : '人机校验未通过，请重试',
+  }
+}

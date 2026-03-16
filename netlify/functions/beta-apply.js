@@ -6,6 +6,7 @@ import {
   requestIp,
   requestUserAgent,
   safeJsonParse,
+  verifyTurnstileToken,
 } from './_invite-utils.js'
 import {
   getApplicationByContactHash,
@@ -64,6 +65,7 @@ export async function handler(event) {
     const contactValue = normalizeContact(contactType, payload.contactValue)
     const usageNote = String(payload.usageNote || '').trim()
     let referralCode = String(payload.referralCode || '').trim().toLowerCase() || null
+    const turnstileToken = String(payload.turnstileToken || '').trim()
 
     if (usageNote.length < 8) {
       return json(400, { error: '请简单描述你的使用场景，至少 8 个字' })
@@ -89,6 +91,11 @@ export async function handler(event) {
     )
     if (recentApplications.length >= APPLICATION_LIMIT_PER_IP) {
       return json(429, { error: '提交过于频繁，请 1 小时后再试' })
+    }
+
+    const turnstileCheck = await verifyTurnstileToken(turnstileToken, requestIp(event.headers))
+    if (!turnstileCheck.success) {
+      return json(400, { error: turnstileCheck.error || '人机校验未通过，请重试' })
     }
 
     let inviter = null
