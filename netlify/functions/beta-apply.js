@@ -20,6 +20,12 @@ function buildInviteUrl(origin, code) {
   return `${siteOrigin.replace(/\/$/, '')}/iterate/index.html?ref=${code}`
 }
 
+function isContactHashConflict(error) {
+  const message = String(error?.message || '')
+  return message.includes('duplicate key value violates unique constraint')
+    && message.includes('contact_hash')
+}
+
 async function buildStatus(application) {
   const referrals = await listApplicationsByInviter(application.id)
   const qualifiedCount = referrals.filter(item => item.referral_status === 'qualified').length
@@ -98,23 +104,41 @@ export async function handler(event) {
       }
     }
 
-    const created = await insertApplication({
-      invite_code: inviteCode,
-      contact_type: contactType,
-      contact_value: contactValue,
-      contact_hash: contactHash,
-      usage_note: usageNote,
-      referral_code: referralCode,
-      inviter_application_id: inviterApplicationId,
-      application_status: 'submitted',
-      referral_status: referralStatus,
-      ip_hash: ipHash,
-      user_agent_hash: userAgentHash,
-      qualified_at: referralStatus === 'qualified' ? new Date().toISOString() : null,
-      metadata: {
-        source: 'iterate-landing',
-      },
-    })
+    let created
+    try {
+      created = await insertApplication({
+        invite_code: inviteCode,
+        contact_type: contactType,
+        contact_value: contactValue,
+        contact_hash: contactHash,
+        usage_note: usageNote,
+        referral_code: referralCode,
+        inviter_application_id: inviterApplicationId,
+        application_status: 'submitted',
+        referral_status: referralStatus,
+        ip_hash: ipHash,
+        user_agent_hash: userAgentHash,
+        qualified_at: referralStatus === 'qualified' ? new Date().toISOString() : null,
+        metadata: {
+          source: 'iterate-landing',
+        },
+      })
+    }
+    catch (error) {
+      if (isContactHashConflict(error)) {
+        const duplicated = await getApplicationByContactHash(contactHash)
+        if (duplicated) {
+          return json(200, {
+            ok: true,
+            duplicate: true,
+            message: '你之前已经提交过申请，已返回现有邀请信息',
+            data: await buildStatus(duplicated),
+          })
+        }
+      }
+
+      throw error
+    }
 
     return json(200, {
       ok: true,

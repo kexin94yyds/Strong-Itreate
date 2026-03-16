@@ -26,7 +26,7 @@ export async function handler(event) {
   const clicks = await listClicksByInviteCode(inviteCode)
 
   const qualifiedInviteCount = referredApplications.filter(item => item.referral_status === 'qualified').length
-  const appliedInviteCount = referredApplications.filter(item => item.application_status === 'submitted').length
+  const appliedInviteCount = referredApplications.length
 
   return json(200, {
     ok: true,
