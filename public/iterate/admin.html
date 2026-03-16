@@ -33,7 +33,7 @@
       margin: 0 auto;
       padding: 32px 20px 64px;
     }
-    .topbar, .toolbar, .list {
+    .topbar, .toolbar, .list, .summary {
       display: grid;
       gap: 16px;
     }
@@ -69,8 +69,12 @@
       line-height: 1.6;
     }
     .toolbar {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       align-items: end;
+      margin-bottom: 24px;
+    }
+    .summary {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       margin-bottom: 24px;
     }
     .panel {
@@ -217,11 +221,11 @@
       font-size: 14px;
     }
     @media (max-width: 960px) {
-      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar, .summary { grid-template-columns: 1fr 1fr; }
       .application-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
-      .toolbar, .application-grid { grid-template-columns: 1fr; }
+      .toolbar, .summary, .application-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -252,9 +256,24 @@
         </select>
       </div>
       <div class="panel">
+        <label for="sort">排序</label>
+        <select id="sort">
+          <option value="newest">最新提交</option>
+          <option value="qualified">有效邀请最多</option>
+          <option value="approved">已通过优先</option>
+        </select>
+      </div>
+      <div class="panel">
         <label>&nbsp;</label>
         <button class="primary" id="load-applications">加载申请</button>
       </div>
+    </div>
+
+    <div class="summary" id="summary-cards">
+      <div class="panel"><label>总申请</label><div id="summary-total">0</div></div>
+      <div class="panel"><label>待处理</label><div id="summary-submitted">0</div></div>
+      <div class="panel"><label>已通过</label><div id="summary-approved">0</div></div>
+      <div class="panel"><label>有邀请进度</label><div id="summary-qualified">0</div></div>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -266,9 +285,14 @@
     const tokenInput = document.getElementById('admin-token');
     const searchInput = document.getElementById('search');
     const statusSelect = document.getElementById('status');
+    const sortSelect = document.getElementById('sort');
     const loadButton = document.getElementById('load-applications');
     const feedback = document.getElementById('feedback');
     const listNode = document.getElementById('application-list');
+    const summaryTotal = document.getElementById('summary-total');
+    const summarySubmitted = document.getElementById('summary-submitted');
+    const summaryApproved = document.getElementById('summary-approved');
+    const summaryQualified = document.getElementById('summary-qualified');
 
     tokenInput.value = window.localStorage.getItem(STORAGE_KEY) || '';
 
@@ -323,6 +347,7 @@
         <p class="usage-note">${application.usageNote}</p>
         <div class="actions">
           <button class="ghost" data-copy-contact>复制联系方式</button>
+          <button class="ghost" data-copy-link>复制邀请链接</button>
           <button class="approve" data-status="approved">标记通过</button>
           <button class="reject" data-status="rejected">标记拒绝</button>
           <button class="restore" data-status="submitted">恢复待处理</button>
@@ -333,6 +358,10 @@
         await copyText(application.contactValue);
       });
 
+      wrapper.querySelector('[data-copy-link]').addEventListener('click', async () => {
+        await copyText(`${window.location.origin}/iterate/index.html?ref=${application.inviteCode}`);
+      });
+
       wrapper.querySelectorAll('[data-status]').forEach((button) => {
         button.addEventListener('click', async () => {
           await updateStatus(application.id, button.dataset.status);
@@ -340,6 +369,28 @@
       });
 
       return wrapper;
+    }
+
+    function renderSummary(applications) {
+      summaryTotal.textContent = applications.length;
+      summarySubmitted.textContent = applications.filter(item => item.applicationStatus === 'submitted').length;
+      summaryApproved.textContent = applications.filter(item => item.applicationStatus === 'approved').length;
+      summaryQualified.textContent = applications.filter(item => item.qualifiedInviteCount > 0).length;
+    }
+
+    function sortApplications(applications) {
+      const rows = [...applications];
+      if (sortSelect.value === 'qualified') {
+        rows.sort((a, b) => b.qualifiedInviteCount - a.qualifiedInviteCount || new Date(b.createdAt) - new Date(a.createdAt));
+        return rows;
+      }
+      if (sortSelect.value === 'approved') {
+        const weight = { approved: 2, submitted: 1, rejected: 0 };
+        rows.sort((a, b) => (weight[b.applicationStatus] - weight[a.applicationStatus]) || (new Date(b.createdAt) - new Date(a.createdAt)));
+        return rows;
+      }
+      rows.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return rows;
     }
 
     async function loadApplications() {
@@ -368,15 +419,17 @@
           throw new Error(result?.error || '加载失败');
         }
 
+        const applications = sortApplications(result.data);
+        renderSummary(applications);
         listNode.innerHTML = '';
-        if (!result.data.length) {
+        if (!applications.length) {
           listNode.innerHTML = '<div class="empty">当前没有符合筛选条件的申请。</div>';
         } else {
-          result.data.forEach((application) => {
+          applications.forEach((application) => {
             listNode.appendChild(applicationCard(application));
           });
         }
-        setFeedback(`已加载 ${result.data.length} 条申请。`);
+        setFeedback(`已加载 ${applications.length} 条申请。`);
       } catch (error) {
         setFeedback(error instanceof Error ? error.message : '加载失败');
       } finally {
@@ -415,6 +468,7 @@
         loadApplications();
       }
     });
+    sortSelect.addEventListener('change', loadApplications);
   </script>
 </body>
 </html>
