@@ -87,3 +87,29 @@ export async function listRecentApplicationsByIpHash(ipHash, sinceIso) {
 export async function listRecentClicksByIpHash(ipHash, sinceIso) {
   return supabaseFetch(`/rest/v1/iterate_beta_invite_clicks?ip_hash=eq.${encodeURIComponent(ipHash)}&created_at=gte.${encodeURIComponent(sinceIso)}&select=id`)
 }
+
+export async function listApplicationsForAdmin({ search = '', status = '' } = {}) {
+  const filters = ['select=*', 'order=created_at.desc']
+
+  if (search) {
+    const encoded = encodeURIComponent(`%${search}%`)
+    filters.push(`or=(contact_value.ilike.${encoded},usage_note.ilike.${encoded},invite_code.ilike.${encoded})`)
+  }
+
+  if (status && status !== 'all') {
+    filters.push(`application_status=eq.${encodeURIComponent(status)}`)
+  }
+
+  return supabaseFetch(`/rest/v1/iterate_beta_applications?${filters.join('&')}`)
+}
+
+export async function updateApplicationStatus(id, status) {
+  const rows = await supabaseFetch(`/rest/v1/iterate_beta_applications?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      application_status: status,
+    }),
+  })
+
+  return rows?.[0] || null
+}

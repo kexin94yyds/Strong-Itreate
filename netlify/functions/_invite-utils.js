@@ -82,6 +82,10 @@ export function getTurnstileSiteKey() {
   return getEnv(['TURNSTILE_SITE_KEY', 'CF_TURNSTILE_SITE_KEY'])
 }
 
+export function getAdminToken() {
+  return getEnv(['ITERATE_ADMIN_TOKEN'])
+}
+
 function getTurnstileSecretKey() {
   return getEnv(['TURNSTILE_SECRET_KEY', 'CF_TURNSTILE_SECRET_KEY'])
 }
