@@ -13,7 +13,11 @@ import {
   insertApplication,
   isSupabaseConfigured,
   listApplicationsByInviter,
+  listRecentApplicationsByIpHash,
 } from './_supabase.js'
+
+const APPLICATION_LIMIT_WINDOW_MS = 60 * 60 * 1000
+const APPLICATION_LIMIT_PER_IP = 5
 
 function buildInviteUrl(origin, code) {
   const siteOrigin = origin || 'https://iterate.xin'
@@ -76,6 +80,17 @@ export async function handler(event) {
       })
     }
 
+    const ipHash = hashValue(`ip:${requestIp(event.headers)}`)
+    const userAgentHash = hashValue(`ua:${requestUserAgent(event.headers)}`)
+
+    const recentApplications = await listRecentApplicationsByIpHash(
+      ipHash,
+      new Date(Date.now() - APPLICATION_LIMIT_WINDOW_MS).toISOString(),
+    )
+    if (recentApplications.length >= APPLICATION_LIMIT_PER_IP) {
+      return json(429, { error: '提交过于频繁，请 1 小时后再试' })
+    }
+
     let inviter = null
     if (referralCode) {
       inviter = await getApplicationByInviteCode(referralCode)
@@ -83,9 +98,6 @@ export async function handler(event) {
         referralCode = null
       }
     }
-
-    const ipHash = hashValue(`ip:${requestIp(event.headers)}`)
-    const userAgentHash = hashValue(`ua:${requestUserAgent(event.headers)}`)
 
     let inviteCode = randomInviteCode()
     while (await getApplicationByInviteCode(inviteCode)) {

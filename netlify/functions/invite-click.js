@@ -1,5 +1,13 @@
 import { hashValue, json, requestIp, requestUserAgent, safeJsonParse } from './_invite-utils.js'
-import { getApplicationByInviteCode, insertInviteClick, isSupabaseConfigured } from './_supabase.js'
+import {
+  getApplicationByInviteCode,
+  insertInviteClick,
+  isSupabaseConfigured,
+  listRecentClicksByIpHash,
+} from './_supabase.js'
+
+const CLICK_LIMIT_WINDOW_MS = 60 * 60 * 1000
+const CLICK_LIMIT_PER_IP = 30
 
 export async function handler(event) {
   if (event.httpMethod === 'OPTIONS')
@@ -24,6 +32,15 @@ export async function handler(event) {
 
   const ipHash = hashValue(`ip:${requestIp(event.headers)}`)
   const userAgentHash = hashValue(`ua:${requestUserAgent(event.headers)}`)
+  const recentClicks = await listRecentClicksByIpHash(
+    ipHash,
+    new Date(Date.now() - CLICK_LIMIT_WINDOW_MS).toISOString(),
+  )
+
+  // Treat over-limit traffic as a no-op so the page flow stays smooth.
+  if (recentClicks.length >= CLICK_LIMIT_PER_IP) {
+    return json(200, { ok: true })
+  }
 
   await insertInviteClick({
     invite_code: inviteCode,

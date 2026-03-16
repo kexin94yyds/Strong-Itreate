@@ -83,6 +83,9 @@ create index if not exists iterate_beta_applications_created_at_idx
 create index if not exists iterate_beta_applications_status_idx
   on public.iterate_beta_applications(application_status, referral_status, created_at desc);
 
+create index if not exists iterate_beta_applications_ip_created_at_idx
+  on public.iterate_beta_applications(ip_hash, created_at desc);
+
 create index if not exists iterate_beta_invite_clicks_created_at_idx
   on public.iterate_beta_invite_clicks(created_at desc);
 
@@ -95,6 +98,9 @@ where newer.ctid < older.ctid
 
 create unique index if not exists iterate_beta_invite_clicks_unique_visitor_idx
   on public.iterate_beta_invite_clicks(invite_code, ip_hash, user_agent_hash);
+
+create index if not exists iterate_beta_invite_clicks_ip_created_at_idx
+  on public.iterate_beta_invite_clicks(ip_hash, created_at desc);
 
 alter table public.iterate_beta_applications enable row level security;
 alter table public.iterate_beta_invite_clicks enable row level security;

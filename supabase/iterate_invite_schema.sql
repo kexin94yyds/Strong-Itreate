@@ -44,6 +44,9 @@ create index if not exists iterate_beta_applications_created_at_idx
 create index if not exists iterate_beta_applications_status_idx
   on public.iterate_beta_applications(application_status, referral_status, created_at desc);
 
+create index if not exists iterate_beta_applications_ip_created_at_idx
+  on public.iterate_beta_applications(ip_hash, created_at desc);
+
 create table if not exists public.iterate_beta_invite_clicks (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
@@ -62,6 +65,9 @@ create index if not exists iterate_beta_invite_clicks_created_at_idx
 
 create unique index if not exists iterate_beta_invite_clicks_unique_visitor_idx
   on public.iterate_beta_invite_clicks(invite_code, ip_hash, user_agent_hash);
+
+create index if not exists iterate_beta_invite_clicks_ip_created_at_idx
+  on public.iterate_beta_invite_clicks(ip_hash, created_at desc);
 
 create or replace function public.iterate_touch_updated_at()
 returns trigger

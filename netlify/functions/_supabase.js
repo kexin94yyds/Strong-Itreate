@@ -79,3 +79,11 @@ export async function listApplicationsByInviter(inviterId) {
 export async function listClicksByInviteCode(inviteCode) {
   return supabaseFetch(`/rest/v1/iterate_beta_invite_clicks?invite_code=eq.${encodeURIComponent(inviteCode)}&select=*`)
 }
+
+export async function listRecentApplicationsByIpHash(ipHash, sinceIso) {
+  return supabaseFetch(`/rest/v1/iterate_beta_applications?ip_hash=eq.${encodeURIComponent(ipHash)}&created_at=gte.${encodeURIComponent(sinceIso)}&select=id`)
+}
+
+export async function listRecentClicksByIpHash(ipHash, sinceIso) {
+  return supabaseFetch(`/rest/v1/iterate_beta_invite_clicks?ip_hash=eq.${encodeURIComponent(ipHash)}&created_at=gte.${encodeURIComponent(sinceIso)}&select=id`)
+}
