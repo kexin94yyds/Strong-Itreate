@@ -398,9 +398,9 @@
         </div>
 
         <div class="button-row">
-          <button class="button secondary" id="copy-primary">复制推荐文案</button>
-          <button class="button secondary" id="copy-wechat">复制到微信</button>
-          <button class="button secondary" id="copy-founder">复制 Founder 文案</button>
+          <button class="button secondary" id="copy-primary">复制通用文案</button>
+          <button class="button secondary" id="copy-wechat">复制微信文案</button>
+          <button class="button secondary" id="copy-founder">复制深度推荐文案</button>
           <a class="button secondary" id="share-x" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=iterate">分享到 X</a>
         </div>
 
@@ -445,7 +445,7 @@
     <section class="card" style="margin-top: 24px;">
       <h2 class="card-title">推荐文案</h2>
         <div class="share-copy" id="share-copy">
-        让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。如果你平时用 AI IDE、CLI 或桌面宿主做长链路任务，这个值得试。\n\nhttps://iterate.xin/iterate/index.html?ref=demo
+        我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测。\n\nhttps://iterate.xin/iterate/index.html?ref=demo
       </div>
       <div class="footnote">
         有效邀请只统计完整申请，不统计点击量。系统会区分点击、申请和有效邀请，不会按单纯流量发奖励。
@@ -476,19 +476,23 @@
     }
 
     function primaryCopy(link) {
-      return `让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。我已经申请了，你也可以试试： ${link}`;
+      return `我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测： ${link}`;
+    }
+
+    function wechatCopy(link) {
+      return `我最近在试一个叫 iterate 的东西。它不是再做一个 AI IDE，而是把 AI 一轮结束就断掉的工作流，变成可以继续推进的 Agent Loop。你如果平时也高频用 Cursor / Codex / Claude Code 做任务，可以从这个链接申请看看： ${link}`;
     }
 
     function founderCopy(link) {
-      return `我在 iterate 的首批内测候选名单里。它不是另一个 AI IDE，而是给 AI 工作流加了一层 Agent Loop。你如果平时做长链路任务，这个值得试： ${link}`;
+      return `我最近在参加 iterate 的早期内测。它最有意思的地方，不是又做了一个聊天框，而是给 AI 工作流补了一层 Agent Loop：AI 做完一轮后，任务不会直接掉地上，而是能继续接力往下跑。你如果平时也会高频用 AI IDE / CLI 做长链路任务，这个值得你试一轮： ${link}`;
     }
 
     function updateCopyActions(link) {
       copyPrimary.dataset.copyText = primaryCopy(link);
-      copyWechat.dataset.copyText = link;
+      copyWechat.dataset.copyText = wechatCopy(link);
       copyFounder.dataset.copyText = founderCopy(link);
       shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`iterate 不是另一个 AI IDE，而是接住 AI 工作流的 Agent Loop。 ${link}`)}`;
-      shareCopyNode.textContent = `让 AI 继续，而不是重来。iterate 不是另一个 AI IDE，而是一层接住 AI 工作流的 Agent Loop。如果你平时用 AI IDE、CLI 或桌面宿主做长链路任务，这个值得试。\n\n${link}`;
+      shareCopyNode.textContent = `我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测。\n\n${link}`;
     }
 
     function applyInviteStatus(data) {
@@ -527,7 +531,7 @@
     async function copyText(value) {
       try {
         await navigator.clipboard.writeText(value);
-        feedback.textContent = '已复制，可以去发给朋友了。';
+        feedback.textContent = '已复制，直接发给朋友或贴到微信里就行。';
       } catch (error) {
         feedback.textContent = '复制失败，请手动复制。';
       }
