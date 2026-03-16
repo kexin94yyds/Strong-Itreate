@@ -86,6 +86,16 @@ create index if not exists iterate_beta_applications_status_idx
 create index if not exists iterate_beta_invite_clicks_created_at_idx
   on public.iterate_beta_invite_clicks(created_at desc);
 
+delete from public.iterate_beta_invite_clicks newer
+using public.iterate_beta_invite_clicks older
+where newer.ctid < older.ctid
+  and newer.invite_code = older.invite_code
+  and newer.ip_hash is not distinct from older.ip_hash
+  and newer.user_agent_hash is not distinct from older.user_agent_hash;
+
+create unique index if not exists iterate_beta_invite_clicks_unique_visitor_idx
+  on public.iterate_beta_invite_clicks(invite_code, ip_hash, user_agent_hash);
+
 alter table public.iterate_beta_applications enable row level security;
 alter table public.iterate_beta_invite_clicks enable row level security;
 

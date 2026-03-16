@@ -60,6 +60,9 @@ create index if not exists iterate_beta_invite_clicks_code_idx
 create index if not exists iterate_beta_invite_clicks_created_at_idx
   on public.iterate_beta_invite_clicks(created_at desc);
 
+create unique index if not exists iterate_beta_invite_clicks_unique_visitor_idx
+  on public.iterate_beta_invite_clicks(invite_code, ip_hash, user_agent_hash);
+
 create or replace function public.iterate_touch_updated_at()
 returns trigger
 language plpgsql

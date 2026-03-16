@@ -62,8 +62,11 @@ export async function insertApplication(payload) {
 }
 
 export async function insertInviteClick(payload) {
-  const rows = await supabaseFetch('/rest/v1/iterate_beta_invite_clicks', {
+  const rows = await supabaseFetch('/rest/v1/iterate_beta_invite_clicks?on_conflict=invite_code,ip_hash,user_agent_hash', {
     method: 'POST',
+    headers: {
+      Prefer: 'resolution=ignore-duplicates,return=representation',
+    },
     body: JSON.stringify(payload),
   })
   return rows?.[0] || null
