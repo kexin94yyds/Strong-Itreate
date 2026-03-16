@@ -53,7 +53,7 @@ export async function handler(event) {
     const contactType = String(payload.contactType || '').trim().toLowerCase()
     const contactValue = normalizeContact(contactType, payload.contactValue)
     const usageNote = String(payload.usageNote || '').trim()
-    const referralCode = String(payload.referralCode || '').trim().toLowerCase() || null
+    let referralCode = String(payload.referralCode || '').trim().toLowerCase() || null
 
     if (usageNote.length < 8) {
       return json(400, { error: '请简单描述你的使用场景，至少 8 个字' })
@@ -73,6 +73,9 @@ export async function handler(event) {
     let inviter = null
     if (referralCode) {
       inviter = await getApplicationByInviteCode(referralCode)
+      if (!inviter) {
+        referralCode = null
+      }
     }
 
     const ipHash = hashValue(`ip:${requestIp(event.headers)}`)

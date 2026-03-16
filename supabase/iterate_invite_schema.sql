@@ -16,7 +16,20 @@ create table if not exists public.iterate_beta_applications (
   qualified_at timestamptz,
   ip_hash text,
   user_agent_hash text,
-  metadata jsonb not null default '{}'::jsonb
+  metadata jsonb not null default '{}'::jsonb,
+  constraint iterate_beta_applications_invite_code_format_chk
+    check (invite_code ~ '^[a-z0-9]{7}$'),
+  constraint iterate_beta_applications_referral_code_format_chk
+    check (referral_code is null or referral_code ~ '^[a-z0-9]{7}$'),
+  constraint iterate_beta_applications_usage_note_length_chk
+    check (char_length(btrim(usage_note)) >= 8),
+  constraint iterate_beta_applications_no_self_link_chk
+    check (inviter_application_id is null or inviter_application_id <> id),
+  constraint iterate_beta_applications_qualified_consistency_chk
+    check (
+      (referral_status = 'qualified' and inviter_application_id is not null and qualified_at is not null)
+      or (referral_status <> 'qualified' and inviter_application_id is null)
+    )
 );
 
 create index if not exists iterate_beta_applications_inviter_idx
@@ -24,6 +37,12 @@ create index if not exists iterate_beta_applications_inviter_idx
 
 create index if not exists iterate_beta_applications_referral_code_idx
   on public.iterate_beta_applications(referral_code);
+
+create index if not exists iterate_beta_applications_created_at_idx
+  on public.iterate_beta_applications(created_at desc);
+
+create index if not exists iterate_beta_applications_status_idx
+  on public.iterate_beta_applications(application_status, referral_status, created_at desc);
 
 create table if not exists public.iterate_beta_invite_clicks (
   id uuid primary key default gen_random_uuid(),
@@ -38,9 +57,13 @@ create table if not exists public.iterate_beta_invite_clicks (
 create index if not exists iterate_beta_invite_clicks_code_idx
   on public.iterate_beta_invite_clicks(invite_code);
 
+create index if not exists iterate_beta_invite_clicks_created_at_idx
+  on public.iterate_beta_invite_clicks(created_at desc);
+
 create or replace function public.iterate_touch_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
@@ -54,3 +77,9 @@ create trigger iterate_beta_applications_touch_updated_at
 before update on public.iterate_beta_applications
 for each row
 execute function public.iterate_touch_updated_at();
+
+alter table public.iterate_beta_applications enable row level security;
+alter table public.iterate_beta_invite_clicks enable row level security;
+
+revoke all on public.iterate_beta_applications from anon, authenticated;
+revoke all on public.iterate_beta_invite_clicks from anon, authenticated;
