@@ -1,23 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iterate | Invite Loop Preview</title>
-  <link rel="icon" type="image/png" href="/iterate/assets/favicon-CFdCgY3a.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <title>申请已提交 | Iterate</title>
   <style>
     :root {
-      --bg: #050505;
-      --panel: #101010;
-      --panel-soft: #171717;
-      --line: rgba(255, 255, 255, 0.08);
-      --text: rgba(255, 255, 255, 0.95);
-      --muted: rgba(255, 255, 255, 0.58);
-      --accent: #ffffff;
-      --success: #34d399;
+      color-scheme: light;
+      --bg: #0a0a0a;
+      --panel: rgba(255, 255, 255, 0.96);
+      --text: #111111;
+      --muted: #6b7280;
+      --line: rgba(17, 17, 17, 0.08);
+      --accent: #111111;
+      --accent-soft: #f4f4f5;
+      --success: #0f766e;
     }
 
     * {
@@ -27,560 +24,342 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 30%),
-        var(--bg);
+      font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.14), transparent 32%),
+        linear-gradient(180deg, #050505 0%, #111111 100%);
     }
 
     .page {
-      width: min(980px, calc(100vw - 40px));
+      width: min(960px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 32px 0 72px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 32px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      font-size: 24px;
-    }
-
-    .brand-badge {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .topbar-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      padding: 40px 0 72px;
     }
 
     .hero {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
-      border-radius: 28px;
-      padding: 32px;
-      margin-bottom: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 16px;
-      border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      pointer-events: none;
+      padding: 20px 0 32px;
+      color: #fafafa;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 14px;
-      color: var(--muted);
+      margin: 0 0 14px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      letter-spacing: 0.24em;
+      color: rgba(255, 255, 255, 0.6);
     }
 
-    .eyebrow-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--success);
-    }
-
-    .hero h1 {
-      margin: 24px 0 10px;
-      font-family: 'Noto Serif SC', serif;
-      font-size: clamp(34px, 5.8vw, 64px);
+    .title {
+      margin: 0;
+      font-size: clamp(36px, 6vw, 68px);
       line-height: 0.95;
       letter-spacing: -0.05em;
+      font-weight: 900;
     }
 
-    .hero p {
-      max-width: 760px;
-      margin: 0;
-      color: var(--muted);
+    .subtitle {
+      max-width: 680px;
+      margin: 20px 0 0;
       font-size: 18px;
-      line-height: 1.55;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 24px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.72);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 20px;
-      margin-top: 22px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 24px;
+      align-items: start;
     }
 
     .card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+    }
+
+    .card-main {
+      padding: 32px;
+    }
+
+    .card-side {
       padding: 24px;
     }
 
-    .card-title {
-      margin: 0 0 18px;
-      font-size: 24px;
+    .kicker {
+      margin: 0 0 10px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: -0.04em;
-    }
-
-    .progress-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .progress-main {
-      font-size: 46px;
-      font-weight: 800;
-      letter-spacing: -0.06em;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      width: 33.33%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #ffffff, #9ae6b4);
-    }
-
-    .progress-note {
-      margin-top: 16px;
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    .link-box {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .mono-box {
-      flex: 1;
-      padding: 15px 16px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: var(--panel-soft);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.78);
-      word-break: break-all;
-    }
-
-    .button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      min-height: 50px;
-      padding: 0 18px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: var(--accent);
-      color: #000;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      cursor: pointer;
+      color: var(--muted);
     }
 
-    .button.secondary {
-      background: transparent;
-      color: #fff;
+    .code-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      background: #fbfbfb;
     }
 
-    .button-row {
+    .code-meta {
+      min-width: 0;
+    }
+
+    .code-label {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .code-value {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      text-transform: lowercase;
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
-    .copy-note {
-      margin-top: 14px;
-      min-height: 22px;
-      color: var(--success);
+    button,
+    a.button {
+      appearance: none;
+      border: 0;
+      background: var(--accent);
+      color: #ffffff;
+      padding: 14px 18px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+    }
+
+    button:hover,
+    a.button:hover {
+      opacity: 0.92;
+    }
+
+    button:active,
+    a.button:active {
+      transform: scale(0.98);
+    }
+
+    .button-secondary {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 24px;
       font-size: 14px;
-      font-weight: 600;
+      color: var(--success);
     }
 
-    .reward-list {
+    .link-box {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .link-box p {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .link-box code {
+      display: block;
+      overflow-wrap: anywhere;
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .steps {
       display: grid;
       gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .reward {
-      border: 1px solid var(--line);
-      border-radius: 20px;
+    .step {
       padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .reward strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 20px;
-      letter-spacing: -0.04em;
-    }
-
-    .reward span {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 15px;
-    }
-
-    .reward-tag {
-      flex: 0 0 auto;
-      padding: 10px 14px;
-      border-radius: 999px;
       border: 1px solid var(--line);
-      font-size: 12px;
-      font-weight: 800;
+      background: #fcfcfc;
+    }
+
+    .step-index {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 11px;
+      font-weight: 900;
       letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .share-copy {
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.03);
-      color: rgba(255, 255, 255, 0.88);
-      line-height: 1.8;
-    }
-
-    .footnote {
-      margin-top: 12px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
     }
 
-    @media (max-width: 960px) {
+    .step p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    @media (max-width: 840px) {
       .grid {
         grid-template-columns: 1fr;
       }
 
       .page {
-        width: min(100vw - 24px, 100%);
-        padding: 18px 0 44px;
+        width: min(100% - 24px, 960px);
+        padding: 28px 0 48px;
       }
 
-      .hero {
+      .card-main,
+      .card-side {
         padding: 22px;
       }
 
-      .hero p {
-        font-size: 16px;
-      }
-
-      .progress-main {
-        font-size: 36px;
-      }
-
-      .link-box {
-        flex-direction: column;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      .topbar {
-        margin-bottom: 18px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      .card-title {
-        font-size: 22px;
-      }
-
-      .reward {
+      .code-row {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      .reward-tag {
-        align-self: flex-start;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .topbar-actions {
-        width: 100%;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-badge">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
-          </svg>
-        </span>
-        <span>iterate</span>
-      </div>
-      <div class="topbar-actions">
-        <a href="/iterate/index.html" class="button secondary">返回 Landing</a>
-      </div>
-    </div>
-
+  <main class="page">
     <section class="hero">
-      <div class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        Invite Loop Preview
-      </div>
-      <h1>你已进入 iterate 候选名单。</h1>
-      <p>这一步不是“提交结束”，而是进入下一段 loop。邀请 3 位同样高频使用 AI 的人完成申请，你会进入优先审核通道。</p>
-      <div class="hero-actions">
-        <a href="/iterate/payment-success.html" class="button secondary">已有订单，恢复领取</a>
-      </div>
+      <p class="eyebrow">Invite Ready</p>
+      <h1 class="title">申请已提交。<br>你的邀请码已经生成。</h1>
+      <p class="subtitle">
+        这不是一个“提交后就结束”的表单页。你现在已经进入邀请闭环，可以把专属链接发给同类用户；
+        后续排序、进度判断和优先邀请，会基于真实申请结果继续推进。
+      </p>
     </section>
 
     <section class="grid">
-      <div class="card">
-        <h2 class="card-title">邀请进度</h2>
-        <div class="progress-top">
-          <div class="progress-main" id="progress-main">0 / 3</div>
-          <div class="muted" id="progress-meta">再邀请 3 位，即可优先审核</div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-        </div>
-        <div class="progress-note" id="progress-note">
-          只有完成有效申请才会计入进度。我们更想通过这一步找到真正会高频使用 iterate 的同类用户，而不是拉一批只点开看看的人。
+      <article class="card card-main">
+        <p class="kicker">Your Invite Code</p>
+        <div class="code-row">
+          <div class="code-meta">
+            <p class="code-label">专属邀请码</p>
+            <p class="code-value" id="invite-code">读取中</p>
+          </div>
+          <button id="copy-code">复制邀请码</button>
         </div>
 
         <div class="link-box">
-          <div class="mono-box" id="invite-link">https://iterate.xin/iterate/index.html?ref=demo</div>
-          <button class="button" data-copy-target="invite-link">复制链接</button>
+          <p>分享链接</p>
+          <code id="invite-link">生成中...</code>
         </div>
 
-        <div class="button-row">
-          <button class="button secondary" id="copy-primary">复制通用文案</button>
-          <button class="button secondary" id="copy-wechat">复制微信文案</button>
-          <button class="button secondary" id="copy-founder">复制深度推荐文案</button>
-          <a class="button secondary" id="share-x" target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text=iterate">分享到 X</a>
+        <div class="actions">
+          <button id="copy-link">复制邀请链接</button>
+          <a class="button button-secondary" id="open-link" href="/">打开邀请链接</a>
+          <a class="button button-secondary" id="back-home" href="/">返回申请页</a>
         </div>
 
-        <div class="copy-note" id="copy-feedback"></div>
-      </div>
+        <div class="status" id="status">你可以直接复制上面的邀请码或邀请链接。</div>
+      </article>
 
-      <div class="card">
-        <h2 class="card-title">为什么继续邀请</h2>
-        <div class="reward-list">
-          <div class="reward">
-            <div>
-              <strong>邀请 3 人</strong>
-              <span>优先审核，尽早进入第一波可用名单。</span>
-            </div>
-            <div class="reward-tag">Next</div>
-          </div>
-          <div class="reward">
-            <div>
-              <strong>邀请 5 人</strong>
-              <span>直接进入首批内测资格，不再排队。</span>
-            </div>
-            <div class="reward-tag">Fast Lane</div>
-          </div>
-          <div class="reward">
-            <div>
-              <strong>邀请 10 人</strong>
-              <span>Founder Beta 身份，进入更高反馈优先级。</span>
-            </div>
-            <div class="reward-tag">Founder</div>
-          </div>
-          <div class="reward">
-            <div>
-              <strong>邀请 20 人</strong>
-              <span>正式版特别权益，保留更高优先级和长期身份。</span>
-            </div>
-            <div class="reward-tag">Legacy</div>
-          </div>
-        </div>
-      </div>
+      <aside class="card card-side">
+        <p class="kicker">Next Steps</p>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-index">01</span>
+            <p>把邀请链接发给真正会长期使用 AI IDE / CLI / 桌面宿主的人，而不是泛流量。</p>
+          </li>
+          <li class="step">
+            <span class="step-index">02</span>
+            <p>对方通过你的链接完成有效申请后，这次邀请才会进入真实统计。</p>
+          </li>
+          <li class="step">
+            <span class="step-index">03</span>
+            <p>如果你更习惯微信沟通，仍可引导对方先走网页申请；邀请码和进度判断以网页链路为准。</p>
+          </li>
+        </ol>
+
+        <p class="footer-note">
+          如果你是回访打开这个页面，但 URL 上没有 `code` 参数，页面会尝试回退读取最近一次生成的邀请码。
+        </p>
+      </aside>
     </section>
-
-    <section class="card" style="margin-top: 24px;">
-      <h2 class="card-title">推荐文案</h2>
-        <div class="share-copy" id="share-copy">
-        我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测。\n\nhttps://iterate.xin/iterate/index.html?ref=demo
-      </div>
-      <div class="footnote">
-        有效邀请只统计完整申请，不统计点击量。系统会区分点击、申请和有效邀请，不会按单纯流量发奖励。
-      </div>
-    </section>
-  </div>
+  </main>
 
   <script>
-    const feedback = document.getElementById('copy-feedback');
-    const progressMain = document.getElementById('progress-main');
-    const progressMeta = document.getElementById('progress-meta');
-    const progressFill = document.getElementById('progress-fill');
-    const progressNote = document.getElementById('progress-note');
-    const inviteLinkNode = document.getElementById('invite-link');
-    const shareCopyNode = document.getElementById('share-copy');
-    const copyPrimary = document.getElementById('copy-primary');
-    const copyWechat = document.getElementById('copy-wechat');
-    const copyFounder = document.getElementById('copy-founder');
-    const shareX = document.getElementById('share-x');
+    const STORAGE_INVITE_KEY = 'iterate_beta_last_invite_code';
+    const params = new URLSearchParams(window.location.search);
+    const inviteCode = (params.get('code') || window.localStorage.getItem(STORAGE_INVITE_KEY) || '').trim().toLowerCase();
+    const baseUrl = new URL('./', window.location.href);
+    const landingUrl = new URL(baseUrl);
+    landingUrl.searchParams.set('ref', inviteCode);
 
-    function currentInviteCode() {
-      const url = new URL(window.location.href);
-      return url.searchParams.get('code') || window.localStorage.getItem('iterate_beta_last_invite_code') || 'demo';
+    const inviteCodeEl = document.getElementById('invite-code');
+    const inviteLinkEl = document.getElementById('invite-link');
+    const statusEl = document.getElementById('status');
+    const copyCodeBtn = document.getElementById('copy-code');
+    const copyLinkBtn = document.getElementById('copy-link');
+    const openLinkEl = document.getElementById('open-link');
+    const backHomeEl = document.getElementById('back-home');
+
+    function setStatus(message) {
+      statusEl.textContent = message;
     }
 
-    function currentInviteLink(code) {
-      return `${window.location.origin}/iterate/index.html?ref=${code}`;
-    }
-
-    function primaryCopy(link) {
-      return `我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测： ${link}`;
-    }
-
-    function wechatCopy(link) {
-      return `我最近在试一个叫 iterate 的东西。它不是再做一个 AI IDE，而是把 AI 一轮结束就断掉的工作流，变成可以继续推进的 Agent Loop。你如果平时也高频用 Cursor / Codex / Claude Code 做任务，可以从这个链接申请看看： ${link}`;
-    }
-
-    function founderCopy(link) {
-      return `我最近在参加 iterate 的早期内测。它最有意思的地方，不是又做了一个聊天框，而是给 AI 工作流补了一层 Agent Loop：AI 做完一轮后，任务不会直接掉地上，而是能继续接力往下跑。你如果平时也会高频用 AI IDE / CLI 做长链路任务，这个值得你试一轮： ${link}`;
-    }
-
-    function updateCopyActions(link) {
-      copyPrimary.dataset.copyText = primaryCopy(link);
-      copyWechat.dataset.copyText = wechatCopy(link);
-      copyFounder.dataset.copyText = founderCopy(link);
-      shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`iterate 不是另一个 AI IDE，而是接住 AI 工作流的 Agent Loop。 ${link}`)}`;
-      shareCopyNode.textContent = `我最近在试 iterate。它不是另一个 AI IDE，而是给 AI 工作流补一层 Agent Loop：AI 一轮结束后，任务不会直接断掉，而是能继续往下推进。如果你平时会用 Cursor、Codex、Claude Code 这类工具做长链路任务，可以试试这轮内测。\n\n${link}`;
-    }
-
-    function applyInviteStatus(data) {
-      const qualified = data.qualifiedInviteCount || 0;
-      const target = data.targetCount || 3;
-      const remaining = Math.max(0, target - qualified);
-      const width = Math.min(100, (qualified / target) * 100);
-      const link = data.inviteLink || currentInviteLink(data.inviteCode || currentInviteCode());
-
-      progressMain.textContent = `${qualified} / ${target}`;
-      progressMeta.textContent = remaining > 0 ? `再邀请 ${remaining} 位，即可优先审核` : '已进入优先审核通道';
-      progressFill.style.width = `${width}%`;
-      progressNote.textContent = `当前已记录 ${data.clickCount || 0} 次打开，${data.appliedInviteCount || 0} 位提交申请，其中 ${qualified} 位属于有效邀请。`;
-      inviteLinkNode.textContent = link;
-      updateCopyActions(link);
-    }
-
-    async function loadInviteStatus() {
-      const code = currentInviteCode();
-      const fallbackLink = currentInviteLink(code);
-      inviteLinkNode.textContent = fallbackLink;
-      updateCopyActions(fallbackLink);
-
-      try {
-        const response = await fetch(`/.netlify/functions/invite-status?code=${encodeURIComponent(code)}`);
-        const result = await response.json();
-        if (!response.ok || !result?.ok) {
-          throw new Error(result?.error || '加载邀请状态失败');
-        }
-        applyInviteStatus(result.data);
-      } catch (error) {
-        progressNote.textContent = '暂时还没拿到实时邀请状态，先用你的专属邀请链接继续传播。';
-      }
-    }
-
-    async function copyText(value) {
+    async function copyText(value, successMessage) {
       try {
         await navigator.clipboard.writeText(value);
-        feedback.textContent = '已复制，直接发给朋友或贴到微信里就行。';
-      } catch (error) {
-        feedback.textContent = '复制失败，请手动复制。';
+        setStatus(successMessage);
+      } catch (_error) {
+        setStatus('复制失败，请手动长按或选择文本复制。');
       }
     }
 
-    document.querySelectorAll('[data-copy-target]').forEach(button => {
-      button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-copy-target');
-        const target = document.getElementById(targetId);
-        copyText(target.textContent.trim());
-      });
-    });
+    if (inviteCode) {
+      window.localStorage.setItem(STORAGE_INVITE_KEY, inviteCode);
+      inviteCodeEl.textContent = inviteCode;
+      inviteLinkEl.textContent = landingUrl.toString();
+      openLinkEl.href = landingUrl.toString();
+      backHomeEl.href = baseUrl.toString();
 
-    [copyPrimary, copyWechat, copyFounder].forEach((button) => {
-      button.addEventListener('click', () => {
-        copyText(button.dataset.copyText || '');
-      });
-    });
-
-    loadInviteStatus();
+      copyCodeBtn.addEventListener('click', () => copyText(inviteCode, '邀请码已复制。'));
+      copyLinkBtn.addEventListener('click', () => copyText(landingUrl.toString(), '邀请链接已复制。'));
+    } else {
+      inviteCodeEl.textContent = '未拿到';
+      inviteLinkEl.textContent = '当前 URL 没有 code 参数，也没有本地缓存的邀请码。';
+      openLinkEl.href = baseUrl.toString();
+      backHomeEl.href = baseUrl.toString();
+      copyCodeBtn.disabled = true;
+      copyLinkBtn.disabled = true;
+      setStatus('未检测到邀请码，请从申请页重新进入，或带上 ?code=你的邀请码 打开本页。');
+    }
   </script>
 </body>
 </html>
