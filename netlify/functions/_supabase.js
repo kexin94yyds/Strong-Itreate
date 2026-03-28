@@ -113,3 +113,24 @@ export async function updateApplicationStatus(id, status) {
 
   return rows?.[0] || null
 }
+
+export async function getLicenseOrderByExternalOrderId(externalOrderId) {
+  const rows = await supabaseFetch(`/rest/v1/license_orders?external_order_id=eq.${encodeURIComponent(externalOrderId)}&select=*`)
+  return rows?.[0] || null
+}
+
+export async function insertLicenseOrder(payload) {
+  const rows = await supabaseFetch('/rest/v1/license_orders', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+  return rows?.[0] || null
+}
+
+export async function updateLicenseOrderByExternalOrderId(externalOrderId, payload) {
+  const rows = await supabaseFetch(`/rest/v1/license_orders?external_order_id=eq.${encodeURIComponent(externalOrderId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+  return rows?.[0] || null
+}

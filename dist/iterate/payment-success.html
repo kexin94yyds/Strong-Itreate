@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支付成功 | iterate</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0a0a;
+      --card: #121212;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: rgba(255, 255, 255, 0.94);
+      --muted: rgba(255, 255, 255, 0.6);
+      --accent: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1a1a1a, var(--bg) 55%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 24px;
+    }
+    .card {
+      width: min(100%, 640px);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 30px;
+      letter-spacing: -0.04em;
+    }
+    p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .section {
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+    .code {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #0f0f0f;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    button, a.button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: white;
+      color: black;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button.secondary, a.button.secondary {
+      background: transparent;
+      color: var(--text);
+    }
+    .hint {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="eyebrow">Payment Delivery</div>
+    <h1>你的激活码已经准备好了</h1>
+    <p>支付成功之后，真正需要交付的是激活码，不是订单号。把下面这串码复制到 iterate 桌面端里激活即可。</p>
+
+    <div class="section">
+      <div class="eyebrow">License Key</div>
+      <div id="license-key" class="code">正在查询激活码...</div>
+      <div class="row">
+        <button id="copy-button">复制激活码</button>
+        <a class="button secondary" href="https://iterate.xin" target="_blank" rel="noreferrer">打开官网</a>
+      </div>
+      <div id="status" class="status"></div>
+      <div class="hint">如果这里迟迟没出码，不要重新支付。优先保留订单号，稍后继续打开本页恢复领取。</div>
+    </div>
+  </div>
+
+  <script>
+    const codeNode = document.getElementById('license-key')
+    const statusNode = document.getElementById('status')
+    const copyButton = document.getElementById('copy-button')
+
+    function getOrderId() {
+      const url = new URL(window.location.href)
+      return url.searchParams.get('orderId')
+        || url.searchParams.get('orderNo')
+        || url.searchParams.get('externalOrderId')
+        || ''
+    }
+
+    async function loadStatus() {
+      const orderId = getOrderId()
+      if (!orderId) {
+        codeNode.textContent = '缺少订单号，无法查询激活码。'
+        return
+      }
+
+      statusNode.textContent = `订单号：${orderId}`
+
+      try {
+        const response = await fetch(`/.netlify/functions/payment-status?orderId=${encodeURIComponent(orderId)}`)
+        const result = await response.json()
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || '查询失败')
+        }
+
+        const licenseKey = result.data?.licenseKey
+        if (!licenseKey) {
+          codeNode.textContent = '已支付，但激活码还未准备好。请稍后刷新本页恢复领取。'
+          return
+        }
+
+        codeNode.textContent = licenseKey
+      }
+      catch (error) {
+        codeNode.textContent = `查询失败：${error.message || error}`
+      }
+    }
+
+    copyButton.addEventListener('click', async () => {
+      const content = codeNode.textContent || ''
+      if (!content || content.includes('查询')) {
+        return
+      }
+      await navigator.clipboard.writeText(content)
+      copyButton.textContent = '已复制'
+      setTimeout(() => {
+        copyButton.textContent = '复制激活码'
+      }, 1200)
+    })
+
+    loadStatus()
+  </script>
+</body>
+</html>
