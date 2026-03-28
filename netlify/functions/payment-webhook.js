@@ -5,6 +5,7 @@ import {
   getLicenseOrderByExternalOrderId,
   insertLicenseOrder,
   isSupabaseConfigured,
+  updateLicenseOrderByExternalOrderId,
 } from './_supabase.js'
 
 export async function handler(event) {
@@ -18,10 +19,6 @@ export async function handler(event) {
     return json(500, { error: '支付服务未配置好 Supabase 环境变量' })
   }
 
-  if (!isLicenseSigningConfigured()) {
-    return json(500, { error: '支付服务未配置 ITERATE_LICENSE_PRIVATE_KEY_B64' })
-  }
-
   const payload = safeJsonParse(event.body)
   if (!payload) {
     return json(400, { error: '请求体不是合法 JSON' })
@@ -30,8 +27,33 @@ export async function handler(event) {
   try {
     const order = extractOrderFromPayload(payload)
     const existing = await getLicenseOrderByExternalOrderId(order.externalOrderId)
+    const shouldIssueLicense = order.paymentStatus === 'paid'
+
+    if (shouldIssueLicense && !isLicenseSigningConfigured()) {
+      return json(500, { error: '支付服务未配置 ITERATE_LICENSE_PRIVATE_KEY_B64' })
+    }
 
     if (existing) {
+      if (existing.payment_status !== order.paymentStatus) {
+        const updated = await updateLicenseOrderByExternalOrderId(order.externalOrderId, {
+          payment_status: order.paymentStatus,
+          delivery_status: order.paymentStatus === 'refunded' ? 'failed' : existing.delivery_status,
+          provider_payload: order.rawPayload,
+        })
+
+        return json(200, {
+          ok: true,
+          duplicate: true,
+          data: {
+            externalOrderId: updated.external_order_id,
+            licenseKey: updated.license_key,
+            licenseType: updated.license_type,
+            paymentStatus: updated.payment_status,
+            deliveryStatus: updated.delivery_status,
+          },
+        })
+      }
+
       return json(200, {
         ok: true,
         duplicate: true,
@@ -45,7 +67,7 @@ export async function handler(event) {
       })
     }
 
-    const licenseKey = generateLicenseCode(order.licenseType)
+    const licenseKey = shouldIssueLicense ? generateLicenseCode(order.licenseType) : null
     const created = await insertLicenseOrder({
       provider: order.provider,
       external_order_id: order.externalOrderId,
@@ -53,9 +75,9 @@ export async function handler(event) {
       product_sku: order.productSku,
       license_type: order.licenseType,
       license_key: licenseKey,
-      payment_status: 'paid',
-      delivery_status: 'issued',
-      issued_at: new Date().toISOString(),
+      payment_status: order.paymentStatus,
+      delivery_status: shouldIssueLicense ? 'issued' : 'pending',
+      issued_at: shouldIssueLicense ? new Date().toISOString() : null,
       provider_payload: order.rawPayload,
     })
 

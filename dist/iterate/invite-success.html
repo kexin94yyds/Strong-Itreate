@@ -72,6 +72,13 @@
       background: rgba(255, 255, 255, 0.03);
     }
 
+    .topbar-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
     .hero {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
@@ -126,6 +133,13 @@
       color: var(--muted);
       font-size: 18px;
       line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
     }
 
     .grid {
@@ -352,6 +366,16 @@
       .reward-tag {
         align-self: flex-start;
       }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .topbar-actions {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -366,7 +390,9 @@
         </span>
         <span>iterate</span>
       </div>
-      <a href="/iterate/index.html" class="button secondary">返回 Landing</a>
+      <div class="topbar-actions">
+        <a href="/iterate/index.html" class="button secondary">返回 Landing</a>
+      </div>
     </div>
 
     <section class="hero">
@@ -376,6 +402,9 @@
       </div>
       <h1>你已进入 iterate 候选名单。</h1>
       <p>这一步不是“提交结束”，而是进入下一段 loop。邀请 3 位同样高频使用 AI 的人完成申请，你会进入优先审核通道。</p>
+      <div class="hero-actions">
+        <a href="/iterate/payment-success.html" class="button secondary">已有订单，恢复领取</a>
+      </div>
     </section>
 
     <section class="grid">
