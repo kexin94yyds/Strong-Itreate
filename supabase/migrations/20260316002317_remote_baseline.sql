@@ -1,0 +1,2 @@
+-- Remote migration already applied before this repository started tracking
+-- Supabase migrations locally. This placeholder preserves the remote version.
