@@ -13,3 +13,27 @@
   for = "/*.js"
   [headers.values]
     Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/iterate"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0, must-revalidate"
+    Pragma = "no-cache"
+
+[[headers]]
+  for = "/iterate/"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0, must-revalidate"
+    Pragma = "no-cache"
+
+[[headers]]
+  for = "/iterate/*.html"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0, must-revalidate"
+    Pragma = "no-cache"
+
+[[headers]]
+  for = "/iterate/assets/*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0, must-revalidate"
+    Pragma = "no-cache"

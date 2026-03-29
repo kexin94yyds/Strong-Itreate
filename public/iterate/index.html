@@ -50,6 +50,22 @@
   }
 }
 </script>
+  <script>
+    // Force a single reload when Chrome restores an old DOM from BFCache/session state.
+    window.addEventListener('pageshow', (event) => {
+      if (!event.persisted)
+        return
+
+      const key = 'iterate:index:bfcache-reload'
+      if (sessionStorage.getItem(key) === '1') {
+        sessionStorage.removeItem(key)
+        return
+      }
+
+      sessionStorage.setItem(key, '1')
+      window.location.reload()
+    })
+  </script>
   <script type="module" crossorigin src="/iterate/assets/main-BI4Ef49I.js"></script>
   <link rel="modulepreload" crossorigin href="/iterate/assets/Footer-QgI3qZp3.js">
 </head>
