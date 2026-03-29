@@ -100,6 +100,13 @@
       border: 1px solid var(--line);
       background: #0f0f0f;
     }
+    .step-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
     .prompt-box h2 {
       margin: 0 0 8px;
       font-size: 16px;
@@ -133,12 +140,14 @@
     </div>
 
     <div class="section">
-      <div class="eyebrow">Next Step</div>
+      <div class="eyebrow">Installation Guide</div>
       <div class="prompt-box">
-        <h2>把 iterate 接到你当前正在使用的 AI</h2>
-        <p>复制安装提示词，发给你当前正在使用的 AI。它会继续帮你完成 MCP 配置、刷新当前 IDE / CLI，并做最小验证。</p>
+        <div class="step-label">Step 2</div>
+        <h2>安装引导</h2>
+        <p>下载完成后，下一步就是按安装引导操作。先点下面这个按钮，你就会直接看到接下来该做什么。</p>
       </div>
       <div class="row">
+        <a class="button" href="/iterate/INSTALLATION.md" target="_blank" rel="noreferrer">打开安装引导</a>
         <button id="copy-installation-button" class="secondary">复制安装提示词</button>
         <a class="button secondary" href="/iterate/INSTALLATION.md" target="_blank" rel="noreferrer">查看安装提示词</a>
       </div>
