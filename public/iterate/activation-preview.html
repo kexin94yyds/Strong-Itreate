@@ -192,7 +192,6 @@
 
     .trial-btn-primary,
     .trial-btn-secondary {
-      width: 100%;
       padding: 10px 0;
       border-radius: 10px;
       font-size: 14px;
@@ -222,6 +221,12 @@
       gap: 8px;
     }
 
+    .trial-enter-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
     .toolbar-note {
       margin-top: 14px;
       font-size: 12px;
@@ -236,6 +241,12 @@
 
       .preview-shell {
         min-height: auto;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .trial-enter-actions {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -281,7 +292,8 @@
         </div>
 
         <div class="trial-enter-actions" id="enter-panel" hidden>
-          <button type="button" class="trial-btn-primary">开始使用</button>
+          <button type="button" class="trial-btn-secondary">复制安装提示词</button>
+          <button type="button" class="trial-btn-primary">直接开始使用</button>
         </div>
 
         <div class="trial-contact-actions">
