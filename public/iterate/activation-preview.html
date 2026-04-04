@@ -255,20 +255,19 @@
   <main class="page">
     <aside class="toolbar">
       <p class="toolbar-eyebrow">Activation Preview</p>
-      <p class="toolbar-title">激活前后状态预览</p>
+      <p class="toolbar-title">图 2：输入激活码开始使用</p>
       <p class="toolbar-copy">
-        这里单独预览“输入激活码开始使用”以及“X 版已开启”这套状态，不影响正式网站流程。
+        这里单独预览激活前输入页。你可以切换看 `1 天版 / 7 天版 / 永久版` 三种输入前状态。
       </p>
 
       <div class="chips">
-        <button class="chip" data-mode="input">输入前</button>
         <button class="chip" data-mode="day1">1 天版</button>
-        <button class="chip" data-mode="day7">7 天版</button>
+        <button class="chip active" data-mode="day7">7 天版</button>
         <button class="chip" data-mode="permanent">永久版</button>
       </div>
 
       <p class="toolbar-note">
-        预览点：\n激活前是否足够直接；激活后是否明确告诉用户买的是哪种，并只留一个“开始使用”动作。
+        预览点：输入前不要出现 `复制安装提示词`，只保留输入框、主按钮和获取激活码入口。
       </p>
     </aside>
 
@@ -281,19 +280,9 @@
         <h1 class="trial-title" id="trial-title">输入激活码开始使用</h1>
         <p class="trial-subtitle" id="trial-subtitle">输入购买后的激活码，验证通过后即可开始使用。</p>
 
-        <div class="trial-success" id="trial-success" hidden>
-          <p class="trial-success-title" id="success-title">7 天版已开启</p>
-          <p class="trial-success-description" id="success-description">iterate 已准备好，你现在可以直接开始使用。</p>
-        </div>
-
         <div class="trial-activate" id="activate-panel">
-          <input class="trial-input" type="text" value="T7-123e4567-e89b-12d3-a456-426614174000" readonly>
+          <input class="trial-input" id="license-input" type="text" value="T7-123e4567-e89b-12d3-a456-426614174000" readonly>
           <button type="button" class="trial-btn-primary">激活并开始使用</button>
-        </div>
-
-        <div class="trial-enter-actions" id="enter-panel" hidden>
-          <button type="button" class="trial-btn-secondary">复制安装提示词</button>
-          <button type="button" class="trial-btn-primary">直接开始使用</button>
         </div>
 
         <div class="trial-contact-actions">
@@ -305,60 +294,33 @@
 
   <script>
     const modes = {
-      input: {
-        title: '输入激活码开始使用',
-        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
-        success: null,
-      },
       day1: {
         title: '输入激活码开始使用',
-        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
-        success: {
-          title: '1 天版已开启',
-          description: 'iterate 已准备好，你现在可以直接开始使用。',
-        },
+        subtitle: '输入 1 天版激活码，验证通过后即可开始使用。',
+        input: 'T1-123e4567-e89b-12d3-a456-426614174000',
       },
       day7: {
         title: '输入激活码开始使用',
-        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
-        success: {
-          title: '7 天版已开启',
-          description: 'iterate 已准备好，你现在可以直接开始使用。',
-        },
+        subtitle: '输入 7 天版激活码，验证通过后即可开始使用。',
+        input: 'T7-123e4567-e89b-12d3-a456-426614174000',
       },
       permanent: {
         title: '输入激活码开始使用',
-        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
-        success: {
-          title: '永久版已开启',
-          description: 'iterate 已准备好，你现在可以直接开始使用。',
-        },
+        subtitle: '输入永久版激活码，验证通过后即可开始使用。',
+        input: 'P-123e4567-e89b-12d3-a456-426614174000',
       },
     }
 
     const chips = Array.from(document.querySelectorAll('.chip'))
     const titleNode = document.getElementById('trial-title')
     const subtitleNode = document.getElementById('trial-subtitle')
-    const successNode = document.getElementById('trial-success')
-    const successTitleNode = document.getElementById('success-title')
-    const successDescriptionNode = document.getElementById('success-description')
-    const activatePanel = document.getElementById('activate-panel')
-    const enterPanel = document.getElementById('enter-panel')
+    const inputNode = document.getElementById('license-input')
 
     function setMode(mode) {
       const next = modes[mode]
       titleNode.textContent = next.title
       subtitleNode.textContent = next.subtitle
-
-      const active = Boolean(next.success)
-      successNode.hidden = !active
-      activatePanel.hidden = active
-      enterPanel.hidden = !active
-
-      if (active) {
-        successTitleNode.textContent = next.success.title
-        successDescriptionNode.textContent = next.success.description
-      }
+      inputNode.value = next.input
 
       chips.forEach(chip => {
         chip.classList.toggle('active', chip.dataset.mode === mode)
@@ -369,7 +331,7 @@
       chip.addEventListener('click', () => setMode(chip.dataset.mode))
     })
 
-    setMode('input')
+    setMode('day7')
   </script>
 </body>
 </html>
