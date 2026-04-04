@@ -257,17 +257,11 @@
       <p class="toolbar-eyebrow">Activation Preview</p>
       <p class="toolbar-title">图 2：输入激活码开始使用</p>
       <p class="toolbar-copy">
-        这里单独预览激活前输入页。你可以切换看 `1 天版 / 7 天版 / 永久版` 三种输入前状态。
+        这里单独预览激活前输入页。输入前不分 `1 天版 / 7 天版 / 永久版`，版本由你输入的激活码决定。
       </p>
 
-      <div class="chips">
-        <button class="chip" data-mode="day1">1 天版</button>
-        <button class="chip active" data-mode="day7">7 天版</button>
-        <button class="chip" data-mode="permanent">永久版</button>
-      </div>
-
       <p class="toolbar-note">
-        预览点：输入前不要出现 `复制安装提示词`，只保留输入框、主按钮和获取激活码入口。
+        预览点：输入前不要出现 `复制安装提示词`，只保留输入框、主按钮和获取激活码入口。激活成功后再自动进入图 3。
       </p>
     </aside>
 
@@ -281,7 +275,7 @@
         <p class="trial-subtitle" id="trial-subtitle">输入购买后的激活码，验证通过后即可开始使用。</p>
 
         <div class="trial-activate" id="activate-panel">
-          <input class="trial-input" id="license-input" type="text" value="T7-123e4567-e89b-12d3-a456-426614174000" readonly>
+          <input class="trial-input" id="license-input" type="text" value="" placeholder="请输入激活码" readonly>
           <button type="button" class="trial-btn-primary">激活并开始使用</button>
         </div>
 
@@ -293,45 +287,6 @@
   </main>
 
   <script>
-    const modes = {
-      day1: {
-        title: '输入激活码开始使用',
-        subtitle: '输入 1 天版激活码，验证通过后即可开始使用。',
-        input: 'T1-123e4567-e89b-12d3-a456-426614174000',
-      },
-      day7: {
-        title: '输入激活码开始使用',
-        subtitle: '输入 7 天版激活码，验证通过后即可开始使用。',
-        input: 'T7-123e4567-e89b-12d3-a456-426614174000',
-      },
-      permanent: {
-        title: '输入激活码开始使用',
-        subtitle: '输入永久版激活码，验证通过后即可开始使用。',
-        input: 'P-123e4567-e89b-12d3-a456-426614174000',
-      },
-    }
-
-    const chips = Array.from(document.querySelectorAll('.chip'))
-    const titleNode = document.getElementById('trial-title')
-    const subtitleNode = document.getElementById('trial-subtitle')
-    const inputNode = document.getElementById('license-input')
-
-    function setMode(mode) {
-      const next = modes[mode]
-      titleNode.textContent = next.title
-      subtitleNode.textContent = next.subtitle
-      inputNode.value = next.input
-
-      chips.forEach(chip => {
-        chip.classList.toggle('active', chip.dataset.mode === mode)
-      })
-    }
-
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => setMode(chip.dataset.mode))
-    })
-
-    setMode('day7')
   </script>
 </body>
 </html>
