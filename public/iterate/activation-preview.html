@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iterate | Activation Preview</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: rgba(250, 250, 250, 0.92);
+      --card: #ffffff;
+      --border: #e5e5e5;
+      --text: #171717;
+      --muted: #737373;
+      --success-bg: #f4f8f3;
+      --success-border: #d9e8d5;
+      --success-title: #1f5130;
+      --success-copy: #4e6a56;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #fafafa 0%, #f1f1f1 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .toolbar {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(23, 23, 23, 0.94);
+      color: #fafafa;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+    }
+
+    .toolbar p {
+      margin: 0;
+    }
+
+    .toolbar-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(250, 250, 250, 0.58);
+    }
+
+    .toolbar-title {
+      margin-top: 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .toolbar-copy {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(250, 250, 250, 0.78);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      border: 1px solid rgba(250, 250, 250, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fafafa;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: #fafafa;
+      color: #171717;
+      border-color: #fafafa;
+    }
+
+    .preview-shell {
+      min-height: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
+      background: var(--bg);
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+      padding: 20px;
+    }
+
+    .trial-card {
+      max-width: 380px;
+      width: 100%;
+      padding: 36px 28px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .trial-logo {
+      margin-bottom: 20px;
+    }
+
+    .trial-logo img {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+    }
+
+    .trial-title {
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .trial-subtitle {
+      margin: 0 0 20px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .trial-success {
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      text-align: left;
+    }
+
+    .trial-success-title {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--success-title);
+    }
+
+    .trial-success-description {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--success-copy);
+    }
+
+    .trial-activate,
+    .trial-enter-actions {
+      margin-bottom: 14px;
+    }
+
+    .trial-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text);
+      background: #fafafa;
+      outline: none;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .trial-btn-primary,
+    .trial-btn-secondary {
+      width: 100%;
+      padding: 10px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .trial-btn-primary {
+      margin-top: 10px;
+      border: none;
+      background: #171717;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .trial-btn-secondary {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #525252;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .trial-contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toolbar-note {
+      margin-top: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: rgba(250, 250, 250, 0.68);
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-shell {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <aside class="toolbar">
+      <p class="toolbar-eyebrow">Activation Preview</p>
+      <p class="toolbar-title">激活前后状态预览</p>
+      <p class="toolbar-copy">
+        这里单独预览“输入激活码开始使用”以及“X 版已开启”这套状态，不影响正式网站流程。
+      </p>
+
+      <div class="chips">
+        <button class="chip active" data-mode="input">输入前</button>
+        <button class="chip" data-mode="day1">1 天版</button>
+        <button class="chip" data-mode="day7">7 天版</button>
+        <button class="chip" data-mode="permanent">永久版</button>
+      </div>
+
+      <p class="toolbar-note">
+        预览点：\n激活前是否足够直接；激活后是否明确告诉用户买的是哪种，并只留一个“开始使用”动作。
+      </p>
+    </aside>
+
+    <section class="preview-shell">
+      <div class="trial-card">
+        <div class="trial-logo">
+          <img src="/iterate/assets/favicon-CFdCgY3a.png" alt="iterate">
+        </div>
+
+        <h1 class="trial-title" id="trial-title">输入激活码开始使用</h1>
+        <p class="trial-subtitle" id="trial-subtitle">输入购买后的激活码，验证通过后即可开始使用。</p>
+
+        <div class="trial-success" id="trial-success" hidden>
+          <p class="trial-success-title" id="success-title">7 天版已开启</p>
+          <p class="trial-success-description" id="success-description">iterate 已准备好，你现在可以直接开始使用。</p>
+        </div>
+
+        <div class="trial-activate" id="activate-panel">
+          <input class="trial-input" type="text" value="T7-123e4567-e89b-12d3-a456-426614174000" readonly>
+          <button type="button" class="trial-btn-primary">激活并开始使用</button>
+        </div>
+
+        <div class="trial-enter-actions" id="enter-panel" hidden>
+          <button type="button" class="trial-btn-primary">开始使用</button>
+        </div>
+
+        <div class="trial-contact-actions">
+          <button type="button" class="trial-btn-secondary">去官网获取激活码</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const modes = {
+      input: {
+        title: '输入激活码开始使用',
+        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
+        success: null,
+      },
+      day1: {
+        title: '输入激活码开始使用',
+        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
+        success: {
+          title: '1 天版已开启',
+          description: 'iterate 已准备好，你现在可以直接开始使用。',
+        },
+      },
+      day7: {
+        title: '输入激活码开始使用',
+        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
+        success: {
+          title: '7 天版已开启',
+          description: 'iterate 已准备好，你现在可以直接开始使用。',
+        },
+      },
+      permanent: {
+        title: '输入激活码开始使用',
+        subtitle: '输入购买后的激活码，验证通过后即可开始使用。',
+        success: {
+          title: '永久版已开启',
+          description: 'iterate 已准备好，你现在可以直接开始使用。',
+        },
+      },
+    }
+
+    const chips = Array.from(document.querySelectorAll('.chip'))
+    const titleNode = document.getElementById('trial-title')
+    const subtitleNode = document.getElementById('trial-subtitle')
+    const successNode = document.getElementById('trial-success')
+    const successTitleNode = document.getElementById('success-title')
+    const successDescriptionNode = document.getElementById('success-description')
+    const activatePanel = document.getElementById('activate-panel')
+    const enterPanel = document.getElementById('enter-panel')
+
+    function setMode(mode) {
+      const next = modes[mode]
+      titleNode.textContent = next.title
+      subtitleNode.textContent = next.subtitle
+
+      const active = Boolean(next.success)
+      successNode.hidden = !active
+      activatePanel.hidden = active
+      enterPanel.hidden = !active
+
+      if (active) {
+        successTitleNode.textContent = next.success.title
+        successDescriptionNode.textContent = next.success.description
+      }
+
+      chips.forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.mode === mode)
+      })
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => setMode(chip.dataset.mode))
+    })
+  </script>
+</body>
+</html>
