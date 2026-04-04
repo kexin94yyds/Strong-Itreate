@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iterate | Welcome Preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080808;
+      --card: rgba(18, 18, 18, 0.98);
+      --border: rgba(255, 255, 255, 0.08);
+      --muted: rgba(255, 255, 255, 0.62);
+      --muted-2: rgba(255, 255, 255, 0.46);
+      --text: #ffffff;
+      --surface: rgba(255, 255, 255, 0.04);
+      --surface-2: rgba(255, 255, 255, 0.03);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.07), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.04), transparent 24%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .shell {
+      width: min(92vw, 460px);
+      max-height: min(620px, calc(100dvh - 32px));
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(14px, 2.2vh, 18px);
+      padding: clamp(16px, 2.6vh, 22px);
+      overflow-y: auto;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at top center, rgba(255, 255, 255, 0.05), transparent 38%),
+        linear-gradient(180deg, rgba(19, 19, 19, 0.98), rgba(10, 10, 10, 0.98));
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .shell.compact {
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      object-fit: contain;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .shell.tight .logo,
+    .shell.compact .logo {
+      width: 42px;
+      height: 42px;
+    }
+
+    .eyebrow-top {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .subtitle-top {
+      margin: 4px 0 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .skip {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.52);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 1.8vh, 14px);
+      min-height: 0;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.44);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4.2vh, 32px);
+      line-height: 1.15;
+    }
+
+    .shell.tight h1 {
+      font-size: 26px;
+    }
+
+    .desc {
+      margin: 0;
+      font-size: clamp(13px, 1.9vh, 14px);
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .shell.tight .desc {
+      line-height: 1.6;
+    }
+
+    .status {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .shell.compact .status {
+      padding: 14px 16px;
+    }
+
+    .shell.tight .status {
+      padding: 12px 14px;
+    }
+
+    .status-label {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+
+    .status-value {
+      margin: 0;
+      font-size: clamp(16px, 2.4vh, 18px);
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .helper {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.56);
+    }
+
+    .shell.tight .helper {
+      display: none;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      position: sticky;
+      bottom: 0;
+      padding-top: 4px;
+      background: linear-gradient(180deg, rgba(10, 10, 10, 0), rgba(10, 10, 10, 0.98) 24%);
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .shell.tight .btn {
+      min-height: 42px;
+      padding: 10px 14px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+
+    .btn.primary {
+      border: 1px solid #fff;
+      background: #fff;
+      color: #090909;
+    }
+
+    .meta {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .shell {
+        width: min(94vw, 460px);
+        max-height: calc(100dvh - 24px);
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .meta {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell" id="shell">
+    <div class="topbar">
+      <div class="brand">
+        <img class="logo" src="/iterate/assets/favicon-CFdCgY3a.png" alt="iterate">
+        <div>
+          <p class="eyebrow-top">Iterate Welcome</p>
+          <p class="subtitle-top">新用户最短开始路径</p>
+        </div>
+      </div>
+
+      <button class="skip">跳过</button>
+    </div>
+
+    <section class="content">
+      <p class="eyebrow">Trial</p>
+      <h1>试用已开启</h1>
+      <p class="desc">
+        你已自动开始 7 天试用。现在先直接使用；如果你要把 iterate 接到当前 IDE 或 CLI，再复制安装提示词继续配置。
+      </p>
+
+      <div class="status">
+        <p class="status-label">当前状态</p>
+        <p class="status-value">已进入 7 天试用</p>
+      </div>
+
+      <p class="helper">
+        先开始用，后面真正需要时再激活，不用现在处理购买和授权。
+      </p>
+    </section>
+
+    <div class="actions">
+      <button class="btn secondary">复制安装提示词</button>
+      <button class="btn primary">直接开始使用</button>
+    </div>
+  </main>
+
+  <div class="meta">Preview Only · 自适应欢迎页</div>
+
+  <script>
+    const shell = document.getElementById('shell')
+
+    function syncViewportMode() {
+      shell.classList.toggle('compact', window.innerHeight <= 820)
+      shell.classList.toggle('tight', window.innerHeight <= 700)
+    }
+
+    syncViewportMode()
+    window.addEventListener('resize', syncViewportMode)
+  </script>
+</body>
+</html>
