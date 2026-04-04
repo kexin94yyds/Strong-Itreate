@@ -261,7 +261,7 @@
       </p>
 
       <div class="chips">
-        <button class="chip active" data-mode="input">输入前</button>
+        <button class="chip" data-mode="input">输入前</button>
         <button class="chip" data-mode="day1">1 天版</button>
         <button class="chip" data-mode="day7">7 天版</button>
         <button class="chip" data-mode="permanent">永久版</button>
@@ -368,6 +368,8 @@
     chips.forEach(chip => {
       chip.addEventListener('click', () => setMode(chip.dataset.mode))
     })
+
+    setMode('input')
   </script>
 </body>
 </html>
