@@ -1590,7 +1590,7 @@ function showWebProjectsView() {
                 name: 'Tobooks',
                 icon: `<img src="${EpubReaderIcon}" alt="Tobooks" class="gpts-card-img-icon">`,
                 description: '一个简洁、高效的在线Epub电子书阅读器。',
-                url: 'https://tobooks.netlify.app/'
+                url: 'https://tobooks.xin'
             },
             {
                 id: 'pixeltune-photo',
@@ -2095,7 +2095,32 @@ function showAppsView() {
                 name: 'AI Sidebar',
                 icon: `<img src="${AISidebar}" alt="AI Sidebar" class="gpts-card-img-icon">`,
                 description: '侧边栏 AI 助手，支持 Mac 和 iOS。',
-                url: ''
+                url: 'https://aibar.xin',
+                actionLabel: '访问获取'
+            },
+            {
+                id: 'flow-app',
+                name: 'Relearn',
+                icon: `<img src="${FlowIcon}" alt="Relearn" class="gpts-card-img-icon">`,
+                description: '一款笔记软件，你可以写下，就是想到就记，复制即记。',
+                url: 'https://relearn.xin',
+                actionLabel: '访问获取'
+            },
+            {
+                id: 'iterate-app',
+                name: 'Iterate',
+                icon: `<img src="/iterate-icon.png" alt="Iterate" class="gpts-card-img-icon">`,
+                description: '连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。',
+                url: 'https://iterate.xin/iterate/',
+                actionLabel: '访问获取'
+            },
+            {
+                id: 'prompter-app',
+                name: 'Prompter',
+                icon: `<img src="${PrompterIcon}" alt="Prompter" class="gpts-card-img-icon">`,
+                description: '提示词管理工具，支持手机和电脑。',
+                url: 'https://prompter.xin',
+                actionLabel: '访问获取'
             },
             {
                 id: 'monoshot-app',
@@ -2109,20 +2134,6 @@ function showAppsView() {
                 name: 'Replace Information',
                 icon: `<img src="${RIIcon}" alt="Replace Information" class="gpts-card-img-icon">`,
                 description: '信息置换工具，智能管理你的信息。',
-                url: ''
-            },
-            {
-                id: 'prompter-app',
-                name: 'Prompter',
-                icon: `<img src="${PrompterIcon}" alt="Prompter" class="gpts-card-img-icon">`,
-                description: '提示词管理工具，支持手机和电脑。',
-                url: ''
-            },
-            {
-                id: 'flow-app',
-                name: 'Flow',
-                icon: `<img src="${FlowIcon}" alt="Flow" class="gpts-card-img-icon">`,
-                description: '信息过滤器，过滤优质信息。',
                 url: ''
             },
             {
@@ -2145,14 +2156,22 @@ function showAppsView() {
                 icon: `<img src="${闹钟Icon}" alt="久坐提醒" class="gpts-card-img-icon">`,
                 description: '提醒间隔设置，循环提醒，帮助您保持健康的工作习惯。',
                 url: 'https://standing.netlify.app/'
+            },
+            {
+                id: 'xspeech-app',
+                name: 'xspeech',
+                icon: `<img src="/xspeech-icon.png" alt="xspeech" class="gpts-card-img-icon">`,
+                description: '本地语音转文字应用，让表达直接变成文本。',
+                url: ''
             }
         ];
 
         let appCardsHTML = '';
         myApps.forEach(app => {
+            const actionLabel = app.actionLabel || (app.url ? '访问 App' : '联系获取');
             const buttonHTML = app.url 
-                ? `<a href="${app.url}" target="_blank" rel="noopener noreferrer" class="gpts-action-btn">访问 App</a>`
-                : `<button class="gpts-action-btn app-contact-btn">联系获取</button>`;
+                ? `<a href="${app.url}" target="_blank" rel="noopener noreferrer" class="gpts-action-btn">${actionLabel}</a>`
+                : `<button class="gpts-action-btn app-contact-btn">${actionLabel}</button>`;
             const tooltipHTML = !app.url ? `
                 <div class="gpts-hover-tooltip">
                     <img src="${WechatQR}" alt="QR Code">

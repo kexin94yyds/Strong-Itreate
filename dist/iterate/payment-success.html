@@ -239,6 +239,17 @@ MCP 配置写完后，不要停在“理论上已经好了”。
 - 当前 IDE 或 CLI 已刷新
 - iterate 已真正可用`
 
+    function formatLicenseType(type) {
+      const value = String(type || '').trim().toLowerCase()
+      if (value === 'day1')
+        return '1 天版'
+      if (value === 'day7')
+        return '7 天版'
+      if (value === 'permanent')
+        return '永久版'
+      return ''
+    }
+
     function getOrderId() {
       const url = new URL(window.location.href)
       return url.searchParams.get('orderId')
@@ -264,12 +275,16 @@ MCP 配置写完后，不要停在“理论上已经好了”。
         }
 
         const licenseKey = result.data?.licenseKey
+        const licenseTypeLabel = formatLicenseType(result.data?.licenseType)
         if (!licenseKey) {
           codeNode.textContent = '已支付，但激活码还未准备好。请稍后刷新本页恢复领取。'
           return
         }
 
         codeNode.textContent = licenseKey
+        statusNode.textContent = licenseTypeLabel
+          ? `订单号：${orderId} · 已购买：${licenseTypeLabel}`
+          : `订单号：${orderId}`
       }
       catch (error) {
         codeNode.textContent = `查询失败：${error.message || error}`

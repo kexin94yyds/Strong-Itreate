@@ -3,49 +3,34 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="iterate 直接购买页。支付成功后自动发放激活码，任务不中断。">
+  <meta name="viewport"   content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="iterate 连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。">
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https:;"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://challenges.cloudflare.com https://static.cloudflareinsights.com https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https:; frame-src https://challenges.cloudflare.com;"
   >
   <meta property="og:type" content="website">
-  <meta property="og:title" content="iterate | 直接购买">
-  <meta property="og:description" content="支付成功后自动发放激活码，让 AI 继续，而不是重来。">
+  <meta property="og:title" content="iterate | 无限迭代">
+  <meta property="og:description" content="连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。">
   <meta property="og:url" content="https://iterate.xin/iterate/">
   <meta property="og:image" content="https://iterate.xin/iterate/iterate-share.png">
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="iterate | 直接购买">
-  <meta name="twitter:description" content="支付成功后自动发放激活码，让 AI 继续，而不是重来。">
+  <meta name="twitter:title" content="iterate | 无限迭代">
+  <meta name="twitter:description" content="连接 AI IDE、CLI 与桌面宿主。让 AI 继续，而不是重来。">
   <meta name="twitter:image" content="https://iterate.xin/iterate/iterate-share.png">
   <link rel="icon" type="image/png" href="/iterate/assets/favicon-CFdCgY3a.png">
-  <title>iterate | 直接购买</title>
+  <title>iterate | 无限迭代</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #040404;
-      --panel: rgba(255, 255, 255, 0.06);
-      --line: rgba(255, 255, 255, 0.1);
-      --text: rgba(255, 255, 255, 0.96);
-      --muted: rgba(255, 255, 255, 0.62);
-      --accent: #ffffff;
-      --accent-text: #0a0a0a;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
-      min-height: 100vh;
       font-family: 'Noto Serif SC', 'Inter', serif;
-      background:
-        radial-gradient(circle at top, rgba(255, 255, 255, 0.09), transparent 32%),
-        var(--bg);
-      color: var(--text);
+      background-color: #000;
+      color: #fff;
     }
     .mono {
       font-family: 'JetBrains Mono', monospace;
@@ -54,252 +39,37 @@
       background: #fff;
       color: #000;
     }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .page {
-      width: min(1120px, calc(100vw - 40px));
-      margin: 0 auto;
-      padding: 26px 0 72px;
-    }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 40px;
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-    .brand-badge {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.03);
-    }
-    .topbar-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 18px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 14px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.04);
-    }
-    .button.primary {
-      background: var(--accent);
-      color: var(--accent-text);
-      border-color: var(--accent);
-    }
-    .hero {
-      text-align: center;
-      padding: 34px 0 16px;
-    }
-    .hero-mark {
-      margin: 0 auto 22px;
-      width: 110px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 14px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.24em;
-    }
-    .eyebrow-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #34d399;
-    }
-    h1 {
-      margin: 26px 0 14px;
-      font-size: clamp(64px, 11vw, 160px);
-      line-height: 0.92;
-      letter-spacing: -0.07em;
-    }
-    .hero-title {
-      margin: 0 auto 14px;
-      max-width: 900px;
-      font-size: clamp(36px, 6vw, 86px);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-    }
-    .hero-copy {
-      max-width: 760px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 20px;
-      line-height: 1.65;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 44px;
-    }
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 24px;
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-    }
-    .card-label {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .card-title {
-      margin: 0 0 10px;
-      font-size: 30px;
-      letter-spacing: -0.05em;
-    }
-    .card-copy {
-      min-height: 86px;
-      margin: 0 0 24px;
-      color: var(--muted);
-      line-height: 1.75;
-      font-size: 15px;
-    }
-    .card .button {
-      width: 100%;
-    }
-    .status {
-      margin-top: 22px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    @media (max-width: 920px) {
-      .cards {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 640px) {
-      .page {
-        width: min(100vw - 28px, 1120px);
-      }
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .hero-copy {
-        font-size: 17px;
-      }
-    }
   </style>
-</head>
-<body>
-  <div class="page">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-badge">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
-          </svg>
-        </span>
-        <span>iterate</span>
-      </div>
-      <div class="topbar-actions">
-        <a href="/iterate/payment-success.html" class="button">恢复领取</a>
-      </div>
-    </div>
 
-    <section class="hero">
-      <div class="hero-mark">
-        <svg viewBox="0 0 24 24" width="92" height="46" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
-        </svg>
-      </div>
-      <div class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        Closed Beta Now Open
-      </div>
-      <h1>ITERATE</h1>
-      <div class="hero-title">让 AI 对话不中断。</div>
-      <p class="hero-copy">
-        连接 AI IDE、CLI 与桌面宿主。现在不走邀请码，直接支付，自动发放激活码。
-      </p>
-    </section>
-
-    <section id="cards" class="cards"></section>
-    <div id="status" class="status">正在加载支付入口...</div>
-  </div>
-
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
   <script>
-    async function loadCheckoutOptions() {
-      const cardsNode = document.getElementById('cards')
-      const statusNode = document.getElementById('status')
+    // Force a single reload when Chrome restores an old DOM from BFCache/session state.
+    window.addEventListener('pageshow', (event) => {
+      if (!event.persisted)
+        return
 
-      try {
-        const response = await fetch('/.netlify/functions/payment-config')
-        const result = await response.json()
-
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || '加载支付入口失败')
-        }
-
-        const options = result.data?.options || []
-        const supportText = result.data?.supportText || ''
-
-        cardsNode.innerHTML = options.map(option => `
-          <article class="card">
-            <div class="card-label">${option.id}</div>
-            <h2 class="card-title">${option.label}</h2>
-            <p class="card-copy">${option.description}</p>
-            ${option.enabled
-              ? `<a class="button primary" href="${option.url}" target="_blank" rel="noreferrer">立即购买</a>`
-              : `<button class="button" type="button" disabled>待配置</button>`}
-          </article>
-        `).join('')
-
-        statusNode.textContent = supportText || '支付成功后自动发放激活码。'
+      const key = 'iterate:index:bfcache-reload'
+      if (sessionStorage.getItem(key) === '1') {
+        sessionStorage.removeItem(key)
+        return
       }
-      catch (error) {
-        cardsNode.innerHTML = `
-          <article class="card" style="grid-column: 1 / -1;">
-            <div class="card-label">payment</div>
-            <h2 class="card-title">支付入口暂未就绪</h2>
-            <p class="card-copy">当前还没配置公开 checkout 链接。把支付链接填到环境变量后，这里会自动变成正式购买入口。</p>
-          </article>
-        `
-        statusNode.textContent = error.message || '加载失败'
-      }
-    }
 
-    loadCheckoutOptions()
+      sessionStorage.setItem(key, '1')
+      window.location.reload()
+    })
   </script>
+  <script type="module" crossorigin src="/iterate/assets/main-BI4Ef49I.js"></script>
+  <link rel="modulepreload" crossorigin href="/iterate/assets/Footer-QgI3qZp3.js">
+</head>
+<body class="antialiased">
+  <div id="root"></div>
 </body>
 </html>
