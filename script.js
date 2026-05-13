@@ -1306,8 +1306,8 @@ function showPluginDetailView() {
                 name: 'AI Sidebar',
                 icon: `<img src="${AISidebar}" alt="AI Sidebar" class="gpts-card-img-icon">`,
                 description: '侧边栏 AI 助手，随时调用',
-                storeUrl: '',
-                manualUrl: ''
+                storeUrl: 'https://chromewebstore.google.com/detail/ai-sidebar/cccnpjjkooljnaffoglpnkglehldnmog?authuser=0&hl=en',
+                manualUrl: 'https://mp.weixin.qq.com/s/hI4pID-rbJ09wHWgOILziQ'
             },
             {
                 id: 'word-recorder',
