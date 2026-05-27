@@ -359,6 +359,8 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
 
       orderRef.current = orderNo;
       paymentAccessRef.current = paymentAccessToken;
+      if (data.paymentMethod === 'wechat' || data.paymentMethod === 'alipay')
+        setPaymentMethod(data.paymentMethod);
       resetEmailVerification('找回验证已使用；再次操作需重新验证邮箱。');
 
       const claimToken = getApiString(data, 'claimToken');
