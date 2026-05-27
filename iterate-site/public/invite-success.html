@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>申请已提交 | Iterate</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #0a0a0a;
+      --panel: rgba(255, 255, 255, 0.96);
+      --text: #111111;
+      --muted: #6b7280;
+      --line: rgba(17, 17, 17, 0.08);
+      --accent: #111111;
+      --accent-soft: #f4f4f5;
+      --success: #0f766e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.14), transparent 32%),
+        linear-gradient(180deg, #050505 0%, #111111 100%);
+    }
+
+    .page {
+      width: min(960px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero {
+      padding: 20px 0 32px;
+      color: #fafafa;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(36px, 6vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      max-width: 680px;
+      margin: 20px 0 0;
+      font-size: 18px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+    }
+
+    .card-main {
+      padding: 32px;
+    }
+
+    .card-side {
+      padding: 24px;
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .code-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      background: #fbfbfb;
+    }
+
+    .code-meta {
+      min-width: 0;
+    }
+
+    .code-label {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .code-value {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      text-transform: lowercase;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button,
+    a.button {
+      appearance: none;
+      border: 0;
+      background: var(--accent);
+      color: #ffffff;
+      padding: 14px 18px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+    }
+
+    button:hover,
+    a.button:hover {
+      opacity: 0.92;
+    }
+
+    button:active,
+    a.button:active {
+      transform: scale(0.98);
+    }
+
+    .button-secondary {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 24px;
+      font-size: 14px;
+      color: var(--success);
+    }
+
+    .link-box {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .link-box p {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .link-box code {
+      display: block;
+      overflow-wrap: anywhere;
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: #fcfcfc;
+    }
+
+    .step-index {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    @media (max-width: 840px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        width: min(100% - 24px, 960px);
+        padding: 28px 0 48px;
+      }
+
+      .card-main,
+      .card-side {
+        padding: 22px;
+      }
+
+      .code-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">Invite Ready</p>
+      <h1 class="title">申请已提交。<br>你的邀请码已经生成。</h1>
+      <p class="subtitle">
+        这不是一个“提交后就结束”的表单页。你现在已经进入邀请闭环，可以把专属链接发给同类用户；
+        后续排序、进度判断和优先邀请，会基于真实申请结果继续推进。
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="card card-main">
+        <p class="kicker">Your Invite Code</p>
+        <div class="code-row">
+          <div class="code-meta">
+            <p class="code-label">专属邀请码</p>
+            <p class="code-value" id="invite-code">读取中</p>
+          </div>
+          <button id="copy-code">复制邀请码</button>
+        </div>
+
+        <div class="link-box">
+          <p>分享链接</p>
+          <code id="invite-link">生成中...</code>
+        </div>
+
+        <div class="actions">
+          <button id="copy-link">复制邀请链接</button>
+          <a class="button button-secondary" id="open-link" href="/">打开邀请链接</a>
+          <a class="button button-secondary" id="back-home" href="/">返回申请页</a>
+        </div>
+
+        <div class="status" id="status">你可以直接复制上面的邀请码或邀请链接。</div>
+      </article>
+
+      <aside class="card card-side">
+        <p class="kicker">Next Steps</p>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-index">01</span>
+            <p>把邀请链接发给真正会长期使用 AI IDE / CLI / 桌面宿主的人，而不是泛流量。</p>
+          </li>
+          <li class="step">
+            <span class="step-index">02</span>
+            <p>对方通过你的链接完成有效申请后，这次邀请才会进入真实统计。</p>
+          </li>
+          <li class="step">
+            <span class="step-index">03</span>
+            <p>如果你更习惯微信沟通，仍可引导对方先走网页申请；邀请码和进度判断以网页链路为准。</p>
+          </li>
+        </ol>
+
+        <p class="footer-note">
+          如果你是回访打开这个页面，但 URL 上没有 `code` 参数，页面会尝试回退读取最近一次生成的邀请码。
+        </p>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_INVITE_KEY = 'iterate_beta_last_invite_code';
+    const params = new URLSearchParams(window.location.search);
+    const inviteCode = (params.get('code') || window.localStorage.getItem(STORAGE_INVITE_KEY) || '').trim().toLowerCase();
+    const baseUrl = new URL('./', window.location.href);
+    const landingUrl = new URL(baseUrl);
+    landingUrl.searchParams.set('ref', inviteCode);
+
+    const inviteCodeEl = document.getElementById('invite-code');
+    const inviteLinkEl = document.getElementById('invite-link');
+    const statusEl = document.getElementById('status');
+    const copyCodeBtn = document.getElementById('copy-code');
+    const copyLinkBtn = document.getElementById('copy-link');
+    const openLinkEl = document.getElementById('open-link');
+    const backHomeEl = document.getElementById('back-home');
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    async function copyText(value, successMessage) {
+      try {
+        await navigator.clipboard.writeText(value);
+        setStatus(successMessage);
+      } catch (_error) {
+        setStatus('复制失败，请手动长按或选择文本复制。');
+      }
+    }
+
+    if (inviteCode) {
+      window.localStorage.setItem(STORAGE_INVITE_KEY, inviteCode);
+      inviteCodeEl.textContent = inviteCode;
+      inviteLinkEl.textContent = landingUrl.toString();
+      openLinkEl.href = landingUrl.toString();
+      backHomeEl.href = baseUrl.toString();
+
+      copyCodeBtn.addEventListener('click', () => copyText(inviteCode, '邀请码已复制。'));
+      copyLinkBtn.addEventListener('click', () => copyText(landingUrl.toString(), '邀请链接已复制。'));
+    } else {
+      inviteCodeEl.textContent = '未拿到';
+      inviteLinkEl.textContent = '当前 URL 没有 code 参数，也没有本地缓存的邀请码。';
+      openLinkEl.href = baseUrl.toString();
+      backHomeEl.href = baseUrl.toString();
+      copyCodeBtn.disabled = true;
+      copyLinkBtn.disabled = true;
+      setStatus('未检测到邀请码，请从申请页重新进入，或带上 ?code=你的邀请码 打开本页。');
+    }
+  </script>
+</body>
+</html>
