@@ -6,7 +6,6 @@ type PaymentMethod = 'wechat' | 'alipay';
 type PayStep = 'idle' | 'paying' | 'success';
 
 const PAYMENT_API_URL = 'https://wechat-y-server-vjfbztievl.cn-shanghai.fcapp.run';
-const ITERATE_COUPON_CODE = '无限迭代';
 const INSTALL_GUIDE_URL = 'https://iterate.xin/iterate/INSTALLATION.md';
 const DOWNLOAD_LINKS = {
   mac: 'https://github.com/kexin94yyds/iterate-releases/releases/latest/download/iterate_aarch64.dmg',
@@ -35,15 +34,12 @@ function isPermanentPlan(plan: Plan): plan is Extract<Plan, { id: 'permanent' }>
 
 function resolvePlanPricing(plan: Plan, couponCode: string) {
   const normalizedCoupon = couponCode.trim();
-  const hasValidCoupon = isPermanentPlan(plan) && normalizedCoupon === ITERATE_COUPON_CODE;
 
   return {
-    price: hasValidCoupon && isPermanentPlan(plan) ? plan.couponPrice : plan.price,
-    couponCode: hasValidCoupon ? ITERATE_COUPON_CODE : '',
-    hasValidCoupon,
-    couponError: normalizedCoupon && !hasValidCoupon
-      ? isPermanentPlan(plan) ? '优惠码无效' : '优惠码仅限永久版'
-      : '',
+    price: plan.price,
+    couponCode: normalizedCoupon,
+    hasCouponInput: normalizedCoupon.length > 0,
+    couponError: '',
   };
 }
 
@@ -404,7 +400,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
                 <span className="text-sm text-zinc-400">二维码生成中...</span>
               </div>
               <p className="text-lg font-black">¥{orderAmount ?? currentPricing.price}</p>
-              {currentPricing.hasValidCoupon ? <p className="mt-1 text-xs text-emerald-600">已使用优惠码：{ITERATE_COUPON_CODE}</p> : null}
+              {currentPricing.hasCouponInput ? <p className="mt-1 text-xs text-emerald-600">已提交优惠码，实际金额以订单为准。</p> : null}
               <p className="mt-1 text-xs text-zinc-400">订单号：{orderRef.current}</p>
               <p className="mt-1 text-xs text-zinc-400">最长等待约 5 分钟。</p>
             </>
@@ -492,15 +488,15 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
             type="text"
             value={couponInput}
             onChange={event => setCouponInput(event.target.value)}
-            placeholder="优惠码（永久版可填：无限迭代）"
+            placeholder="优惠码（可选）"
             className="mb-2 w-full border border-zinc-200 px-4 py-3 text-sm outline-none transition-colors focus:border-black"
           />
-          {currentPricing.hasValidCoupon ? (
-            <p className="mb-3 text-xs font-bold text-emerald-600">已享受永久版优惠价 ¥{currentPricing.price}</p>
+          {currentPricing.hasCouponInput ? (
+            <p className="mb-3 text-xs font-bold text-emerald-600">已填写优惠码，实际支付金额以订单为准。</p>
           ) : currentPricing.couponError ? (
             <p className="mb-3 text-xs font-bold text-red-600">{currentPricing.couponError}</p>
           ) : (
-            <p className="mb-3 text-xs text-zinc-400">永久版原价 ¥39.9，优惠码后 ¥19.9。</p>
+            <p className="mb-3 text-xs text-zinc-400">如有优惠码，请输入后再支付。</p>
           )}
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
