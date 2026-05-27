@@ -28,6 +28,8 @@ type PaymentCheckoutProps = {
   showInstallLinks?: boolean;
 };
 
+type PaymentApiResponse = Record<string, unknown>;
+
 function isPermanentPlan(plan: Plan): plan is Extract<Plan, { id: 'permanent' }> {
   return plan.id === 'permanent';
 }
@@ -55,17 +57,50 @@ function resolveOrderAmount(data: Record<string, unknown>, fallback: number) {
   return fallback;
 }
 
+function getApiString(data: PaymentApiResponse, key: string) {
+  const value = data[key];
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function getApiErrorMessage(data: PaymentApiResponse, fallback: string) {
+  return getApiString(data, 'error') || getApiString(data, 'message') || fallback;
+}
+
+function isApiShapeError(error: unknown) {
+  return error instanceof Error && (
+    error.message.includes('支付服务接口尚未部署')
+    || error.message.includes('非 JSON 响应')
+  );
+}
+
+async function readPaymentApiJson(response: Response, fallback: string): Promise<PaymentApiResponse> {
+  const text = await response.text();
+  if (!text.trim())
+    return {};
+
+  try {
+    const parsed = JSON.parse(text);
+    return parsed && typeof parsed === 'object' ? parsed as PaymentApiResponse : {};
+  }
+  catch {
+    if (response.status === 404)
+      throw new Error('支付服务接口尚未部署，请稍后再试。');
+
+    throw new Error(`${fallback}：支付服务返回了非 JSON 响应 (${response.status})`);
+  }
+}
+
 async function claimIterateLicense(claimToken: string) {
   const response = await fetch(`${PAYMENT_API_URL}/api/iterate/claim-license`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ claimToken }),
   });
-  const data = await response.json();
-  const licenseKey = typeof data.licenseKey === 'string' ? data.licenseKey.trim() : '';
+  const data = await readPaymentApiJson(response, '领取激活码失败');
+  const licenseKey = getApiString(data, 'licenseKey');
 
   if (!response.ok || !data.success || !licenseKey)
-    throw new Error(data.error || data.message || '领取激活码失败');
+    throw new Error(getApiErrorMessage(data, '领取激活码失败'));
 
   return licenseKey;
 }
@@ -121,9 +156,9 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      const data = await response.json();
+      const data = await readPaymentApiJson(response, '验证码发送失败');
       if (!response.ok || !data.success)
-        throw new Error(data.error || data.message || '验证码发送失败');
+        throw new Error(getApiErrorMessage(data, '验证码发送失败'));
 
       setEmailVerificationState('sent');
       setEmailVerificationMessage('验证码已发送，请检查邮箱。');
@@ -149,11 +184,12 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),
       });
-      const data = await response.json();
-      if (!response.ok || !data.success || !data.emailVerificationToken)
-        throw new Error(data.error || data.message || '邮箱验证失败');
+      const data = await readPaymentApiJson(response, '邮箱验证失败');
+      const token = getApiString(data, 'emailVerificationToken');
+      if (!response.ok || !data.success || !token)
+        throw new Error(getApiErrorMessage(data, '邮箱验证失败'));
 
-      setEmailVerificationToken(data.emailVerificationToken);
+      setEmailVerificationToken(token);
       setEmailVerificationState('verified');
       setEmailVerificationMessage('邮箱已验证，可支付或找回订单。');
     }
@@ -187,10 +223,10 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         const response = await fetch(`${PAYMENT_API_URL}/api/iterate/payment-status/${orderRef.current}`, {
           headers: { Authorization: `Bearer ${paymentAccessRef.current}` },
         });
-        const data = await response.json();
+        const data = await readPaymentApiJson(response, '支付状态查询失败');
 
         if (data.status === 'success') {
-          const claimToken = typeof data.claimToken === 'string' ? data.claimToken.trim() : '';
+          const claimToken = getApiString(data, 'claimToken');
           if (!claimToken)
             return;
 
@@ -216,7 +252,13 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
           setPayStep('idle');
         }
       }
-      catch {}
+      catch (error) {
+        if (isApiShapeError(error)) {
+          clearInterval(pollRef.current!);
+          setPayError(error instanceof Error ? error.message : '支付状态查询失败');
+          setPayStep('idle');
+        }
+      }
     }, 3000);
   }
 
@@ -253,14 +295,16 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      const data = await response.json();
-      const codeUrl = data.codeUrl || data.code_url;
+      const data = await readPaymentApiJson(response, '创建订单失败');
+      const codeUrl = getApiString(data, 'codeUrl') || getApiString(data, 'code_url');
+      const paymentAccessToken = getApiString(data, 'paymentAccessToken');
+      const orderNo = getApiString(data, 'orderNo');
 
-      if (!response.ok || !data.success || !codeUrl || !data.paymentAccessToken)
-        throw new Error(data.message || data.error || '创建订单失败');
+      if (!response.ok || !data.success || !codeUrl || !paymentAccessToken || !orderNo)
+        throw new Error(getApiErrorMessage(data, '创建订单失败'));
 
-      orderRef.current = data.orderNo;
-      paymentAccessRef.current = data.paymentAccessToken;
+      orderRef.current = orderNo;
+      paymentAccessRef.current = paymentAccessToken;
       setOrderAmount(resolveOrderAmount(data, currentPricing.price));
       resetEmailVerification('邮箱已绑定当前订单；新订单或找回需重新验证。');
 
@@ -307,15 +351,17 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
           emailVerificationToken,
         }),
       });
-      const data = await response.json();
-      if (!response.ok || !data.success || !data.paymentAccessToken)
-        throw new Error(data.error || data.message || '找回失败');
+      const data = await readPaymentApiJson(response, '找回失败');
+      const paymentAccessToken = getApiString(data, 'paymentAccessToken');
+      const orderNo = getApiString(data, 'orderNo');
+      if (!response.ok || !data.success || !paymentAccessToken || !orderNo)
+        throw new Error(getApiErrorMessage(data, '找回失败'));
 
-      orderRef.current = data.orderNo;
-      paymentAccessRef.current = data.paymentAccessToken;
+      orderRef.current = orderNo;
+      paymentAccessRef.current = paymentAccessToken;
       resetEmailVerification('找回验证已使用；再次操作需重新验证邮箱。');
 
-      const claimToken = typeof data.claimToken === 'string' ? data.claimToken.trim() : '';
+      const claimToken = getApiString(data, 'claimToken');
       if (claimToken) {
         const licenseKey = await claimIterateLicense(claimToken);
         setActivationCode(licenseKey);
