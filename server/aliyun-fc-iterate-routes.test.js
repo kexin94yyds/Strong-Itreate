@@ -162,6 +162,7 @@ function loadClaimHelpers(environment = {}, overrides = {}) {
     isValidEmail: email => typeof email === 'string' && email.includes('@'),
     callWechatAPI: overrides.callWechatAPI || (async () => ({ code_url: 'weixin://test-qr' })),
     queryWechatOrderStatus: overrides.queryWechatOrderStatus || (async () => ({ trade_state: 'NOTPAY' })),
+    createAlipayPagePayment: overrides.createAlipayPagePayment,
     createAlipayPrecreatePayment: overrides.createAlipayPrecreatePayment,
     queryAlipayTradeStatus: overrides.queryAlipayTradeStatus,
     supabaseRI: {
@@ -465,13 +466,13 @@ test('wechat create-payment accepts checkout without email verification', async 
   assert.equal(tables.iterate_email_verifications.length, 0)
 })
 
-test('alipay precreate returns a QR code and persists provider checkout metadata', async () => {
+test('alipay page pay returns an official cashier URL and persists provider checkout metadata', async () => {
   let adapterInput = null
-  const { routes, tables } = loadClaimHelpers({}, {
+  const { routes, tables } = loadClaimHelpers({ ALIPAY_RETURN_URL: 'https://iterate.xin/iterate/buy.html' }, {
     generateOrderNo: () => 'ITERATE-alipay-create',
-    createAlipayPrecreatePayment: async (input) => {
+    createAlipayPagePayment: async (input) => {
       adapterInput = input
-      return { qrCode: 'https://qr.alipay.com/iterate-test' }
+      return { payUrl: 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay' }
     },
   })
 
@@ -486,9 +487,11 @@ test('alipay precreate returns a QR code and persists provider checkout metadata
 
   assert.equal(response.statusCode, 200)
   assert.equal(response.body.paymentMethod, 'alipay')
-  assert.equal(response.body.codeUrl, 'https://qr.alipay.com/iterate-test')
+  assert.equal(response.body.codeUrl, 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay')
+  assert.equal(response.body.payUrl, 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay')
   assert.equal(response.body.amountCents, 1000)
   assert.equal(adapterInput.totalAmount, '10.00')
+  assert.equal(adapterInput.returnUrl, 'https://iterate.xin/iterate/buy.html')
   assert.equal(adapterInput.metadata.email, '')
   assert.equal(tables.iterate_payment_access[0].payment_method, 'alipay')
   assert.equal(tables.iterate_payment_access[0].plan_id, 'iterate_day7')
@@ -510,6 +513,35 @@ test('an unavailable alipay adapter fails without requiring email verification',
 
   assert.equal(response.statusCode, 503)
   assert.equal(tables.iterate_email_verifications.length, 0)
+})
+
+test('alipay unpaid page pay status stays pending when the trade is not created yet', async () => {
+  const { issueIteratePaymentAccessToken, routes } = loadClaimHelpers({}, {
+    queryAlipayTradeStatus: async orderNo => ({
+      outTradeNo: orderNo,
+      tradeStatus: 'WAIT_BUYER_PAY',
+      totalAmount: '',
+      gmtPayment: '',
+    }),
+  })
+  const token = await issueIteratePaymentAccessToken('ITERATE-alipay-new-page-pay', '', {
+    paymentMethod: 'alipay',
+    planId: 'iterate_day1',
+    amountCents: 199,
+    couponCode: '',
+  })
+
+  const response = createResponse()
+  await routes.get('GET /api/iterate/payment-status/:orderNo')({
+    params: { orderNo: 'ITERATE-alipay-new-page-pay' },
+    headers: { authorization: `Bearer ${token}` },
+  }, response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(response.body.success, true)
+  assert.equal(response.body.paymentMethod, 'alipay')
+  assert.equal(response.body.status, 'pending')
+  assert.equal(response.body.claimToken, null)
 })
 
 test('alipay paid status issues a claim token through the shared fulfillment flow', async () => {

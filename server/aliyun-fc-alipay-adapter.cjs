@@ -47,6 +47,40 @@ function resultData(result) {
   return result && result.data ? result.data : result
 }
 
+function resolvePagePayUrl(result) {
+  const data = resultData(result)
+  if (typeof data === 'string')
+    return data
+  return data?.paymentUrl || data?.payment_url || data?.url || data?.pageRedirectionData || data?.page_redirection_data || ''
+}
+
+function alipayErrorText(error) {
+  const data = error?.data || error?.response?.data || error?.result || {}
+  const response = data?.alipay_trade_query_response || data?.alipayTradeQueryResponse || {}
+  return [
+    error?.message,
+    error?.code,
+    error?.subCode,
+    error?.sub_code,
+    data?.code,
+    data?.subCode,
+    data?.sub_code,
+    data?.msg,
+    data?.subMsg,
+    data?.sub_msg,
+    response?.code,
+    response?.subCode,
+    response?.sub_code,
+    response?.msg,
+    response?.subMsg,
+    response?.sub_msg,
+  ].filter(Boolean).join(' ')
+}
+
+function isAlipayTradeNotExistError(error) {
+  return /(?:ACQ\.)?TRADE_NOT_EXIST|交易不存在/i.test(alipayErrorText(error))
+}
+
 function createAlipayAdapters(AlipaySdk, env = process.env) {
   if (typeof AlipaySdk !== 'function')
     throw new Error('未加载官方 alipay-sdk 的 AlipaySdk')
@@ -54,6 +88,29 @@ function createAlipayAdapters(AlipaySdk, env = process.env) {
   const sdk = new AlipaySdk(createSdkConfig(env))
 
   return {
+    async createAlipayPagePayment({ outTradeNo, subject, totalAmount, notifyUrl, returnUrl }) {
+      if (typeof sdk.pageExecute !== 'function')
+        throw new Error('当前 alipay-sdk 不支持电脑网站支付 pageExecute')
+
+      const request = {
+        bizContent: {
+          out_trade_no: outTradeNo,
+          product_code: 'FAST_INSTANT_TRADE_PAY',
+          total_amount: totalAmount,
+          subject,
+        },
+        notifyUrl,
+      }
+      if (returnUrl)
+        request.returnUrl = returnUrl
+
+      const result = await sdk.pageExecute('alipay.trade.page.pay', 'GET', request)
+      const paymentUrl = resolvePagePayUrl(result)
+      if (!paymentUrl)
+        throw new Error('支付宝电脑网站支付未返回官方收银台链接')
+      return { paymentUrl, payUrl: paymentUrl }
+    },
+
     async createAlipayPrecreatePayment({ outTradeNo, subject, totalAmount, notifyUrl }) {
       const result = await sdk.curl('POST', '/v3/alipay/trade/precreate', {
         body: {
@@ -71,9 +128,22 @@ function createAlipayAdapters(AlipaySdk, env = process.env) {
     },
 
     async queryAlipayTradeStatus(orderNo) {
-      const result = await sdk.curl('POST', '/v3/alipay/trade/query', {
-        body: { out_trade_no: orderNo },
-      })
+      let result
+      try {
+        result = await sdk.curl('POST', '/v3/alipay/trade/query', {
+          body: { out_trade_no: orderNo },
+        })
+      }
+      catch (error) {
+        if (!isAlipayTradeNotExistError(error))
+          throw error
+        return {
+          outTradeNo: orderNo,
+          tradeStatus: 'WAIT_BUYER_PAY',
+          totalAmount: '',
+          gmtPayment: '',
+        }
+      }
       const data = resultData(result)
       return {
         outTradeNo: data?.out_trade_no || data?.outTradeNo || '',

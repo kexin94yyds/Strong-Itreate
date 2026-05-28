@@ -7,7 +7,7 @@
  * 
  * 依赖：复用现有 supabaseRI 客户端 + WECHAT_CONFIG
  * 支付宝：完整 FC 入口需通过 server/aliyun-fc-alipay-adapter.cjs 使用官方 SDK 注入
- *   globalThis.createAlipayPrecreatePayment / globalThis.queryAlipayTradeStatus
+ *   globalThis.createAlipayPagePayment / globalThis.queryAlipayTradeStatus
  */
 
 // ============== Iterate 产品配置 ==============
@@ -132,7 +132,7 @@ async function createIterateProviderPayment(paymentMethod, orderNo, plan, pricin
         return { codeUrl: result.code_url || '', raw: result };
     }
 
-    const adapter = globalThis.createAlipayPrecreatePayment;
+    const adapter = globalThis.createAlipayPagePayment;
     if (typeof adapter !== 'function') {
         throw createMissingIteratePaymentAdapterError(paymentMethod);
     }
@@ -141,6 +141,7 @@ async function createIterateProviderPayment(paymentMethod, orderNo, plan, pricin
         subject: `Iterate - ${plan.productName}`,
         totalAmount: (pricing.payAmount / 100).toFixed(2),
         notifyUrl: process.env.ALIPAY_NOTIFY_URL?.trim() || '',
+        returnUrl: process.env.ALIPAY_RETURN_URL?.trim() || 'https://iterate.xin/iterate/buy.html',
         metadata: {
             product: 'iterate',
             planId: plan.productId,
@@ -148,7 +149,8 @@ async function createIterateProviderPayment(paymentMethod, orderNo, plan, pricin
             couponCode: pricing.couponCode,
         },
     });
-    return { codeUrl: result.codeUrl || result.qrCode || result.qr_code || '', raw: result };
+    const payUrl = result.payUrl || result.paymentUrl || '';
+    return { codeUrl: payUrl, payUrl, raw: result };
 }
 
 function toIterateAmountCents(amount) {
@@ -918,7 +920,7 @@ app.post('/api/iterate/create-payment', async (req, res) => {
         } catch (error) {
             return res.status(error.statusCode || 400).json({ success: false, message: error.message });
         }
-        if (paymentMethod === 'alipay' && typeof globalThis.createAlipayPrecreatePayment !== 'function') {
+        if (paymentMethod === 'alipay' && typeof globalThis.createAlipayPagePayment !== 'function') {
             const error = createMissingIteratePaymentAdapterError(paymentMethod);
             return res.status(error.statusCode).json({ success: false, message: error.message });
         }
@@ -927,7 +929,7 @@ app.post('/api/iterate/create-payment', async (req, res) => {
         const orderNo = generateOrderNo('ITERATE');
         const result = await createIterateProviderPayment(paymentMethod, orderNo, plan, pricing, safeEmail);
 
-        if (result.codeUrl) {
+        if (result.codeUrl || result.payUrl) {
             const paymentAccessToken = await issueIteratePaymentAccessToken(orderNo, safeEmail, {
                 paymentMethod,
                 planId: plan.productId,
@@ -944,6 +946,7 @@ app.post('/api/iterate/create-payment', async (req, res) => {
                 paymentAccessToken,
                 code_url: result.codeUrl,
                 codeUrl: result.codeUrl,
+                payUrl: result.payUrl || '',
                 amountCents: pricing.payAmount,
                 amount: pricing.payAmount / 100,
                 originalAmount: pricing.originalAmount / 100,

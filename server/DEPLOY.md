@@ -38,7 +38,7 @@ create-payment(paymentMethod=wechat|alipay)
   - 依赖线上已有的 `app`、`supabaseRI`、`WECHAT_CONFIG`、`callWechatAPI`、`queryWechatOrderStatus`、`generateTimeExpire`。
 - `server/aliyun-fc-alipay-adapter.cjs`
   - 复制到 FC 代码目录，与 `index.js` 同级。
-  - 用官方 `alipay-sdk` 注入支付宝 precreate 和 query adapter。
+  - 用官方 `alipay-sdk` 注入支付宝电脑网站支付 `page.pay` 和 query adapter。
 
 本地测试文件：
 
@@ -113,6 +113,7 @@ legacy 邮箱验证/订单找回接口如果继续保留，才需要配置：
 - `ALIPAY_KEY_TYPE`，默认 `PKCS8`
 - `ALIPAY_GATEWAY`
 - `ALIPAY_NOTIFY_URL`
+- `ALIPAY_RETURN_URL`，默认 `https://iterate.xin/iterate/buy.html`
 
 如果支付宝环境变量不完整，不要注入支付宝 adapter；否则函数启动会失败。未注入 adapter 时，`paymentMethod=alipay` 会返回 `503 支付宝支付通道尚未配置`。
 
@@ -176,14 +177,14 @@ curl -i "$BASE/api/iterate/payment-status/deployment-probe-no-token"
 
 ### 历史线上门禁结果（2026-05-28 08:13 CST）
 
-该结果来自旧邮箱验证方案，已不作为当前无邮箱 checkout 的门禁依据。当前验收以“不传邮箱创建微信/支付宝订单并返回 `paymentAccessToken`”为准。
+该结果来自旧邮箱验证方案，已不作为当前无邮箱 checkout 的门禁依据。当前验收以“不传邮箱创建微信订单返回二维码、创建支付宝订单返回官方收银台 `payUrl`，并都返回 `paymentAccessToken`”为准。
 
 ## 真实闭环验收
 
 只有无副作用探针全部通过后，才进行真实闭环：
 
 1. 创建微信 1 天测试订单，不传邮箱，确认返回微信二维码和 `paymentAccessToken`。
-2. 创建支付宝 1 天测试订单，不传邮箱，确认返回支付宝二维码和 `paymentAccessToken`。
+2. 创建支付宝 1 天测试订单，不传邮箱，确认返回支付宝官方收银台 `payUrl` 和 `paymentAccessToken`。
 3. 支付后用 `Authorization: Bearer <paymentAccessToken>` 查询 `payment-status`。
 4. `payment-status` 成功后必须返回 `claimToken`，不能直接返回完整 `licenseKey`。
 5. 调用 `claim-license` 兑换激活码。

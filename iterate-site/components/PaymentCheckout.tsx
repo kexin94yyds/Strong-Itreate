@@ -118,6 +118,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
   const [activationCode, setActivationCode] = useState('');
   const [copied, setCopied] = useState(false);
   const [orderAmount, setOrderAmount] = useState<number | null>(null);
+  const [cashierUrl, setCashierUrl] = useState('');
   const qrCanvasRef = useRef<HTMLDivElement | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const orderRef = useRef<string | null>(null);
@@ -192,11 +193,16 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
     setPaymentMethod(method);
     setPayError('');
     setOrderAmount(null);
+    setCashierUrl('');
 
     if (currentPricing.couponError) {
       setPayError(currentPricing.couponError);
       return;
     }
+
+    let cashierWindow: Window | null = null;
+    if (method === 'alipay')
+      cashierWindow = window.open('about:blank', '_blank');
 
     setPayStep('paying');
 
@@ -216,15 +222,30 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
       });
       const data = await readPaymentApiJson(response, '创建订单失败');
       const codeUrl = getApiString(data, 'codeUrl') || getApiString(data, 'code_url');
+      const payUrl = getApiString(data, 'payUrl') || getApiString(data, 'paymentUrl') || (method === 'alipay' ? codeUrl : '');
       const paymentAccessToken = getApiString(data, 'paymentAccessToken');
       const orderNo = getApiString(data, 'orderNo');
+      const paymentTarget = method === 'alipay' ? payUrl : codeUrl;
 
-      if (!response.ok || !data.success || !codeUrl || !paymentAccessToken || !orderNo)
+      if (!response.ok || !data.success || !paymentTarget || !paymentAccessToken || !orderNo)
         throw new Error(getApiErrorMessage(data, '创建订单失败'));
 
       orderRef.current = orderNo;
       paymentAccessRef.current = paymentAccessToken;
       setOrderAmount(resolveOrderAmount(data, currentPricing.price));
+
+      if (method === 'alipay') {
+        setCashierUrl(paymentTarget);
+        if (cashierWindow && !cashierWindow.closed) {
+          cashierWindow.opener = null;
+          cashierWindow.location.href = paymentTarget;
+        }
+        else {
+          setPayError('浏览器阻止了新窗口，请点击下方按钮打开支付宝收银台。');
+        }
+        startPaymentPolling();
+        return;
+      }
 
       setTimeout(() => {
         if (!qrCanvasRef.current)
@@ -240,6 +261,8 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
       startPaymentPolling();
     }
     catch (error) {
+      if (cashierWindow && !cashierWindow.closed)
+        cashierWindow.close();
       setPayError(error instanceof Error ? error.message : '网络错误');
       setPayStep('idle');
     }
@@ -303,11 +326,34 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         </div>
       ) : payStep === 'paying' ? (
         <div className="text-center">
-          <div className="mb-2 text-xl font-bold">{paymentMethod === 'wechat' ? '微信' : '支付宝'}扫码支付</div>
-          <p className="mb-4 text-sm text-zinc-500">请使用{paymentMethod === 'wechat' ? '微信' : '支付宝'}扫描下方二维码，支付成功后会自动返回激活码。</p>
-          <div ref={qrCanvasRef} className="mx-auto mb-3 inline-flex h-[200px] w-[200px] items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50">
-            <span className="text-sm text-zinc-400">二维码生成中...</span>
-          </div>
+          {paymentMethod === 'alipay' ? (
+            <>
+              <div className="mb-2 text-xl font-bold">支付宝官方收银台</div>
+              <p className="mb-4 text-sm text-zinc-500">请在新打开的支付宝页面完成付款，本页会自动等待支付结果并返回激活码。</p>
+              <div className="mx-auto mb-4 flex h-[160px] w-[220px] flex-col items-center justify-center border border-zinc-200 bg-zinc-50 px-5">
+                <span className="mb-3 text-3xl font-black text-[#1677ff]">支付宝</span>
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">Official Cashier</span>
+              </div>
+              {cashierUrl ? (
+                <a
+                  href={cashierUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mb-3 inline-flex items-center justify-center bg-blue-500 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-600"
+                >
+                  打开支付宝收银台
+                </a>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <div className="mb-2 text-xl font-bold">微信扫码支付</div>
+              <p className="mb-4 text-sm text-zinc-500">请使用微信扫描下方二维码，支付成功后会自动返回激活码。</p>
+              <div ref={qrCanvasRef} className="mx-auto mb-3 inline-flex h-[200px] w-[200px] items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50">
+                <span className="text-sm text-zinc-400">二维码生成中...</span>
+              </div>
+            </>
+          )}
           <p className="text-lg font-black">¥{orderAmount ?? currentPricing.price}</p>
           {currentPricing.hasCouponInput ? <p className="mt-1 text-xs text-emerald-600">已提交优惠码，实际金额以订单为准。</p> : null}
           <p className="mt-1 text-xs text-zinc-400">订单号：{orderRef.current}</p>
@@ -374,7 +420,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
               onClick={() => handleBuy('alipay')}
               className="bg-blue-500 px-4 py-4 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-600"
             >
-              支付宝支付 ¥{currentPricing.price}
+              支付宝收银台 ¥{currentPricing.price}
             </button>
           </div>
 

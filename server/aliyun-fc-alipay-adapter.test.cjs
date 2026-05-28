@@ -22,9 +22,48 @@ test('SDK config requires verification material and supports public-key mode', (
   )
 })
 
-test('precreate uses the official SDK v3 QR endpoint contract', async () => {
+test('page pay uses the official desktop cashier contract', async () => {
   const calls = []
   class FakeAlipaySdk {
+    async pageExecute(method, httpMethod, options) {
+      calls.push({ method, httpMethod, options })
+      return 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay'
+    }
+  }
+  const adapter = createAlipayAdapters(FakeAlipaySdk, environment)
+
+  const result = await adapter.createAlipayPagePayment({
+    outTradeNo: 'ITERATE-order',
+    subject: 'Iterate - 7 天版',
+    totalAmount: '10.00',
+    notifyUrl: environment.ALIPAY_NOTIFY_URL,
+    returnUrl: 'https://iterate.xin/iterate/buy.html',
+  })
+
+  assert.equal(result.payUrl, 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay')
+  assert.deepEqual(calls[0], {
+    method: 'alipay.trade.page.pay',
+    httpMethod: 'GET',
+    options: {
+      bizContent: {
+        out_trade_no: 'ITERATE-order',
+        product_code: 'FAST_INSTANT_TRADE_PAY',
+        total_amount: '10.00',
+        subject: 'Iterate - 7 天版',
+      },
+      notifyUrl: environment.ALIPAY_NOTIFY_URL,
+      returnUrl: 'https://iterate.xin/iterate/buy.html',
+    },
+  })
+})
+
+test('precreate remains available for QR fallback tooling', async () => {
+  const calls = []
+  class FakeAlipaySdk {
+    async pageExecute() {
+      return 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay'
+    }
+
     async curl(method, path, options) {
       calls.push({ method, path, options })
       return { data: { qr_code: 'https://qr.alipay.com/iterate' } }
@@ -80,4 +119,26 @@ test('query and notification verification are exposed to the shared payment rout
     gmtPayment: '2026-05-27 20:00:00',
   })
   assert.equal(adapter.verifyAlipayNotification({ sign: 'valid-signature' }), true)
+})
+
+test('query treats a not-yet-created page pay trade as waiting for buyer payment', async () => {
+  class FakeAlipaySdk {
+    async curl() {
+      const error = new Error('交易不存在 (traceId: test-trace)')
+      error.code = 'ACQ.TRADE_NOT_EXIST'
+      throw error
+    }
+
+    checkNotifySignV2() {
+      return false
+    }
+  }
+  const adapter = createAlipayAdapters(FakeAlipaySdk, environment)
+
+  assert.deepEqual(await adapter.queryAlipayTradeStatus('ITERATE-page-pay-new'), {
+    outTradeNo: 'ITERATE-page-pay-new',
+    tradeStatus: 'WAIT_BUYER_PAY',
+    totalAmount: '',
+    gmtPayment: '',
+  })
 })
