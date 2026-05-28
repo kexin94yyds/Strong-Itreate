@@ -437,26 +437,42 @@ test('alipay payment access can be recovered after the checkout page is lost', a
   assert.equal(wechatQueries, 0)
 })
 
+test('wechat create-payment accepts checkout without email verification', async () => {
+  let providerPayload = null
+  const { routes, tables } = loadClaimHelpers({}, {
+    generateOrderNo: () => 'ITERATE-wechat-create',
+    callWechatAPI: async (_method, _path, body) => {
+      providerPayload = JSON.parse(body)
+      return { code_url: 'weixin://iterate-no-email' }
+    },
+  })
+
+  const response = createResponse()
+  await routes.get('POST /api/iterate/create-payment')({
+    body: {
+      videoId: 'iterate_day7',
+      videoTitle: 'Iterate 7天体验',
+      paymentMethod: 'wechat',
+    },
+  }, response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(response.body.paymentMethod, 'wechat')
+  assert.equal(response.body.codeUrl, 'weixin://iterate-no-email')
+  assert.equal(providerPayload.attach.includes('email:'), true)
+  assert.equal(tables.iterate_payment_access[0].payment_method, 'wechat')
+  assert.equal(tables.iterate_payment_access[0].email, '')
+  assert.equal(tables.iterate_email_verifications.length, 0)
+})
+
 test('alipay precreate returns a QR code and persists provider checkout metadata', async () => {
-  const email = 'buyer@example.com'
-  const verificationToken = 'verified-alipay-session'
   let adapterInput = null
-  const { hashIterateEmailCredential, routes, tables } = loadClaimHelpers({
-    ITERATE_EMAIL_VERIFICATION_SECRET: 'test-email-secret',
-  }, {
+  const { routes, tables } = loadClaimHelpers({}, {
     generateOrderNo: () => 'ITERATE-alipay-create',
     createAlipayPrecreatePayment: async (input) => {
       adapterInput = input
       return { qrCode: 'https://qr.alipay.com/iterate-test' }
     },
-  })
-  tables.iterate_email_verifications.push({
-    id: 'verification-alipay-create',
-    email,
-    verification_token_hash: hashIterateEmailCredential('verification', email, verificationToken),
-    verified_at: new Date().toISOString(),
-    consumed_at: null,
-    token_expires_at: new Date(Date.now() + 60000).toISOString(),
   })
 
   const response = createResponse()
@@ -465,8 +481,6 @@ test('alipay precreate returns a QR code and persists provider checkout metadata
       videoId: 'iterate_day7',
       videoTitle: 'Iterate 7天体验',
       paymentMethod: 'alipay',
-      email,
-      emailVerificationToken: verificationToken,
     },
   }, response)
 
@@ -475,25 +489,15 @@ test('alipay precreate returns a QR code and persists provider checkout metadata
   assert.equal(response.body.codeUrl, 'https://qr.alipay.com/iterate-test')
   assert.equal(response.body.amountCents, 1000)
   assert.equal(adapterInput.totalAmount, '10.00')
+  assert.equal(adapterInput.metadata.email, '')
   assert.equal(tables.iterate_payment_access[0].payment_method, 'alipay')
   assert.equal(tables.iterate_payment_access[0].plan_id, 'iterate_day7')
   assert.equal(tables.iterate_payment_access[0].amount_cents, 1000)
+  assert.equal(tables.iterate_payment_access[0].email, '')
 })
 
-test('an unavailable alipay adapter does not consume email verification', async () => {
-  const email = 'buyer@example.com'
-  const verificationToken = 'verified-unconfigured-alipay'
-  const { hashIterateEmailCredential, routes, tables } = loadClaimHelpers({
-    ITERATE_EMAIL_VERIFICATION_SECRET: 'test-email-secret',
-  })
-  tables.iterate_email_verifications.push({
-    id: 'verification-unconfigured-alipay',
-    email,
-    verification_token_hash: hashIterateEmailCredential('verification', email, verificationToken),
-    verified_at: new Date().toISOString(),
-    consumed_at: null,
-    token_expires_at: new Date(Date.now() + 60000).toISOString(),
-  })
+test('an unavailable alipay adapter fails without requiring email verification', async () => {
+  const { routes, tables } = loadClaimHelpers()
 
   const response = createResponse()
   await routes.get('POST /api/iterate/create-payment')({
@@ -501,13 +505,11 @@ test('an unavailable alipay adapter does not consume email verification', async 
       videoId: 'iterate_day7',
       videoTitle: 'Iterate 7天体验',
       paymentMethod: 'alipay',
-      email,
-      emailVerificationToken: verificationToken,
     },
   }, response)
 
   assert.equal(response.statusCode, 503)
-  assert.equal(tables.iterate_email_verifications[0].consumed_at, null)
+  assert.equal(tables.iterate_email_verifications.length, 0)
 })
 
 test('alipay paid status issues a claim token through the shared fulfillment flow', async () => {

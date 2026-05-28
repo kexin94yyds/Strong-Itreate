@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 
-type EmailVerificationState = 'idle' | 'sending' | 'sent' | 'verifying' | 'verified';
 type PaymentMethod = 'wechat' | 'alipay';
 type PayStep = 'idle' | 'paying' | 'success';
 
@@ -112,19 +111,12 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
   showInstallLinks = false,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>(defaultPlan);
-  const [buyEmail, setBuyEmail] = useState('');
-  const [emailCode, setEmailCode] = useState('');
-  const [emailVerificationToken, setEmailVerificationToken] = useState('');
-  const [emailVerificationState, setEmailVerificationState] = useState<EmailVerificationState>('idle');
-  const [emailVerificationMessage, setEmailVerificationMessage] = useState('');
-  const [recoveryOrderNo, setRecoveryOrderNo] = useState('');
   const [couponInput, setCouponInput] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('wechat');
   const [payStep, setPayStep] = useState<PayStep>('idle');
   const [payError, setPayError] = useState('');
   const [activationCode, setActivationCode] = useState('');
   const [copied, setCopied] = useState(false);
-  const [isRecovering, setIsRecovering] = useState(false);
   const [orderAmount, setOrderAmount] = useState<number | null>(null);
   const qrCanvasRef = useRef<HTMLDivElement | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -133,71 +125,6 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
 
   const currentPlan = PLANS.find(plan => plan.id === selectedPlan)!;
   const currentPricing = resolvePlanPricing(currentPlan, couponInput);
-
-  function resetEmailVerification(message = '') {
-    setEmailCode('');
-    setEmailVerificationToken('');
-    setEmailVerificationState('idle');
-    setEmailVerificationMessage(message);
-  }
-
-  async function requestEmailVerificationCode() {
-    const email = buyEmail.trim();
-    if (!email) {
-      setEmailVerificationMessage('请先填写邮箱。');
-      return;
-    }
-
-    setEmailVerificationState('sending');
-    setEmailVerificationMessage('');
-    try {
-      const response = await fetch(`${PAYMENT_API_URL}/api/iterate/email-verification/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await readPaymentApiJson(response, '验证码发送失败');
-      if (!response.ok || !data.success)
-        throw new Error(getApiErrorMessage(data, '验证码发送失败'));
-
-      setEmailVerificationState('sent');
-      setEmailVerificationMessage('验证码已发送，请检查邮箱。');
-    }
-    catch (error) {
-      setEmailVerificationState('idle');
-      setEmailVerificationMessage(error instanceof Error ? error.message : '验证码发送失败');
-    }
-  }
-
-  async function confirmEmailVerification() {
-    const email = buyEmail.trim();
-    const code = emailCode.trim();
-    if (!email || !/^\d{6}$/.test(code)) {
-      setEmailVerificationMessage('请输入 6 位邮箱验证码。');
-      return;
-    }
-
-    setEmailVerificationState('verifying');
-    try {
-      const response = await fetch(`${PAYMENT_API_URL}/api/iterate/email-verification/confirm`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
-      });
-      const data = await readPaymentApiJson(response, '邮箱验证失败');
-      const token = getApiString(data, 'emailVerificationToken');
-      if (!response.ok || !data.success || !token)
-        throw new Error(getApiErrorMessage(data, '邮箱验证失败'));
-
-      setEmailVerificationToken(token);
-      setEmailVerificationState('verified');
-      setEmailVerificationMessage('邮箱已验证，可支付或找回订单。');
-    }
-    catch (error) {
-      setEmailVerificationState('sent');
-      setEmailVerificationMessage(error instanceof Error ? error.message : '邮箱验证失败');
-    }
-  }
 
   function startPaymentPolling() {
     if (!orderRef.current || !paymentAccessRef.current) {
@@ -233,12 +160,11 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
           const licenseKey = await claimIterateLicense(claimToken);
           clearInterval(pollRef.current!);
           setActivationCode(licenseKey);
-          setIsRecovering(false);
           setPayStep('success');
         }
         else if (data.status === 'claimed') {
           clearInterval(pollRef.current!);
-          setPayError('激活码已领取。请重新验证邮箱后使用订单找回。');
+          setPayError('激活码已领取。如未保存，请联系支持并提供订单号。');
           setPayStep('idle');
         }
         else if (data.status === 'failed') {
@@ -248,7 +174,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         }
         else if (!data.success && response.status === 403) {
           clearInterval(pollRef.current!);
-          setPayError('订单访问已失效，请重新验证邮箱后找回。');
+          setPayError('订单访问已失效，请重新发起支付或联系支持并提供订单号。');
           setPayStep('idle');
         }
       }
@@ -271,12 +197,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
       setPayError(currentPricing.couponError);
       return;
     }
-    if (emailVerificationState !== 'verified' || !emailVerificationToken) {
-      setPayError('请先验证接收找回信息的邮箱。');
-      return;
-    }
 
-    setIsRecovering(false);
     setPayStep('paying');
 
     try {
@@ -284,8 +205,6 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         videoId: currentPlan.productId,
         videoTitle: currentPlan.productName,
         paymentMethod: method,
-        email: buyEmail.trim(),
-        emailVerificationToken,
       };
       if (currentPricing.couponCode)
         body.couponCode = currentPricing.couponCode;
@@ -306,7 +225,6 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
       orderRef.current = orderNo;
       paymentAccessRef.current = paymentAccessToken;
       setOrderAmount(resolveOrderAmount(data, currentPricing.price));
-      resetEmailVerification('邮箱已绑定当前订单；新订单或找回需重新验证。');
 
       setTimeout(() => {
         if (!qrCanvasRef.current)
@@ -323,60 +241,6 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
     }
     catch (error) {
       setPayError(error instanceof Error ? error.message : '网络错误');
-      setPayStep('idle');
-    }
-  }
-
-  async function handleRecoverOrder() {
-    if (!recoveryOrderNo.trim()) {
-      setPayError('请输入已支付订单号。');
-      return;
-    }
-    if (emailVerificationState !== 'verified' || !emailVerificationToken) {
-      setPayError('请先验证付款时填写的邮箱。');
-      return;
-    }
-
-    setPayError('');
-    setIsRecovering(true);
-    setPayStep('paying');
-
-    try {
-      const response = await fetch(`${PAYMENT_API_URL}/api/iterate/recover-order-access`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderNo: recoveryOrderNo.trim(),
-          email: buyEmail.trim(),
-          emailVerificationToken,
-        }),
-      });
-      const data = await readPaymentApiJson(response, '找回失败');
-      const paymentAccessToken = getApiString(data, 'paymentAccessToken');
-      const orderNo = getApiString(data, 'orderNo');
-      if (!response.ok || !data.success || !paymentAccessToken || !orderNo)
-        throw new Error(getApiErrorMessage(data, '找回失败'));
-
-      orderRef.current = orderNo;
-      paymentAccessRef.current = paymentAccessToken;
-      if (data.paymentMethod === 'wechat' || data.paymentMethod === 'alipay')
-        setPaymentMethod(data.paymentMethod);
-      resetEmailVerification('找回验证已使用；再次操作需重新验证邮箱。');
-
-      const claimToken = getApiString(data, 'claimToken');
-      if (claimToken) {
-        const licenseKey = await claimIterateLicense(claimToken);
-        setActivationCode(licenseKey);
-        setIsRecovering(false);
-        setPayStep('success');
-        return;
-      }
-
-      startPaymentPolling();
-    }
-    catch (error) {
-      setIsRecovering(false);
-      setPayError(error instanceof Error ? error.message : '找回失败');
       setPayStep('idle');
     }
   }
@@ -417,7 +281,8 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
               {copied ? '已复制' : '复制'}
             </button>
           </div>
-          <p className="mb-5 text-xs text-amber-600">关闭页面前请确认激活码已保存。遗失后可凭订单号与付款邮箱找回。</p>
+          {orderRef.current ? <p className="mb-4 text-xs text-zinc-500">订单号：{orderRef.current}</p> : null}
+          <p className="mb-5 text-xs text-amber-600">关闭页面前请确认激活码和订单号已保存。遗失后请联系支持并提供订单号。</p>
           <a
             href={successHref}
             className="inline-flex items-center justify-center bg-black px-6 py-3 text-xs font-bold uppercase tracking-[0.24em] text-white transition-colors hover:bg-zinc-800"
@@ -438,21 +303,15 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
         </div>
       ) : payStep === 'paying' ? (
         <div className="text-center">
-          <div className="mb-2 text-xl font-bold">{isRecovering ? '正在找回激活码' : `${paymentMethod === 'wechat' ? '微信' : '支付宝'}扫码支付`}</div>
-          {isRecovering ? (
-            <p className="mb-4 text-sm text-zinc-500">邮箱验证通过，正在核对订单并安全领取。</p>
-          ) : (
-            <>
-              <p className="mb-4 text-sm text-zinc-500">请使用{paymentMethod === 'wechat' ? '微信' : '支付宝'}扫描下方二维码，支付成功后会自动返回激活码。</p>
-              <div ref={qrCanvasRef} className="mx-auto mb-3 inline-flex h-[200px] w-[200px] items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50">
-                <span className="text-sm text-zinc-400">二维码生成中...</span>
-              </div>
-              <p className="text-lg font-black">¥{orderAmount ?? currentPricing.price}</p>
-              {currentPricing.hasCouponInput ? <p className="mt-1 text-xs text-emerald-600">已提交优惠码，实际金额以订单为准。</p> : null}
-              <p className="mt-1 text-xs text-zinc-400">订单号：{orderRef.current}</p>
-              <p className="mt-1 text-xs text-zinc-400">最长等待约 5 分钟。</p>
-            </>
-          )}
+          <div className="mb-2 text-xl font-bold">{paymentMethod === 'wechat' ? '微信' : '支付宝'}扫码支付</div>
+          <p className="mb-4 text-sm text-zinc-500">请使用{paymentMethod === 'wechat' ? '微信' : '支付宝'}扫描下方二维码，支付成功后会自动返回激活码。</p>
+          <div ref={qrCanvasRef} className="mx-auto mb-3 inline-flex h-[200px] w-[200px] items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50">
+            <span className="text-sm text-zinc-400">二维码生成中...</span>
+          </div>
+          <p className="text-lg font-black">¥{orderAmount ?? currentPricing.price}</p>
+          {currentPricing.hasCouponInput ? <p className="mt-1 text-xs text-emerald-600">已提交优惠码，实际金额以订单为准。</p> : null}
+          <p className="mt-1 text-xs text-zinc-400">订单号：{orderRef.current}</p>
+          <p className="mt-1 text-xs text-zinc-400">最长等待约 5 分钟。</p>
           {payError ? <p className="mt-2 text-sm text-red-600">{payError}</p> : null}
         </div>
       ) : (
@@ -487,51 +346,6 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
             ))}
           </div>
 
-          <div className="mb-2 flex gap-2">
-            <input
-              type="email"
-              value={buyEmail}
-              onChange={event => {
-                setBuyEmail(event.target.value);
-                resetEmailVerification();
-              }}
-              placeholder="接收找回信息的邮箱（必填）"
-              className="min-w-0 flex-1 border border-zinc-200 px-4 py-3 text-sm outline-none transition-colors focus:border-black"
-            />
-            <button
-              type="button"
-              onClick={requestEmailVerificationCode}
-              disabled={emailVerificationState === 'sending'}
-              className="shrink-0 border border-black px-3 py-3 text-xs font-bold disabled:opacity-50"
-            >
-              {emailVerificationState === 'sending' ? '发送中' : '发送验证码'}
-            </button>
-          </div>
-
-          <div className="mb-2 flex gap-2">
-            <input
-              type="text"
-              inputMode="numeric"
-              maxLength={6}
-              value={emailCode}
-              onChange={event => setEmailCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
-              placeholder="6 位邮箱验证码"
-              className="min-w-0 flex-1 border border-zinc-200 px-4 py-3 text-sm outline-none transition-colors focus:border-black"
-            />
-            <button
-              type="button"
-              onClick={confirmEmailVerification}
-              disabled={emailVerificationState === 'verifying' || emailVerificationState === 'verified'}
-              className="shrink-0 border border-black px-3 py-3 text-xs font-bold disabled:opacity-50"
-            >
-              {emailVerificationState === 'verified' ? '已验证' : '验证邮箱'}
-            </button>
-          </div>
-
-          {emailVerificationMessage ? (
-            <p className={`mb-3 text-xs ${emailVerificationState === 'verified' ? 'text-emerald-600' : 'text-zinc-500'}`}>{emailVerificationMessage}</p>
-          ) : null}
-
           <input
             type="text"
             value={couponInput}
@@ -551,42 +365,20 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
             <button
               type="button"
               onClick={() => handleBuy('wechat')}
-              disabled={emailVerificationState !== 'verified'}
-              className="bg-green-500 px-4 py-4 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-green-500 px-4 py-4 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-green-600"
             >
               微信支付 ¥{currentPricing.price}
             </button>
             <button
               type="button"
               onClick={() => handleBuy('alipay')}
-              disabled={emailVerificationState !== 'verified'}
-              className="bg-blue-500 px-4 py-4 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-blue-500 px-4 py-4 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-600"
             >
               支付宝支付 ¥{currentPricing.price}
             </button>
           </div>
 
           {payError ? <p className="mt-2 text-sm text-red-600">{payError}</p> : null}
-
-          <div className="mt-5 border-t border-zinc-200 pt-4">
-            <p className="mb-2 text-xs font-bold text-zinc-700">已付款但没有保存激活码？</p>
-            <input
-              type="text"
-              value={recoveryOrderNo}
-              onChange={event => setRecoveryOrderNo(event.target.value)}
-              placeholder="输入付款订单号"
-              className="mb-2 w-full border border-zinc-200 px-4 py-3 text-sm outline-none transition-colors focus:border-black"
-            />
-            <button
-              type="button"
-              onClick={handleRecoverOrder}
-              disabled={emailVerificationState !== 'verified'}
-              className="w-full border border-black px-4 py-3 text-sm font-bold transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              用已验证邮箱找回激活码
-            </button>
-            <p className="mt-2 text-[10px] text-zinc-400">请先使用上方付款邮箱完成验证码验证。</p>
-          </div>
 
           <div className="mt-3 space-y-1 text-[10px] text-zinc-400">
             <p>虚拟商品，一经售出不退不换。</p>

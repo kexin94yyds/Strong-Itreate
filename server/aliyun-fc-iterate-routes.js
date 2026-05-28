@@ -894,8 +894,6 @@ app.post('/api/iterate/create-payment', async (req, res) => {
             videoTitle,
             paymentMethod: requestedPaymentMethod = 'wechat',
             couponCode = '',
-            email = '',
-            emailVerificationToken = '',
         } = req.body;
 
         if (!videoId || !videoTitle) {
@@ -925,14 +923,7 @@ app.post('/api/iterate/create-payment', async (req, res) => {
             return res.status(error.statusCode).json({ success: false, message: error.message });
         }
 
-        const safeEmail = normalizeIterateEmail(email);
-        if (!safeEmail || !isValidEmail(safeEmail)) {
-            return res.status(400).json({ success: false, message: '请先填写并验证邮箱' });
-        }
-        if (!await consumeIterateEmailVerification(safeEmail, String(emailVerificationToken || '').trim())) {
-            return res.status(403).json({ success: false, message: '邮箱验证已过期，请重新验证' });
-        }
-
+        const safeEmail = '';
         const orderNo = generateOrderNo('ITERATE');
         const result = await createIterateProviderPayment(paymentMethod, orderNo, plan, pricing, safeEmail);
 

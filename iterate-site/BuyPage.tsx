@@ -8,7 +8,7 @@ const heroAside = (
       <div className="mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-zinc-500">你会在这里拿到什么</div>
       <div className="space-y-3 text-sm leading-relaxed text-zinc-300">
         <p>支付成功后立刻返回正式激活码。</p>
-        <p>付款邮箱会绑定订单，页面关闭后仍可找回。</p>
+        <p>页面会展示订单号，请和激活码一起保存。</p>
         <p>支持 1 天版、7 天版和永久版；永久版可用优惠码。</p>
       </div>
     </div>

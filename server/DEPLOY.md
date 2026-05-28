@@ -6,22 +6,16 @@
 当前目标链路是：
 
 ```text
-email-verification/send
-  -> email-verification/confirm
-  -> create-payment(paymentMethod=wechat|alipay)
+create-payment(paymentMethod=wechat|alipay)
   -> payment-status(orderNo, Authorization: Bearer paymentAccessToken)
   -> claim-license
 ```
 
 ## 结论先行
 
-不要只部署前端。当前线上 FC 已确认仍缺少新邮箱验证和订单找回路由：
+不要只部署前端。当前 checkout 已移除邮箱验证，`create-payment` 必须允许只凭套餐和 `paymentMethod=wechat|alipay` 创建订单；否则新前端会无法支付。
 
-- `POST /api/iterate/email-verification/confirm` 线上返回 `404 Cannot POST`
-- `POST /api/iterate/recover-order-access` 线上返回 `404 Cannot POST`
-- 无 `Authorization` 的 `GET /api/iterate/payment-status/:orderNo` 线上仍返回 `200 pending`
-
-这说明线上函数仍是旧路由集。需要部署 FC 后端和 Supabase migration，前端才会真正完成邮箱验证支付闭环。
+旧邮箱验证和订单找回路由可以保留为 legacy 接口，但不再是官网购买链路的前置条件。
 
 ## 发布前门禁
 
@@ -92,9 +86,12 @@ npm install alipay-sdk --save
 - `SUPABASE_RI_URL`
 - `SUPABASE_RI_KEY`
 
-必须配置邮箱验证和激活码签发：
+必须配置激活码签发：
 
 - `ITERATE_LICENSE_PRIVATE_KEY_B64`
+
+legacy 邮箱验证/订单找回接口如果继续保留，才需要配置：
+
 - `ITERATE_EMAIL_VERIFICATION_SECRET`
 - `RESEND_API_KEY`
 - `ITERATE_EMAIL_FROM`，可选，默认 `Iterate <noreply@iterate.xin>`
@@ -164,57 +161,33 @@ BASE='https://wechat-y-server-vjfbztievl.cn-shanghai.fcapp.run'
 
 curl -i "$BASE/api/health"
 
-curl -i -X OPTIONS "$BASE/api/iterate/email-verification/send"
-
-curl -i -X POST "$BASE/api/iterate/email-verification/confirm" \
+curl -i -X POST "$BASE/api/iterate/create-payment" \
   -H 'Content-Type: application/json' \
-  -d '{"email":"probe@example.invalid","code":"000000"}'
+  -d '{"videoId":"iterate_day7","videoTitle":"Iterate 7天体验","paymentMethod":"unsupported"}'
 
 curl -i "$BASE/api/iterate/payment-status/deployment-probe-no-token"
-
-curl -i -X POST "$BASE/api/iterate/recover-order-access" \
-  -H 'Content-Type: application/json' \
-  -d '{}'
 ```
 
 期望结果：
 
 - `/api/health` 返回 `200`
-- `OPTIONS /api/iterate/email-verification/send` 返回 `204`
-- `POST /api/iterate/email-verification/confirm` 不再是 `404 Cannot POST`；在假验证码下应返回 JSON 错误，通常是 `400 验证码无效或已过期`
+- 不支持的 `create-payment` 支付方式返回 JSON `400 不支持的支付方式`，不能是 HTML 404
 - 无 token 的 `payment-status` 返回 `403`
-- 空请求 `recover-order-access` 不再是 `404 Cannot POST`；应返回 JSON 错误，通常是 `400 缺少订单号或邮箱验证信息`
 
-如果 `confirm` 返回 `500`，优先检查 Supabase migration 是否已应用以及 `SUPABASE_RI_KEY` 是否为 service role。
+### 历史线上门禁结果（2026-05-28 08:13 CST）
 
-不要在未授权的真实邮箱上测试 `email-verification/send`。该接口会通过 Resend 发送真实邮件。
-
-### 当前线上门禁结果（2026-05-28 08:13 CST）
-
-本地只读探针结果：
-
-- `/api/health` 返回 `200`，版本 `5.2.0`，Supabase 和私钥检查为 `ok`。
-- `OPTIONS /api/iterate/email-verification/send` 返回 `204`。
-- `POST /api/iterate/email-verification/confirm` 在假验证码下仍返回 `404 Cannot POST`。
-- 无 token 的 `GET /api/iterate/payment-status/:orderNo` 仍返回 `200 pending`，而不是预期的 `403`。
-- `POST /api/iterate/recover-order-access` 空请求仍返回 `404 Cannot POST`。
-- 本机未找到 `aliyun`、`s`、`fun`、`fcli` CLI；仓库内也未找到 FC/serverless 模板文件。
-
-结论：线上仍是旧路由集，尚未满足部署后验收标准。下一步必须先建立 FC 回滚基线和部署通道，再部署本仓库的候选后端。
+该结果来自旧邮箱验证方案，已不作为当前无邮箱 checkout 的门禁依据。当前验收以“不传邮箱创建微信/支付宝订单并返回 `paymentAccessToken`”为准。
 
 ## 真实闭环验收
 
 只有无副作用探针全部通过后，才进行真实闭环：
 
-1. 使用受控邮箱请求 `email-verification/send`。
-2. 输入验证码确认，拿到 `emailVerificationToken`。
-3. 创建微信 1 天测试订单，确认返回 `paymentAccessToken`。
-4. 创建支付宝 1 天测试订单，确认返回支付宝二维码。
-5. 支付后用 `Authorization: Bearer <paymentAccessToken>` 查询 `payment-status`。
-6. `payment-status` 成功后必须返回 `claimToken`，不能直接返回完整 `licenseKey`。
-7. 调用 `claim-license` 兑换激活码。
-8. 二次调用同一个 `claimToken` 必须失败。
-9. 用订单号和付款邮箱重新走 `recover-order-access`，确认可恢复领取。
+1. 创建微信 1 天测试订单，不传邮箱，确认返回微信二维码和 `paymentAccessToken`。
+2. 创建支付宝 1 天测试订单，不传邮箱，确认返回支付宝二维码和 `paymentAccessToken`。
+3. 支付后用 `Authorization: Bearer <paymentAccessToken>` 查询 `payment-status`。
+4. `payment-status` 成功后必须返回 `claimToken`，不能直接返回完整 `licenseKey`。
+5. 调用 `claim-license` 兑换激活码。
+6. 二次调用同一个 `claimToken` 必须失败。
 
 ## 回滚
 
@@ -226,5 +199,5 @@ curl -i -X POST "$BASE/api/iterate/recover-order-access" \
 
 ## 当前已知阻断
 
-- `P-2026-1602`：本地 OTP / 支付访问 token / 订单找回链路未部署到线上。
+- `P-2026-1602`：本地支付访问 token 链路未部署到线上。
 - `P-2026-1604`：线上支付函数直连 `LATEST`，缺少版本与别名回滚点。
