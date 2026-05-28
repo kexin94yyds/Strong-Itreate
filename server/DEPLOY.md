@@ -53,18 +53,23 @@ email-verification/send
 
 需要先应用的 Supabase migration，建议按下列顺序执行：
 
+- `supabase/migrations/20260526000000_iterate_base_license_order_schema.sql`
 - `supabase/migrations/20260527_iterate_claim_token_idempotency.sql`
 - `supabase/migrations/20260527_iterate_verified_email_recovery.sql`
 - `supabase/migrations/20260527_iterate_payment_provider.sql`
 
-这些 migration 依赖生产库里已经存在基础表：
+基础表契约见：
+
+- `supabase/ITERATE_PAYMENT_SCHEMA.md`
+
+这些 migration 依赖或创建下列基础表：
 
 - `public.iterate_orders`
   - 当前代码需要：`order_id`、`email`、`amount`、`plan_id`、`plan_name`、`status`、`license_id`、`license_key`、`paid_at`、`payment_method`
 - `public.iterate_licenses`
   - 当前代码需要：`id`、`license_key`、`order_id`、`email`、`plan_id`、`plan_name`、`license_type`、`status`、`created_at`、`expires_at`
 
-当前仓库没有这两张基础表的原始 `CREATE TABLE` migration。部署前必须先在 Supabase 里确认基础表存在；如果缺表，先恢复基础 schema，不要直接执行 20260527 migration。
+`20260526000000_iterate_base_license_order_schema.sql` 是本地补齐的 idempotent baseline guard。部署前仍必须先在 Supabase 里确认生产表结构和数据兼容；如果现有数据违反唯一索引，先停止并清理数据，不要继续发布 FC。
 
 ## FC 依赖与环境变量
 
@@ -183,6 +188,19 @@ curl -i -X POST "$BASE/api/iterate/recover-order-access" \
 如果 `confirm` 返回 `500`，优先检查 Supabase migration 是否已应用以及 `SUPABASE_RI_KEY` 是否为 service role。
 
 不要在未授权的真实邮箱上测试 `email-verification/send`。该接口会通过 Resend 发送真实邮件。
+
+### 当前线上门禁结果（2026-05-28 08:13 CST）
+
+本地只读探针结果：
+
+- `/api/health` 返回 `200`，版本 `5.2.0`，Supabase 和私钥检查为 `ok`。
+- `OPTIONS /api/iterate/email-verification/send` 返回 `204`。
+- `POST /api/iterate/email-verification/confirm` 在假验证码下仍返回 `404 Cannot POST`。
+- 无 token 的 `GET /api/iterate/payment-status/:orderNo` 仍返回 `200 pending`，而不是预期的 `403`。
+- `POST /api/iterate/recover-order-access` 空请求仍返回 `404 Cannot POST`。
+- 本机未找到 `aliyun`、`s`、`fun`、`fcli` CLI；仓库内也未找到 FC/serverless 模板文件。
+
+结论：线上仍是旧路由集，尚未满足部署后验收标准。下一步必须先建立 FC 回滚基线和部署通道，再部署本仓库的候选后端。
 
 ## 真实闭环验收
 
