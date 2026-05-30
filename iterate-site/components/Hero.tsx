@@ -50,6 +50,14 @@ export const Hero: React.FC = () => {
           <a href="#download" className="w-full border border-white/15 px-6 py-3 text-white font-bold uppercase tracking-widest transition-all hover:border-white/40 hover:bg-white/5 sm:w-auto md:px-8 md:py-4">
             下载客户端
           </a>
+          <a
+            href="https://mp.weixin.qq.com/s/XRrM6HONwmHlvw3CF-llVg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full border border-white/10 px-6 py-3 text-[#b6ab98] font-bold uppercase tracking-widest transition-all hover:border-white/25 hover:bg-white/[0.03] hover:text-white sm:w-auto md:px-8 md:py-4"
+          >
+            为什么是 iterate
+          </a>
         </div>
 
         <div className="hidden space-y-2 pt-2 sm:block">
