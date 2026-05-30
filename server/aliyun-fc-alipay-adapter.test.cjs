@@ -37,7 +37,7 @@ test('page pay uses the official desktop cashier contract', async () => {
     subject: 'Iterate - 7 天版',
     totalAmount: '10.00',
     notifyUrl: environment.ALIPAY_NOTIFY_URL,
-    returnUrl: 'https://iterate.xin/iterate/buy.html',
+    returnUrl: 'https://iterate.xin/iterate/alipay-return.html',
   })
 
   assert.equal(result.payUrl, 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay')
@@ -52,7 +52,7 @@ test('page pay uses the official desktop cashier contract', async () => {
         subject: 'Iterate - 7 天版',
       },
       notifyUrl: environment.ALIPAY_NOTIFY_URL,
-      returnUrl: 'https://iterate.xin/iterate/buy.html',
+      returnUrl: 'https://iterate.xin/iterate/alipay-return.html',
     },
   })
 })

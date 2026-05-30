@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>支付宝支付返回 | iterate</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #050505;
+        color: #fff;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #050505;
+      }
+
+      main {
+        box-sizing: border-box;
+        min-height: 100vh;
+        padding: 48px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section {
+        width: min(640px, 100%);
+      }
+
+      .eyebrow {
+        margin-bottom: 18px;
+        color: #71717a;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: clamp(36px, 7vw, 56px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 0 0 28px;
+        color: #d4d4d8;
+        line-height: 1.8;
+      }
+
+      dl {
+        margin: 0 0 28px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .row {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .row:last-child {
+        margin-bottom: 0;
+      }
+
+      dt {
+        color: #a1a1aa;
+        font-size: 12px;
+      }
+
+      dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      button,
+      a {
+        box-sizing: border-box;
+        min-height: 44px;
+        padding: 14px 22px;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        background: transparent;
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      button {
+        border-color: #fff;
+        background: #fff;
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <div class="eyebrow">Alipay Return</div>
+        <h1>支付结果已返回</h1>
+        <p>请回到原来的购买页面，激活码会在那里自动显示。这个返回页会尝试自动关闭；如果没有关闭，可以手动关闭本页。</p>
+        <dl>
+          <div class="row">
+            <dt>订单号</dt>
+            <dd id="orderNo">-</dd>
+          </div>
+          <div class="row">
+            <dt>支付金额</dt>
+            <dd id="amount">-</dd>
+          </div>
+          <div class="row">
+            <dt>支付宝交易号</dt>
+            <dd id="tradeNo">-</dd>
+          </div>
+        </dl>
+        <div class="actions">
+          <button type="button" id="closeButton">关闭本页</button>
+          <a href="/iterate/#pricing">回到购买区</a>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        var CHANNEL = 'iterate-payment-return';
+        var STORAGE_KEY = 'iterate_alipay_return_latest';
+        var params = new URLSearchParams(window.location.search);
+        var payload = {
+          type: 'iterate-alipay-return',
+          orderNo: params.get('out_trade_no') || '',
+          tradeNo: params.get('trade_no') || '',
+          amount: params.get('total_amount') || '',
+          timestamp: Date.now(),
+          rawQuery: window.location.search
+        };
+
+        document.getElementById('orderNo').textContent = payload.orderNo || '-';
+        document.getElementById('amount').textContent = payload.amount ? '¥' + payload.amount : '-';
+        document.getElementById('tradeNo').textContent = payload.tradeNo || '-';
+
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        }
+        catch (error) {}
+
+        if ('BroadcastChannel' in window) {
+          try {
+            var channel = new BroadcastChannel(CHANNEL);
+            channel.postMessage(payload);
+            channel.close();
+          }
+          catch (error) {}
+        }
+
+        try {
+          window.opener && window.opener.postMessage(payload, window.location.origin);
+        }
+        catch (error) {}
+
+        document.getElementById('closeButton').addEventListener('click', function () {
+          window.close();
+        });
+
+        window.setTimeout(function () {
+          window.close();
+        }, 1800);
+      })();
+    </script>
+  </body>
+</html>

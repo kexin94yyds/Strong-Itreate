@@ -30,7 +30,7 @@ const ITERATE_PLANS = {
     iterate_permanent: {
         productId: 'iterate_permanent',
         productName: 'Iterate 永久版',
-        amount: 3990,      // 39.9 元
+        amount: 4990,      // 49.9 元
         licenseType: 'permanent',
         licenseDays: null,  // 永久
     },
@@ -141,7 +141,7 @@ async function createIterateProviderPayment(paymentMethod, orderNo, plan, pricin
         subject: `Iterate - ${plan.productName}`,
         totalAmount: (pricing.payAmount / 100).toFixed(2),
         notifyUrl: process.env.ALIPAY_NOTIFY_URL?.trim() || '',
-        returnUrl: process.env.ALIPAY_RETURN_URL?.trim() || 'https://iterate.xin/iterate/buy.html',
+        returnUrl: process.env.ALIPAY_RETURN_URL?.trim() || 'https://iterate.xin/iterate/alipay-return.html',
         metadata: {
             product: 'iterate',
             planId: plan.productId,
@@ -156,6 +156,62 @@ async function createIterateProviderPayment(paymentMethod, orderNo, plan, pricin
 function toIterateAmountCents(amount) {
     const number = Number(amount);
     return Number.isFinite(number) ? Math.round(number * 100) : null;
+}
+
+function normalizeIterateAlipayNotificationPayload(payload) {
+    const source = Buffer.isBuffer(payload) ? payload.toString('utf8') : payload;
+    if (!source) return {};
+    if (typeof source === 'string') {
+        return Array.from(new URLSearchParams(source).entries()).reduce((normalized, [key, value]) => {
+            normalized[key] = value;
+            return normalized;
+        }, {});
+    }
+    if (typeof source !== 'object') return {};
+
+    return Object.entries(source).reduce((normalized, [key, value]) => {
+        if (Array.isArray(value)) {
+            normalized[key] = value.length > 0 && value[0] != null ? String(value[0]) : '';
+        } else {
+            normalized[key] = value != null ? String(value) : '';
+        }
+        return normalized;
+    }, {});
+}
+
+function getIteratePaymentNotifyPayload(req) {
+    const body = req?.body;
+    if (body && typeof body === 'object' && !Buffer.isBuffer(body) && Object.keys(body).length > 0) {
+        return normalizeIterateAlipayNotificationPayload(body);
+    }
+    if (body && (typeof body !== 'object' || Buffer.isBuffer(body))) {
+        return normalizeIterateAlipayNotificationPayload(body);
+    }
+    return normalizeIterateAlipayNotificationPayload(req?.rawBody || body);
+}
+
+function isIterateAlipayNotification(payload) {
+    return Boolean(payload && typeof payload === 'object'
+        && (payload.sign || payload.trade_status || payload.out_trade_no || payload.app_id));
+}
+
+function createIterateAlipayNotificationPaymentResult(payload) {
+    const tradeStatus = String(payload.trade_status || payload.tradeStatus || '').toUpperCase();
+    const paid = tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED';
+    return {
+        trade_state: paid ? 'SUCCESS' : tradeStatus === 'WAIT_BUYER_PAY' ? 'NOTPAY' : tradeStatus,
+        amount: { total: toIterateAmountCents(payload.total_amount || payload.totalAmount) },
+        success_time: payload.gmt_payment || payload.send_pay_date || payload.notify_time || null,
+        update_time: payload.notify_time || payload.gmt_payment || payload.send_pay_date || null,
+        alipayTradeNo: payload.trade_no || payload.tradeNo || '',
+    };
+}
+
+function sendIterateAlipayNotificationResponse(res, accepted, statusCode = 200) {
+    const response = res.status(statusCode);
+    if (typeof response.type === 'function') response.type('text/plain');
+    if (typeof response.send === 'function') return response.send(accepted ? 'success' : 'failure');
+    return response.json(accepted ? 'success' : 'failure');
 }
 
 async function queryIterateProviderPaymentStatus(paymentMethod, orderNo) {
@@ -782,6 +838,149 @@ async function sendIterateClaimStatus(res, orderNo, licenseKey, paymentMethod = 
     });
 }
 
+async function fulfillIteratePaidOrder(orderNo, paymentMethod, paymentResult, paymentAccess) {
+    if (!paymentAccess) {
+        return { success: false, statusCode: 400, error: '支付访问记录缺失', status: 'error' };
+    }
+
+    if (paymentMethod === 'wechat'
+        && (paymentResult.mchid !== WECHAT_CONFIG.mchid || paymentResult.appid !== WECHAT_CONFIG.appid)) {
+        console.error('❌ Iterate 微信响应验证失败: mchid/appid 不匹配');
+        return { success: false, statusCode: 400, error: '支付验证失败', status: 'error' };
+    }
+
+    // 旧微信订单可从 attach 回填，新订单优先使用访问会话中锁定的字段。
+    const attach = paymentResult.attach || '';
+    const attachFields = parseIterateAttach(attach);
+    const planId = paymentAccess.plan_id || attachFields.plan || null;
+    let resolvedPlan = planId ? ITERATE_PLANS[planId] : null;
+    let resolvedPricing = null;
+
+    if (!resolvedPlan) {
+        const paidAmount = paymentResult.amount?.total;
+        resolvedPlan = Object.values(ITERATE_PLANS).find((p) => {
+            if (p.amount === paidAmount) return true;
+            return Object.values(ITERATE_COUPONS).some(coupon => coupon.productId === p.productId && coupon.amount === paidAmount);
+        });
+        if (!resolvedPlan) {
+            console.error('❌ Iterate 无法匹配套餐, attach:', attach, 'amount:', paidAmount);
+            return { success: false, statusCode: 400, error: '无法确定套餐类型', status: 'error' };
+        }
+    }
+
+    try {
+        resolvedPricing = resolveIteratePricing(resolvedPlan, paymentAccess.coupon_code || attachFields.coupon || '');
+    } catch (error) {
+        console.error('❌ Iterate 优惠码验证失败:', error.message, 'attach:', attach);
+        return { success: false, statusCode: 400, error: '优惠码验证失败', status: 'error' };
+    }
+
+    const storedAmount = Number(paymentAccess.amount_cents);
+    const expectedAmount = Number.isInteger(storedAmount) && storedAmount > 0
+        ? storedAmount
+        : Number.parseInt(attachFields.payAmount || '', 10) || resolvedPricing.payAmount;
+    if (paymentResult.amount?.total !== expectedAmount) {
+        console.error('❌ Iterate 金额不匹配:', paymentResult.amount?.total, 'vs', expectedAmount);
+        return { success: false, statusCode: 400, error: '支付金额验证失败', status: 'error' };
+    }
+
+    // 再次检查缓存/数据库（防止回调与轮询并发重复生成）
+    const rechecked = iterateOrderCache.get(orderNo);
+    if (rechecked && rechecked.licenseKey) {
+        return { success: true, licenseKey: rechecked.licenseKey, plan: resolvedPlan, pricing: resolvedPricing };
+    }
+    const existingLicense = await getIterateLicenseFromDatabase(orderNo);
+    if (existingLicense) {
+        iterateOrderCache.set(orderNo, { licenseKey: existingLicense, plan: resolvedPlan, pricing: resolvedPricing, createdAt: Date.now() });
+        return { success: true, licenseKey: existingLicense, plan: resolvedPlan, pricing: resolvedPricing };
+    }
+
+    const email = normalizeIterateEmail(paymentAccess.email || attachFields.email || '');
+
+    const issuedAt = paymentResult.success_time || paymentResult.update_time;
+    if (!issuedAt) {
+        console.error('❌ Iterate 支付成功响应缺少稳定签发时间，拒绝生成激活码');
+        return { success: false, statusCode: 400, error: '支付签发信息不完整', status: 'error' };
+    }
+
+    // 同一订单稳定生成同一签名激活码，避免跨实例并发签发出不同权益。
+    const generatedLicenseKey = generateIterateLicenseKey(resolvedPlan.licenseType, {
+        issuedAt,
+        nonce: orderNo,
+        orderId: orderNo,
+    });
+    const saved = await saveIterateLicenseToDatabase(generatedLicenseKey, orderNo, email, resolvedPlan, resolvedPricing, paymentMethod);
+    if (!saved.success || !saved.licenseKey) {
+        console.error('❌ Iterate License 持久化失败，拒绝签发 claim token:', saved.error);
+        return { success: false, statusCode: 500, error: '激活码生成失败', status: 'error', includeOrderNo: true };
+    }
+    const licenseKey = saved.licenseKey;
+
+    iterateOrderCache.set(orderNo, {
+        licenseKey, plan: resolvedPlan, pricing: resolvedPricing, createdAt: Date.now(),
+    });
+
+    console.log('✅ Iterate 激活码已生成，订单:', orderNo, '套餐:', resolvedPlan.productId);
+
+    if (iterateOrderCache.size > 100) {
+        cleanIterateOrderCache();
+    }
+
+    return { success: true, licenseKey, plan: resolvedPlan, pricing: resolvedPricing };
+}
+
+async function handleIterateAlipayNotification(payload, res) {
+    const verifier = globalThis.verifyAlipayNotification;
+    if (typeof verifier !== 'function') {
+        console.error('❌ Iterate 支付宝回调验签器未配置');
+        return sendIterateAlipayNotificationResponse(res, false, 503);
+    }
+
+    const orderNo = payload.out_trade_no || payload.outTradeNo || '';
+    const tradeStatus = String(payload.trade_status || payload.tradeStatus || '').toUpperCase();
+    if (!orderNo || !tradeStatus || !payload.sign) {
+        console.error('❌ Iterate 支付宝回调缺少必要字段');
+        return sendIterateAlipayNotificationResponse(res, false, 400);
+    }
+
+    const expectedAppId = process.env.ALIPAY_APP_ID?.trim();
+    if (expectedAppId && payload.app_id !== expectedAppId) {
+        console.error('❌ Iterate 支付宝回调 app_id 不匹配');
+        return sendIterateAlipayNotificationResponse(res, false, 400);
+    }
+
+    if (!verifier(payload)) {
+        console.error('❌ Iterate 支付宝回调验签失败，订单:', orderNo);
+        return sendIterateAlipayNotificationResponse(res, false, 400);
+    }
+
+    const paymentResult = createIterateAlipayNotificationPaymentResult(payload);
+    if (paymentResult.trade_state !== 'SUCCESS') {
+        console.log('Iterate 支付宝回调非成功状态，已验签 ACK:', orderNo, tradeStatus);
+        return sendIterateAlipayNotificationResponse(res, true);
+    }
+
+    const paymentAccess = await findIteratePaymentAccessByOrderNo(orderNo);
+    if (!paymentAccess) {
+        console.error('❌ Iterate 支付宝回调找不到支付访问记录，订单:', orderNo);
+        return sendIterateAlipayNotificationResponse(res, false, 404);
+    }
+    const paymentMethod = resolveIteratePaymentMethod(paymentAccess.payment_method || 'wechat');
+    if (paymentMethod !== 'alipay') {
+        console.error('❌ Iterate 支付宝回调订单支付方式不匹配，订单:', orderNo, 'method:', paymentMethod);
+        return sendIterateAlipayNotificationResponse(res, false, 400);
+    }
+
+    const fulfilled = await fulfillIteratePaidOrder(orderNo, paymentMethod, paymentResult, paymentAccess);
+    if (!fulfilled.success) {
+        console.error('❌ Iterate 支付宝回调履约失败，订单:', orderNo, '原因:', fulfilled.error);
+        return sendIterateAlipayNotificationResponse(res, false, fulfilled.statusCode || 500);
+    }
+
+    console.log('✅ Iterate 支付宝回调已验签并履约，订单:', orderNo);
+    return sendIterateAlipayNotificationResponse(res, true);
+}
+
 // ============== Iterate API 路由 ==============
 
 app.post('/api/iterate/email-verification/send', async (req, res) => {
@@ -992,85 +1191,13 @@ app.get('/api/iterate/payment-status/:orderNo', async (req, res) => {
         const paymentResult = await queryIterateProviderPaymentStatus(paymentMethod, orderNo);
 
         if (paymentResult.trade_state === 'SUCCESS') {
-            if (paymentMethod === 'wechat'
-                && (paymentResult.mchid !== WECHAT_CONFIG.mchid || paymentResult.appid !== WECHAT_CONFIG.appid)) {
-                console.error('❌ Iterate 微信响应验证失败: mchid/appid 不匹配');
-                return res.status(400).json({ success: false, error: '支付验证失败', status: 'error' });
+            const fulfilled = await fulfillIteratePaidOrder(orderNo, paymentMethod, paymentResult, paymentAccess);
+            if (!fulfilled.success) {
+                const body = { success: false, error: fulfilled.error, status: fulfilled.status || 'error' };
+                if (fulfilled.includeOrderNo) body.orderNo = orderNo;
+                return res.status(fulfilled.statusCode || 500).json(body);
             }
-
-            // 旧微信订单可从 attach 回填，新订单优先使用访问会话中锁定的字段。
-            const attach = paymentResult.attach || '';
-            const attachFields = parseIterateAttach(attach);
-            const planId = paymentAccess.plan_id || attachFields.plan || null;
-            let resolvedPlan = planId ? ITERATE_PLANS[planId] : null;
-            let resolvedPricing = null;
-
-            if (!resolvedPlan) {
-                const paidAmount = paymentResult.amount?.total;
-                resolvedPlan = Object.values(ITERATE_PLANS).find((p) => {
-                    if (p.amount === paidAmount) return true;
-                    return Object.values(ITERATE_COUPONS).some(coupon => coupon.productId === p.productId && coupon.amount === paidAmount);
-                });
-                if (!resolvedPlan) {
-                    console.error('❌ Iterate 无法匹配套餐, attach:', attach, 'amount:', paidAmount);
-                    return res.status(400).json({ success: false, error: '无法确定套餐类型', status: 'error' });
-                }
-            }
-
-            try {
-                resolvedPricing = resolveIteratePricing(resolvedPlan, paymentAccess.coupon_code || attachFields.coupon || '');
-            } catch (error) {
-                console.error('❌ Iterate 优惠码验证失败:', error.message, 'attach:', attach);
-                return res.status(400).json({ success: false, error: '优惠码验证失败', status: 'error' });
-            }
-
-            const storedAmount = Number(paymentAccess.amount_cents);
-            const expectedAmount = Number.isInteger(storedAmount) && storedAmount > 0
-                ? storedAmount
-                : Number.parseInt(attachFields.payAmount || '', 10) || resolvedPricing.payAmount;
-            if (paymentResult.amount?.total !== expectedAmount) {
-                console.error('❌ Iterate 金额不匹配:', paymentResult.amount?.total, 'vs', expectedAmount);
-                return res.status(400).json({ success: false, error: '支付金额验证失败', status: 'error' });
-            }
-
-            // 再次检查缓存（防止并发重复生成）
-            const rechecked = iterateOrderCache.get(orderNo);
-            if (rechecked && rechecked.licenseKey) {
-                return sendIterateClaimStatus(res, orderNo, rechecked.licenseKey, paymentMethod);
-            }
-
-            const email = normalizeIterateEmail(paymentAccess.email || attachFields.email || '');
-
-            const issuedAt = paymentResult.success_time || paymentResult.update_time;
-            if (!issuedAt) {
-                console.error('❌ Iterate 支付成功响应缺少稳定签发时间，拒绝生成激活码');
-                return res.status(400).json({ success: false, error: '支付签发信息不完整', status: 'error' });
-            }
-
-            // 同一订单稳定生成同一签名激活码，避免跨实例并发签发出不同权益。
-            const generatedLicenseKey = generateIterateLicenseKey(resolvedPlan.licenseType, {
-                issuedAt,
-                nonce: orderNo,
-                orderId: orderNo,
-            });
-            const saved = await saveIterateLicenseToDatabase(generatedLicenseKey, orderNo, email, resolvedPlan, resolvedPricing, paymentMethod);
-            if (!saved.success || !saved.licenseKey) {
-                console.error('❌ Iterate License 持久化失败，拒绝签发 claim token:', saved.error);
-                return res.status(500).json({ success: false, error: '激活码生成失败', orderNo, status: 'error' });
-            }
-            const licenseKey = saved.licenseKey;
-
-            iterateOrderCache.set(orderNo, {
-                licenseKey, plan: resolvedPlan, pricing: resolvedPricing, createdAt: Date.now(),
-            });
-
-            console.log('✅ Iterate 激活码已生成，订单:', orderNo, '套餐:', resolvedPlan.productId);
-
-            if (iterateOrderCache.size > 100) {
-                cleanIterateOrderCache();
-            }
-
-            return sendIterateClaimStatus(res, orderNo, licenseKey, paymentMethod);
+            return sendIterateClaimStatus(res, orderNo, fulfilled.licenseKey, paymentMethod);
         } else if (paymentResult.trade_state === 'NOTPAY' || paymentResult.trade_state === 'USERPAYING') {
             return res.json({ success: true, orderNo, paymentMethod, status: 'pending', claimToken: null, product: 'iterate' });
         } else if (paymentResult.code) {
@@ -1154,13 +1281,22 @@ app.get('/api/iterate/validate-license/:key', async (req, res) => {
     }
 });
 
-// Iterate 支付回调（微信异步通知）
+// Iterate 支付回调（支付宝异步通知 + 微信兼容 ACK）
 app.post('/api/iterate/payment-notify', async (req, res) => {
+    const notifyPayload = getIteratePaymentNotifyPayload(req);
+    const isAlipayNotify = isIterateAlipayNotification(notifyPayload);
     try {
-        console.log('收到 Iterate 支付回调');
+        if (isAlipayNotify) {
+            return handleIterateAlipayNotification(notifyPayload, res);
+        }
+
+        console.log('收到 Iterate 微信支付回调');
         res.json({ code: 'SUCCESS', message: '成功' });
     } catch (error) {
         console.error('处理 Iterate 支付回调异常:', error.message);
+        if (isAlipayNotify) {
+            return sendIterateAlipayNotificationResponse(res, false, error.statusCode || 500);
+        }
         res.status(500).json({ code: 'FAIL', message: error.message });
     }
 });

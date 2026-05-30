@@ -165,6 +165,7 @@ function loadClaimHelpers(environment = {}, overrides = {}) {
     createAlipayPagePayment: overrides.createAlipayPagePayment,
     createAlipayPrecreatePayment: overrides.createAlipayPrecreatePayment,
     queryAlipayTradeStatus: overrides.queryAlipayTradeStatus,
+    verifyAlipayNotification: overrides.verifyAlipayNotification,
     supabaseRI: {
       from(table) {
         assert.ok(table in tables, `unexpected table: ${table}`)
@@ -193,6 +194,14 @@ function createResponse() {
     body: null,
     status(code) {
       this.statusCode = code
+      return this
+    },
+    type(contentType) {
+      this.contentType = contentType
+      return this
+    },
+    send(body) {
+      this.body = body
       return this
     },
     json(body) {
@@ -468,7 +477,7 @@ test('wechat create-payment accepts checkout without email verification', async 
 
 test('alipay page pay returns an official cashier URL and persists provider checkout metadata', async () => {
   let adapterInput = null
-  const { routes, tables } = loadClaimHelpers({ ALIPAY_RETURN_URL: 'https://iterate.xin/iterate/buy.html' }, {
+  const { routes, tables } = loadClaimHelpers({ ALIPAY_RETURN_URL: 'https://iterate.xin/iterate/alipay-return.html' }, {
     generateOrderNo: () => 'ITERATE-alipay-create',
     createAlipayPagePayment: async (input) => {
       adapterInput = input
@@ -491,7 +500,7 @@ test('alipay page pay returns an official cashier URL and persists provider chec
   assert.equal(response.body.payUrl, 'https://openapi.alipay.com/gateway.do?method=alipay.trade.page.pay')
   assert.equal(response.body.amountCents, 1000)
   assert.equal(adapterInput.totalAmount, '10.00')
-  assert.equal(adapterInput.returnUrl, 'https://iterate.xin/iterate/buy.html')
+  assert.equal(adapterInput.returnUrl, 'https://iterate.xin/iterate/alipay-return.html')
   assert.equal(adapterInput.metadata.email, '')
   assert.equal(tables.iterate_payment_access[0].payment_method, 'alipay')
   assert.equal(tables.iterate_payment_access[0].plan_id, 'iterate_day7')
@@ -576,4 +585,145 @@ test('alipay paid status issues a claim token through the shared fulfillment flo
   assert.equal(typeof response.body.claimToken, 'string')
   assert.equal(tables.iterate_orders[0].payment_method, 'alipay')
   assert.equal(tables.iterate_licenses.length, 1)
+})
+
+test('alipay notify verifies the signature and fulfills a paid order idempotently', async () => {
+  const { privateKey } = crypto.generateKeyPairSync('ed25519')
+  const privateKeyB64 = privateKey.export({ format: 'der', type: 'pkcs8' }).toString('base64')
+  const orderNo = 'ITERATE-alipay-notify-paid'
+  let verifiedPayload = null
+  const { issueIteratePaymentAccessToken, routes, tables } = loadClaimHelpers({
+    ALIPAY_APP_ID: 'alipay-app-id',
+    ITERATE_LICENSE_PRIVATE_KEY_B64: privateKeyB64,
+  }, {
+    verifyAlipayNotification: (payload) => {
+      verifiedPayload = payload
+      return payload.sign === 'valid-signature'
+    },
+  })
+  const paymentAccessToken = await issueIteratePaymentAccessToken(orderNo, 'buyer@example.com', {
+    paymentMethod: 'alipay',
+    planId: 'iterate_day7',
+    amountCents: 1000,
+    couponCode: '',
+  })
+  const notifyBody = {
+    app_id: 'alipay-app-id',
+    out_trade_no: orderNo,
+    trade_no: '2026052922000000000001',
+    trade_status: 'TRADE_SUCCESS',
+    total_amount: '10.00',
+    gmt_payment: '2026-05-29 12:30:00',
+    notify_time: '2026-05-29 12:31:00',
+    sign: 'valid-signature',
+  }
+
+  const firstResponse = createResponse()
+  await routes.get('POST /api/iterate/payment-notify')({ body: notifyBody }, firstResponse)
+
+  assert.equal(firstResponse.statusCode, 200)
+  assert.equal(firstResponse.contentType, 'text/plain')
+  assert.equal(firstResponse.body, 'success')
+  assert.equal(verifiedPayload.out_trade_no, orderNo)
+  assert.equal(tables.iterate_licenses.length, 1)
+  assert.equal(tables.iterate_orders[0].payment_method, 'alipay')
+  assert.equal(tables.iterate_claim_tokens.length, 0)
+
+  const secondResponse = createResponse()
+  await routes.get('POST /api/iterate/payment-notify')({ body: notifyBody }, secondResponse)
+
+  assert.equal(secondResponse.statusCode, 200)
+  assert.equal(secondResponse.body, 'success')
+  assert.equal(tables.iterate_licenses.length, 1)
+
+  const statusResponse = createResponse()
+  await routes.get('GET /api/iterate/payment-status/:orderNo')({
+    params: { orderNo },
+    headers: { authorization: `Bearer ${paymentAccessToken}` },
+  }, statusResponse)
+
+  assert.equal(statusResponse.statusCode, 200)
+  assert.equal(statusResponse.body.paymentMethod, 'alipay')
+  assert.equal(statusResponse.body.status, 'success')
+  assert.equal(typeof statusResponse.body.claimToken, 'string')
+  assert.equal(tables.iterate_claim_tokens.length, 1)
+})
+
+test('alipay notify rejects an invalid signature without fulfillment', async () => {
+  const orderNo = 'ITERATE-alipay-notify-bad-signature'
+  const { issueIteratePaymentAccessToken, routes, tables } = loadClaimHelpers({}, {
+    verifyAlipayNotification: () => false,
+  })
+  await issueIteratePaymentAccessToken(orderNo, 'buyer@example.com', {
+    paymentMethod: 'alipay',
+    planId: 'iterate_day7',
+    amountCents: 1000,
+    couponCode: '',
+  })
+
+  const response = createResponse()
+  await routes.get('POST /api/iterate/payment-notify')({
+    body: {
+      out_trade_no: orderNo,
+      trade_status: 'TRADE_SUCCESS',
+      total_amount: '10.00',
+      gmt_payment: '2026-05-29 12:30:00',
+      sign: 'bad-signature',
+    },
+  }, response)
+
+  assert.equal(response.statusCode, 400)
+  assert.equal(response.body, 'failure')
+  assert.equal(tables.iterate_licenses.length, 0)
+  assert.equal(tables.iterate_orders.length, 0)
+})
+
+test('alipay notify acknowledges non-paid statuses without fulfillment', async () => {
+  const { routes, tables } = loadClaimHelpers({}, {
+    verifyAlipayNotification: () => true,
+  })
+
+  const response = createResponse()
+  await routes.get('POST /api/iterate/payment-notify')({
+    body: {
+      out_trade_no: 'ITERATE-alipay-notify-pending',
+      trade_status: 'WAIT_BUYER_PAY',
+      total_amount: '10.00',
+      notify_time: '2026-05-29 12:31:00',
+      sign: 'valid-signature',
+    },
+  }, response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(response.body, 'success')
+  assert.equal(tables.iterate_licenses.length, 0)
+})
+
+test('alipay notify rejects amount mismatches before license issuance', async () => {
+  const orderNo = 'ITERATE-alipay-notify-amount-mismatch'
+  const { issueIteratePaymentAccessToken, routes, tables } = loadClaimHelpers({}, {
+    verifyAlipayNotification: () => true,
+  })
+  await issueIteratePaymentAccessToken(orderNo, 'buyer@example.com', {
+    paymentMethod: 'alipay',
+    planId: 'iterate_day7',
+    amountCents: 1000,
+    couponCode: '',
+  })
+
+  const response = createResponse()
+  await routes.get('POST /api/iterate/payment-notify')({
+    body: {
+      out_trade_no: orderNo,
+      trade_status: 'TRADE_SUCCESS',
+      total_amount: '9.99',
+      gmt_payment: '2026-05-29 12:30:00',
+      sign: 'valid-signature',
+    },
+  }, response)
+
+  assert.equal(response.statusCode, 400)
+  assert.equal(response.body, 'failure')
+  assert.equal(tables.iterate_licenses.length, 0)
+  assert.equal(tables.iterate_orders.length, 0)
 })

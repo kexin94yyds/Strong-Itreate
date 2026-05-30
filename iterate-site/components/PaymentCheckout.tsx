@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
+import {
+  ALIPAY_RETURN_CHANNEL,
+  ALIPAY_RETURN_STORAGE_KEY,
+  isAlipayReturnPayload,
+  type AlipayReturnPayload,
+} from '../lib/alipayReturn';
 
 type PaymentMethod = 'wechat' | 'alipay';
 type PayStep = 'idle' | 'paying' | 'success';
@@ -13,8 +19,8 @@ const DOWNLOAD_LINKS = {
 
 const PLANS = [
   { id: 'day1', label: '1 天', desc: '快速体验', price: 1.99, productId: 'iterate_day1', productName: 'Iterate 1天体验' },
-  { id: 'day7', label: '7 天', desc: '深度体验', price: 10, productId: 'iterate_day7', productName: 'Iterate 7天体验', popular: true },
-  { id: 'permanent', label: '永久', desc: '终身使用', price: 39.9, couponPrice: 19.9, productId: 'iterate_permanent', productName: 'Iterate 永久版' },
+  { id: 'day7', label: '7 天', desc: '深度体验', price: 10, productId: 'iterate_day7', productName: 'Iterate 7天体验' },
+  { id: 'permanent', label: '永久', desc: '终身使用', price: 49.9, couponPrice: 19.9, productId: 'iterate_permanent', productName: 'Iterate 永久版', popular: true },
 ] as const;
 
 type Plan = typeof PLANS[number];
@@ -126,6 +132,14 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
 
   const currentPlan = PLANS.find(plan => plan.id === selectedPlan)!;
   const currentPricing = resolvePlanPricing(currentPlan, couponInput);
+
+  function handleAlipayReturn(payload: AlipayReturnPayload) {
+    if (!orderRef.current || payload.orderNo !== orderRef.current)
+      return;
+
+    setPayError('');
+    startPaymentPolling();
+  }
 
   function startPaymentPolling() {
     if (!orderRef.current || !paymentAccessRef.current) {
@@ -276,9 +290,58 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
   }
 
   useEffect(() => {
+    let channel: BroadcastChannel | null = null;
+
+    const consumePayload = (value: unknown) => {
+      if (isAlipayReturnPayload(value))
+        handleAlipayReturn(value);
+    };
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin === window.location.origin)
+        consumePayload(event.data);
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== ALIPAY_RETURN_STORAGE_KEY || !event.newValue)
+        return;
+
+      try {
+        consumePayload(JSON.parse(event.newValue));
+      }
+      catch {
+        // Ignore malformed cross-tab messages.
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    window.addEventListener('storage', handleStorage);
+
+    if ('BroadcastChannel' in window) {
+      try {
+        channel = new BroadcastChannel(ALIPAY_RETURN_CHANNEL);
+        channel.onmessage = event => consumePayload(event.data);
+      }
+      catch {
+        channel = null;
+      }
+    }
+
+    try {
+      const cachedPayload = window.localStorage.getItem(ALIPAY_RETURN_STORAGE_KEY);
+      if (cachedPayload)
+        consumePayload(JSON.parse(cachedPayload));
+    }
+    catch {
+      // localStorage can be unavailable in restricted browser modes.
+    }
+
     return () => {
       if (pollRef.current)
         clearInterval(pollRef.current);
+      window.removeEventListener('message', handleMessage);
+      window.removeEventListener('storage', handleStorage);
+      channel?.close();
     };
   }, []);
 

@@ -113,7 +113,7 @@ legacy 邮箱验证/订单找回接口如果继续保留，才需要配置：
 - `ALIPAY_KEY_TYPE`，默认 `PKCS8`
 - `ALIPAY_GATEWAY`
 - `ALIPAY_NOTIFY_URL`
-- `ALIPAY_RETURN_URL`，默认 `https://iterate.xin/iterate/buy.html`
+- `ALIPAY_RETURN_URL`，默认 `https://iterate.xin/iterate/alipay-return.html`
 
 如果支付宝环境变量不完整，不要注入支付宝 adapter；否则函数启动会失败。未注入 adapter 时，`paymentMethod=alipay` 会返回 `503 支付宝支付通道尚未配置`。
 
@@ -130,6 +130,12 @@ const { createAlipayAdapters } = require('./aliyun-fc-alipay-adapter.cjs');
 
 ```js
 Object.assign(globalThis, createAlipayAdapters(AlipaySdk, process.env));
+```
+
+支付宝异步通知是 `application/x-www-form-urlencoded`，确认 FC 入口在注册 Iterate 路由前启用表单解析；已有 JSON parser 保持不变：
+
+```js
+app.use(express.urlencoded({ extended: false }));
 ```
 
 然后把 `server/aliyun-fc-iterate-routes.js` 的完整内容追加到现有 FC 入口中，位置必须在：
