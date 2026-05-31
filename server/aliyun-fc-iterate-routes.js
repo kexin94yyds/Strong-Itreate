@@ -40,8 +40,8 @@ const ITERATE_COUPONS = {
     '无限迭代': {
         code: '无限迭代',
         productId: 'iterate_permanent',
-        amount: 1990,      // 优惠后 19.9 元
-        label: '无限迭代五折优惠',
+        amount: 3990,      // 优惠后 39.9 元
+        label: '无限迭代优惠',
     },
 };
 

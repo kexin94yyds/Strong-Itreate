@@ -15,6 +15,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy:prod": "bash scripts/deploy-netlify-prod.sh",
+    "deploy:prod:dry-run": "DRY_RUN=1 bash scripts/deploy-netlify-prod.sh",
     "preview": "vite preview",
     "mcp-puppeteer": "npx @modelcontextprotocol/server-puppeteer"
   }

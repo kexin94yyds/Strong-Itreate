@@ -475,6 +475,39 @@ test('wechat create-payment accepts checkout without email verification', async 
   assert.equal(tables.iterate_email_verifications.length, 0)
 })
 
+test('permanent coupon creates a 39.9 order and stores coupon metadata', async () => {
+  let providerPayload = null
+  const { routes, tables } = loadClaimHelpers({}, {
+    generateOrderNo: () => 'ITERATE-coupon-create',
+    callWechatAPI: async (_method, _path, body) => {
+      providerPayload = JSON.parse(body)
+      return { code_url: 'weixin://iterate-coupon' }
+    },
+  })
+
+  const response = createResponse()
+  await routes.get('POST /api/iterate/create-payment')({
+    body: {
+      videoId: 'iterate_permanent',
+      videoTitle: 'Iterate 永久版',
+      paymentMethod: 'wechat',
+      couponCode: '无限迭代',
+    },
+  }, response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(response.body.amountCents, 3990)
+  assert.equal(response.body.amount, 39.9)
+  assert.equal(response.body.originalAmount, 49.9)
+  assert.equal(response.body.discountAmount, 10)
+  assert.equal(response.body.couponCode, '无限迭代')
+  assert.equal(providerPayload.amount.total, 3990)
+  assert.equal(providerPayload.attach.includes('coupon:%E6%97%A0%E9%99%90%E8%BF%AD%E4%BB%A3'), true)
+  assert.equal(providerPayload.attach.includes('payAmount:3990'), true)
+  assert.equal(tables.iterate_payment_access[0].amount_cents, 3990)
+  assert.equal(tables.iterate_payment_access[0].coupon_code, '无限迭代')
+})
+
 test('alipay page pay returns an official cashier URL and persists provider checkout metadata', async () => {
   let adapterInput = null
   const { routes, tables } = loadClaimHelpers({ ALIPAY_RETURN_URL: 'https://iterate.xin/iterate/alipay-return.html' }, {

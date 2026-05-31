@@ -20,7 +20,7 @@ const DOWNLOAD_LINKS = {
 const PLANS = [
   { id: 'day1', label: '1 天', desc: '快速体验', price: 1.99, productId: 'iterate_day1', productName: 'Iterate 1天体验' },
   { id: 'day7', label: '7 天', desc: '深度体验', price: 10, productId: 'iterate_day7', productName: 'Iterate 7天体验' },
-  { id: 'permanent', label: '永久', desc: '终身使用', price: 49.9, couponPrice: 19.9, productId: 'iterate_permanent', productName: 'Iterate 永久版', popular: true },
+  { id: 'permanent', label: '永久', desc: '终身使用', price: 49.9, couponPrice: 39.9, productId: 'iterate_permanent', productName: 'Iterate 永久版', popular: true },
 ] as const;
 
 type Plan = typeof PLANS[number];
@@ -41,9 +41,10 @@ function isPermanentPlan(plan: Plan): plan is Extract<Plan, { id: 'permanent' }>
 
 function resolvePlanPricing(plan: Plan, couponCode: string) {
   const normalizedCoupon = couponCode.trim();
+  const couponPrice = normalizedCoupon && isPermanentPlan(plan) ? plan.couponPrice : plan.price;
 
   return {
-    price: plan.price,
+    price: couponPrice,
     couponCode: normalizedCoupon,
     hasCouponInput: normalizedCoupon.length > 0,
     couponError: '',
