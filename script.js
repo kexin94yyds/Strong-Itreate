@@ -441,7 +441,15 @@ detailView.addEventListener('click', (e) => {
 animate();
 
 // Metamorphosis Animation
+let metamorphosisFrameId = null;
+let metamorphosisCleanup = null;
+
 function initMetamorphosis() {
+  if (metamorphosisCleanup) {
+    metamorphosisCleanup();
+    metamorphosisCleanup = null;
+  }
+
   const container = document.getElementById('metamorphosis-container');
   if (!container) return;
 
@@ -461,8 +469,8 @@ function initMetamorphosis() {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  const width = canvas.width;
-  const height = canvas.height;
+  let width = canvas.width;
+  let height = canvas.height;
   
   // Configuration
   const numLines = 150;
@@ -480,6 +488,37 @@ function initMetamorphosis() {
   const transitionTime = 1 - (pauseTime * 2);  // 增加过渡时间比例
   
   let time = 0;
+  let yaw = 0;
+  let pitch = 0;
+  let tunnelDepth = 0;
+  let targetYaw = 0;
+  let targetPitch = 0;
+  let targetTunnelDepth = 0;
+  let yawVelocity = 0;
+  let isDragging = false;
+  let lastPointer = { x: 0, y: 0 };
+  const stages = ['BUILD', 'CREATE', 'RUN', 'WRITE', 'READ', 'INVEST'];
+  const interactiveSelector = 'button, a, input, textarea, select, .side-menu, .detail-view, .main-detail, .music-view, .invest-view, .create-detail, .plugin-detail-view, .gpts-list-view, .apps-view, .web-projects-view, .crawlers-view';
+
+  const pipeHud = document.createElement('div');
+  pipeHud.className = 'pipe-progress-hud';
+  pipeHud.innerHTML = `
+    <div class="pipe-hud-kicker">TIME PIPE</div>
+    <div class="pipe-hud-stage">BUILD</div>
+    <div class="pipe-hud-rail">
+      ${stages.map((stage, index) => `<span data-stage="${stage}" style="--stage-index:${index}"></span>`).join('')}
+    </div>
+  `;
+  document.body.appendChild(pipeHud);
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const smoothstep = (edge0, edge1, value) => {
+    const x = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    return x * x * (3 - 2 * x);
+  };
+
+  const isInteractiveTarget = (target) => target && target.closest && target.closest(interactiveSelector);
+  const canControlPipe = (event) => !document.body.classList.contains('menu-open') && !isInteractiveTarget(event.target);
   
   // Form definitions
   const forms = [
@@ -699,18 +738,114 @@ function initMetamorphosis() {
       u, v, t, blend
     );
   };
+
+  const getInteractiveForm = (u, v, t) => {
+    const basePoint = getCurrentForm(u, v, t);
+    const pipePoint = forms[3](u, v, t);
+    const pipeBlend = smoothstep(0.12, 0.88, tunnelDepth);
+
+    return {
+      x: basePoint.x * (1 - pipeBlend) + pipePoint.x * pipeBlend,
+      y: basePoint.y * (1 - pipeBlend) + pipePoint.y * pipeBlend,
+      z: basePoint.z * (1 - pipeBlend) + pipePoint.z * pipeBlend + (tunnelDepth - 0.5) * 260
+    };
+  };
+
+  const projectPoint = (point, rotateX, rotateY, rotateZ) => {
+    const zSpin = rotateZ;
+    let x = point.x * Math.cos(zSpin) - point.y * Math.sin(zSpin);
+    let y = point.x * Math.sin(zSpin) + point.y * Math.cos(zSpin);
+    let z = point.z;
+
+    const yRotatedX = x * Math.cos(rotateY) + z * Math.sin(rotateY);
+    const yRotatedZ = -x * Math.sin(rotateY) + z * Math.cos(rotateY);
+    x = yRotatedX;
+    z = yRotatedZ;
+
+    const xRotatedY = y * Math.cos(rotateX) - z * Math.sin(rotateX);
+    const xRotatedZ = y * Math.sin(rotateX) + z * Math.cos(rotateX);
+    y = xRotatedY;
+    z = xRotatedZ;
+
+    const focus = 520;
+    const perspective = focus / Math.max(170, focus - z);
+    const depthScale = 1.08 + tunnelDepth * 0.45;
+
+    return {
+      x: width / 2 + x * perspective * depthScale,
+      y: height / 2 + y * perspective * depthScale,
+      z
+    };
+  };
+
+  const updatePipeHud = () => {
+    const progress = tunnelDepth * (stages.length - 1);
+    const stageIndex = clamp(Math.round(progress), 0, stages.length - 1);
+    pipeHud.querySelector('.pipe-hud-stage').textContent = stages[stageIndex];
+    pipeHud.style.setProperty('--pipe-progress', `${tunnelDepth * 100}%`);
+    pipeHud.querySelectorAll('.pipe-hud-rail span').forEach((dot, index) => {
+      dot.classList.toggle('active', index <= stageIndex);
+      dot.classList.toggle('current', index === stageIndex);
+    });
+  };
+
+  const handlePointerDown = (event) => {
+    if (!canControlPipe(event)) return;
+    isDragging = true;
+    lastPointer = { x: event.clientX, y: event.clientY };
+    yawVelocity = 0;
+    document.body.classList.add('pipe-dragging');
+  };
+
+  const handlePointerMove = (event) => {
+    if (!isDragging) return;
+    const dx = event.clientX - lastPointer.x;
+    const dy = event.clientY - lastPointer.y;
+    targetYaw += dx * 0.008;
+    targetPitch = clamp(targetPitch + dy * 0.004, -0.45, 0.45);
+    targetTunnelDepth = clamp(targetTunnelDepth + dy * 0.0018, 0, 1);
+    yawVelocity = dx * 0.002;
+    lastPointer = { x: event.clientX, y: event.clientY };
+  };
+
+  const handlePointerUp = () => {
+    isDragging = false;
+    document.body.classList.remove('pipe-dragging');
+  };
+
+  const handleWheel = (event) => {
+    if (!canControlPipe(event)) return;
+    event.preventDefault();
+    targetTunnelDepth = clamp(targetTunnelDepth + event.deltaY * 0.0012, 0, 1);
+    targetYaw += event.deltaX * 0.003;
+  };
+
+  window.addEventListener('pointerdown', handlePointerDown);
+  window.addEventListener('pointermove', handlePointerMove);
+  window.addEventListener('pointerup', handlePointerUp);
+  window.addEventListener('pointercancel', handlePointerUp);
+  window.addEventListener('wheel', handleWheel, { passive: false });
   
   // Animation loop
   const animate = () => {
+    width = canvas.width;
+    height = canvas.height;
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, width, height);
     
     // 动态旋转变化 - 提升整体速度
     const dynamicRotateSpeed = rotateSpeed * (1 + Math.sin(time * 0.003) * 0.5);  // 提升3倍
-    const rotateX = Math.sin(time * dynamicRotateSpeed) * 0.5;
-    const rotateY = Math.cos(time * dynamicRotateSpeed * 0.7) * 0.3;
-    const rotateZ = time * dynamicRotateSpeed * 0.3 + Math.sin(time * 0.006) * 0.2;  // 提升3倍
+    yawVelocity *= 0.94;
+    targetYaw += yawVelocity;
+    yaw += (targetYaw - yaw) * 0.08;
+    pitch += (targetPitch - pitch) * 0.08;
+    tunnelDepth += (targetTunnelDepth - tunnelDepth) * 0.08;
+
+    const rotateX = Math.sin(time * dynamicRotateSpeed) * 0.18 + pitch;
+    const rotateY = Math.cos(time * dynamicRotateSpeed * 0.7) * 0.16 + yaw;
+    const rotateZ = time * dynamicRotateSpeed * 0.2 + Math.sin(time * 0.006) * 0.14;  // 提升3倍
+    updatePipeHud();
     
     // Draw horizontal contour lines
     for (let i = 0; i < numLines; i++) {
@@ -727,20 +862,13 @@ function initMetamorphosis() {
         const u = j / lineSegments;
         
         // Get the current form
-        const point = getCurrentForm(u, v, time);
-        
-        // Apply rotation
-        const rotatedX = point.x * Math.cos(rotateZ) - point.y * Math.sin(rotateZ);
-        const rotatedY = point.x * Math.sin(rotateZ) + point.y * Math.cos(rotateZ);
-        const rotatedZ = point.z;
-        
-        // Project to screen
-        const scale = 1.5 + rotatedZ * 0.001;
-        const projX = width / 2 + rotatedX * scale;
-        const projY = height / 2 + rotatedY * scale;
+        const point = getInteractiveForm(u, v, time);
+        const projected = projectPoint(point, rotateX, rotateY, rotateZ);
+        const projX = projected.x;
+        const projY = projected.y;
         
         // Check if point should be visible (simple back-face culling)
-        const pointVisible = rotatedZ > -50;
+        const pointVisible = projected.z > -190;
         
         if (j === 0) {
           if (pointVisible) {
@@ -778,20 +906,13 @@ function initMetamorphosis() {
         const v = j / (lineSegments * 0.5);
         
         // Get the current form
-        const point = getCurrentForm(u, v, time);
-        
-        // Apply rotation
-        const rotatedX = point.x * Math.cos(rotateZ) - point.y * Math.sin(rotateZ);
-        const rotatedY = point.x * Math.sin(rotateZ) + point.y * Math.cos(rotateZ);
-        const rotatedZ = point.z;
-        
-        // Project to screen
-        const scale = 1.5 + rotatedZ * 0.001;
-        const projX = width / 2 + rotatedX * scale;
-        const projY = height / 2 + rotatedY * scale;
+        const point = getInteractiveForm(u, v, time);
+        const projected = projectPoint(point, rotateX, rotateY, rotateZ);
+        const projX = projected.x;
+        const projY = projected.y;
         
         // Check if point should be visible
-        const pointVisible = rotatedZ > -50;
+        const pointVisible = projected.z > -190;
         
         if (j === 0) {
           if (pointVisible) {
@@ -815,10 +936,25 @@ function initMetamorphosis() {
     }
     
     time += 1;
-    requestAnimationFrame(animate);
+    metamorphosisFrameId = requestAnimationFrame(animate);
   };
   
   animate();
+
+  metamorphosisCleanup = () => {
+    if (metamorphosisFrameId) {
+      cancelAnimationFrame(metamorphosisFrameId);
+      metamorphosisFrameId = null;
+    }
+    pipeHud.remove();
+    window.removeEventListener('resize', resizeCanvas);
+    window.removeEventListener('pointerdown', handlePointerDown);
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener('pointercancel', handlePointerUp);
+    window.removeEventListener('wheel', handleWheel);
+    document.body.classList.remove('pipe-dragging');
+  };
 }
 
 // 在页面加载完成后初始化动画

@@ -36,6 +36,91 @@
     display: block;
 }
 
+.pipe-progress-hud {
+    --pipe-progress: 0%;
+    position: fixed;
+    left: 50%;
+    bottom: 5.4rem;
+    z-index: 3;
+    width: min(42rem, calc(100vw - 4rem));
+    transform: translateX(-50%);
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.86);
+    text-align: center;
+    opacity: 0.82;
+    transition: opacity 0.25s ease;
+}
+
+.pipe-dragging .pipe-progress-hud {
+    opacity: 1;
+}
+
+.pipe-hud-kicker {
+    margin-bottom: 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.48em;
+    color: rgba(255, 255, 255, 0.46);
+}
+
+.pipe-hud-stage {
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+    letter-spacing: 0.56em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pipe-hud-rail {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.4rem;
+}
+
+.pipe-hud-rail::before,
+.pipe-hud-rail::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    transform: translateY(-50%);
+}
+
+.pipe-hud-rail::before {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.pipe-hud-rail::after {
+    right: auto;
+    width: var(--pipe-progress);
+    background: rgba(255, 255, 255, 0.64);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.26);
+}
+
+.pipe-hud-rail span {
+    position: relative;
+    z-index: 1;
+    width: 0.52rem;
+    height: 0.52rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: #080808;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.pipe-hud-rail span.active {
+    border-color: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.pipe-hud-rail span.current {
+    transform: scale(1.85);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.42);
+}
+
 /* Canvas背景 */
 #noiseCanvas {
     position: fixed;
@@ -670,6 +755,21 @@ body.menu-open .menu-toggle span:nth-child(3) {
 
 /* 响应式调整 */
 @media (max-width: 768px) {
+    .pipe-progress-hud {
+        bottom: 6.8rem;
+        width: min(30rem, calc(100vw - 3rem));
+    }
+
+    .pipe-hud-kicker {
+        font-size: 0.64rem;
+        letter-spacing: 0.36em;
+    }
+
+    .pipe-hud-stage {
+        font-size: 0.86rem;
+        letter-spacing: 0.4em;
+    }
+
     .person-grid {
         padding: 15px;
     }
